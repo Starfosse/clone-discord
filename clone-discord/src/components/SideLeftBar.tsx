@@ -2,7 +2,9 @@ import Image from "next/image"
 import { Separator } from "./ui/separator"
 import { SignedIn, UserButton } from "@clerk/nextjs"
 import { Button } from "./ui/button"
+import Profile from "./Profile"
 
+// createNewUser()
 const SideLeftBar = () => {
   return (
     <>
@@ -41,9 +43,10 @@ const SideLeftBar = () => {
           </button>
         </div>
         <div className="mt-auto mb-2 justify-end items-center">
-          <SignedIn>
+          {/* <SignedIn>
             <UserButton />
-          </SignedIn>
+          </SignedIn> */}
+          <Profile />
         </div>
       </div>
     </>
