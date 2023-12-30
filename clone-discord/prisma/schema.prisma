@@ -11,11 +11,19 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum stateList{
+  ONLINE
+  BUSY
+  ABSENT
+  OUTLINE
+}
+
 model User {
   id String @id @default(uuid())
-  userId String
+  userId String @unique
   pseudo String
   ImageUrl String
+  state stateList @default(OUTLINE)
 
   servers Server[]
   members Member[]
