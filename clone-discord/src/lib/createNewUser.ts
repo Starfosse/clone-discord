@@ -16,7 +16,6 @@ export const createNewUser = async () => {
       data: {
         userId: user.id,
         pseudo: user.username,
-        ImageUrl: "",
       },
     })
   }

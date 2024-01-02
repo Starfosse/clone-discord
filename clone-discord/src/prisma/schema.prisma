@@ -13,17 +13,17 @@ generator client {
 
 enum stateList{
   ONLINE
-  BUSY
   ABSENT
-  OUTLINE
+  BUSY
+  OFFLINE
 }
 
 model User {
   id String @id @default(uuid())
   userId String @unique
   pseudo String
-  ImageUrl String
-  state stateList @default(OUTLINE)
+  imageUrl String @default("")
+  state stateList @default(OFFLINE)
 
   servers Server[]
   members Member[]
@@ -35,7 +35,7 @@ model User {
 model Server{
   id String @id @default(uuid())
   name String
-  ImageUrl String
+  imageUrl String
   inviteCode String @unique
 
   userId String

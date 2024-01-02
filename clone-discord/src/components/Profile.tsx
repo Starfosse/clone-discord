@@ -1,4 +1,5 @@
 "use client"
+
 import {
   Avatar,
   AvatarFallback,
@@ -27,117 +28,161 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { trpc } from "@/app/_trpc/client"
 import { Separator } from "./ui/separator"
+import {
+  useForm,
+  SubmitHandler,
+  Controller,
+} from "react-hook-form"
+import {
+  ProfileValidator,
+  TProfileValidator,
+} from "@/lib/validator/profile-validator"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { cn } from "@/lib/utils"
 
 const Profile = () => {
-  const { data } = trpc.getUser.useQuery()
+  const { data, isLoading } = trpc.getUser.useQuery()
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<TProfileValidator>({
+    resolver: zodResolver(ProfileValidator),
+  })
+
+  const { mutate } = trpc.updateUser.useMutation()
+
+  const onSubmit = ({
+    imageUrl,
+    pseudo,
+    state,
+  }: TProfileValidator) => {
+    console.log("ok")
+    console.log(state)
+    console.log("ok")
+    mutate({ imageUrl, pseudo, state })
+  }
+
   return (
     <>
-      {/* <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select a fruit" />
-        </SelectTrigger>
-        <SelectContent position="popper">
-          <SelectGroup>
-            <SelectLabel>Fruits</SelectLabel>
-            <SelectItem value="apple">Apple</SelectItem>
-            <SelectItem value="banana">Banana</SelectItem>
-            <SelectItem value="blueberry">
-              Blueberry
-            </SelectItem>
-            <SelectItem value="grapes">Grapes</SelectItem>
-            <SelectItem value="pineapple">
-              Pineapple
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select> */}
-
       <Dialog>
         <DialogTrigger asChild>
-          <Avatar className="cursor-pointer">
-            <AvatarImage src="" alt="" />
-            {data ? (
+          {isLoading ? (
+            <p className="text-center text-xs text-white">
+              Chargement
+            </p>
+          ) : (
+            <Avatar className="cursor-pointer">
+              <AvatarImage src="" />
               <AvatarFallback className="text-xs">
                 {data?.pseudo}
               </AvatarFallback>
-            ) : (
-              <p>oups</p>
-            )}
-          </Avatar>
+            </Avatar>
+          )}
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save
-              when you're done.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Image de profil
-              </Label>
-              <Input
-                id="name"
-                value="Pedro Duarte"
-                className="col-span-3"
-              />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <DialogHeader>
+              <DialogTitle>Modifier le profil</DialogTitle>
+              <DialogDescription>
+                Changez votre profil ici.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label
+                  htmlFor="imageUrl"
+                  className="text-right">
+                  Image de profil
+                </Label>
+                <Input
+                  {...register("imageUrl")}
+                  className={cn("col-span-3", {
+                    "focus-visible:ring-red-500":
+                      errors.imageUrl,
+                  })}
+                />
+                {/* {errors?.imageUrl && (
+                <p className="text-sm text-red-500">
+                  {errors.imageUrl.message}
+                </p>
+              )} */}
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label
+                  htmlFor="pseudo"
+                  className="text-right">
+                  Pseudo
+                </Label>
+                <Input
+                  {...register("pseudo")}
+                  className={cn("col-span-3", {
+                    "focus-visible:ring-red-500":
+                      errors.pseudo,
+                  })}
+                />
+                {/* {errors?.pseudo && (
+                <p className="text-sm text-red-500">
+                  {errors.pseudo.message}
+                </p>
+              )} */}
+              </div>
+              <div className="grid grid-cols-4 gap-4 items-center">
+                <Label
+                  htmlFor="state"
+                  className="text-right">
+                  Etat
+                </Label>
+                <Controller
+                  name="state"
+                  control={control}
+                  rules={{
+                    required: "ce champs est requis",
+                  }}
+                  render={({ field }) => (
+                    <Select {...field}>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="En ligne (par défaut)" />{" "}
+                        {/* {`${data.etat}`}*/}
+                      </SelectTrigger>
+                      <SelectContent
+                        position="popper"
+                        side="right">
+                        <SelectGroup>
+                          <SelectItem value="ONLINE">
+                            En ligne
+                          </SelectItem>
+                          <Separator className="w-5/6 my-1 mx-auto" />
+                          <SelectItem value="ABSENT">
+                            Absent
+                          </SelectItem>
+                          <SelectItem value="BUSY">
+                            Occupé
+                            <p className="text-[0.6rem] text-muted-foreground">
+                              Tu ne recevras aucune
+                              notification
+                            </p>
+                          </SelectItem>
+                          <SelectItem value="OFFLINE">
+                            Deconnecté
+                            <p className="text-[0.6rem] text-muted-foreground">
+                              Tu n'apparaîtras pas connecté
+                            </p>
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="username"
-                className="text-right">
-                Username
-              </Label>
-              <Input
-                id="username"
-                value="@peduarte"
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 gap-4 items-center">
-              <Label
-                htmlFor="username"
-                className="text-right">
-                Etat
-              </Label>
-              <Select>
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="En ligne (par défaut)" />{" "}
-                  {/* {`${data.etat}`}*/}
-                </SelectTrigger>
-                <SelectContent
-                  position="popper"
-                  side="right">
-                  <SelectGroup>
-                    <SelectItem value="apple">
-                      En ligne
-                    </SelectItem>
-                    <Separator className="w-5/6 my-1 mx-auto" />
-                    <SelectItem value="blueberry">
-                      Absent
-                    </SelectItem>
-                    <SelectItem value="banana">
-                      Occupé
-                      <p className="text-[0.6rem] text-muted-foreground">
-                        Tu ne recevras aucune notification
-                      </p>
-                    </SelectItem>
-                    <SelectItem value="grapes">
-                      Deconnecté
-                      <p className="text-[0.6rem] text-muted-foreground">
-                        Tu n'apparaîtras pas connecté
-                      </p>
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="submit">Save changes</Button>
-          </DialogFooter>
+            <DialogFooter>
+              <Button>Sauvegarder</Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </>
