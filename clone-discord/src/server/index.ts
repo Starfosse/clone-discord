@@ -20,9 +20,6 @@ export const appRouter = router({
     .mutation(async ({ input }) => {
       const user = await currentUser()
       const { imageUrl, pseudo, state } = input
-      console.log("state ===")
-      console.log(state)
-      console.log("state ===")
       const userToUpdate = await prisma.user.findFirst({
         where: {
           userId: user?.id,
