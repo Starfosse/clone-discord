@@ -44,6 +44,7 @@ import { Separator } from "./ui/separator"
 import Image from "next/image"
 import { toast } from "sonner"
 import { useState } from "react"
+import { Check } from "lucide-react"
 
 const Profile = () => {
   const { data, isLoading } = trpc.getUser.useQuery()
@@ -108,6 +109,15 @@ const Profile = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid py-4">
+                {/* {data?.imageUrl && (
+                  <Image
+                    // className="relative top-11 left-6 z-10 bg- rounded-full border-[3px] border-tertiaryColor"
+                    src={data.imageUrl}
+                    width={16}
+                    height={16}
+                    alt="ok"
+                  />
+                )} */}
                 <FormField
                   control={form.control}
                   name="imageUrl"
@@ -243,7 +253,20 @@ const Profile = () => {
                 />
               </div>
               <DialogFooter>
-                <Button type="submit">Sauvegarder</Button>
+                <Button
+                  type="submit"
+                  onClick={() =>
+                    toast.success(
+                      <div className="flex items-center">
+                        <Check />
+                        &nbsp;Vos modifications ont été
+                        enregristrées
+                      </div>,
+                      { duration: 3000 }
+                    )
+                  }>
+                  Sauvegarder
+                </Button>
               </DialogFooter>
             </form>
           </Form>
@@ -252,8 +275,9 @@ const Profile = () => {
     </>
   )
 }
-// Ajouter un carroussel d'image prédéfinies pour la photo de profil
+
+//ajouter imageurl de discord par défaut
+//permettre d'importer son image
 //ajouter preview image profile
-// Ajouter un sonner pour valider les modifs
 //ajouter une sous-description des state
 export default Profile
