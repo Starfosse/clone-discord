@@ -41,14 +41,14 @@ import {
   AvatarImage,
 } from "./ui/avatar"
 import { Separator } from "./ui/separator"
-import {
-  ItemIndicator,
-  SelectItemIndicator,
-  SelectItemText,
-} from "@radix-ui/react-select"
+import Image from "next/image"
+import { toast } from "sonner"
+import { useState } from "react"
 
 const Profile = () => {
   const { data, isLoading } = trpc.getUser.useQuery()
+
+  const [open, setOpen] = useState(false)
 
   const form = useForm<TProfileValidator>({
     resolver: zodResolver(ProfileValidator),
@@ -66,12 +66,24 @@ const Profile = () => {
     pseudo,
     state,
   }: TProfileValidator) => {
+    console.log("ok")
+    setOpen(false)
     mutate({ imageUrl, pseudo, state })
   }
 
+  const stateUser = data?.state.toLocaleLowerCase()
   return (
     <>
-      <Dialog>
+      {data?.imageUrl && (
+        <Image
+          className="relative top-11 left-6 z-10 bg- rounded-full border-[3px] border-tertiaryColor"
+          src={`/${stateUser}.png`}
+          width={16}
+          height={16}
+          alt="ok"
+        />
+      )}
+      <Dialog onOpenChange={setOpen} open={open}>
         <DialogTrigger asChild>
           {isLoading ? (
             <p className="text-center text-xs text-white">
@@ -79,7 +91,7 @@ const Profile = () => {
             </p>
           ) : (
             <Avatar className="cursor-pointer">
-              <AvatarImage src="" />
+              <AvatarImage src={data?.imageUrl} />
               <AvatarFallback className="text-xs">
                 {data?.pseudo}
               </AvatarFallback>
@@ -159,20 +171,46 @@ const Profile = () => {
                               value={stateList.ONLINE}
                               key={stateList.ONLINE}
                               slot="test">
-                              En ligne
+                              <p className="flex">
+                                <Image
+                                  src="/online.png"
+                                  alt="test"
+                                  width={16}
+                                  height={16}
+                                  className=""
+                                />
+                                &nbsp;&nbsp;En ligne
+                              </p>
                             </SelectItem>
-
                             <Separator className="w-5/6 my-1 mx-auto" />
                             <SelectItem
                               value={stateList.ABSENT}
                               key={stateList.ABSENT}>
-                              Absent
+                              <p className="flex">
+                                <Image
+                                  src="/absent.png"
+                                  alt="test"
+                                  width={16}
+                                  height={16}
+                                  className=""
+                                />
+                                &nbsp;&nbsp;Absent
+                              </p>
                             </SelectItem>
                             <SelectItem
                               value={stateList.BUSY}
                               key={stateList.BUSY}
                               className="text-left">
-                              Occupé
+                              <p className="flex">
+                                <Image
+                                  src="/busy.png"
+                                  alt="test"
+                                  width={16}
+                                  height={16}
+                                  className=""
+                                />
+                                &nbsp;&nbsp;Occupé
+                              </p>
                               {/* <p className="text-[0.6rem] text-muted-foreground text-right">
                                 Tu ne recevras aucune
                                 notification
@@ -180,10 +218,17 @@ const Profile = () => {
                             </SelectItem>
                             <SelectItem
                               value={stateList.OFFLINE}
-                              key={stateList.OFFLINE}
-                              textValue="Tu n'apparaîtras pas
-                              connecté">
-                              Deconnecté
+                              key={stateList.OFFLINE}>
+                              <p className="flex">
+                                <Image
+                                  src="/busy.png"
+                                  alt="test"
+                                  width={16}
+                                  height={16}
+                                  className=""
+                                />
+                                &nbsp;&nbsp;Deconnecté
+                              </p>
                               {/* <p className="text-[0.6rem] text-muted-foreground">
                                 Tu n'apparaîtras pas
                                 connecté
@@ -198,7 +243,7 @@ const Profile = () => {
                 />
               </div>
               <DialogFooter>
-                <Button>Sauvegarder</Button>
+                <Button type="submit">Sauvegarder</Button>
               </DialogFooter>
             </form>
           </Form>
