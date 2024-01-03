@@ -25,6 +25,7 @@ export const appRouter = router({
           userId: user?.id,
         },
       })
+      console.log("ok02")
       return await prisma.user.update({
         where: {
           userId: user?.id,
