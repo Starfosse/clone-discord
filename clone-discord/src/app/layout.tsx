@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import SideLeftBar from "@/components/SideLeftBar"
 import { ClerkProvider } from "@clerk/nextjs"
 import Provider from "./_trpc/Provider"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -28,10 +29,11 @@ export default function RootLayout({
           )}>
           <main className="relative flex flex-col min-h-screen">
             <Provider>
-            <SideLeftBar />
-            <div className="flex-grow flex-1">
-              {children}
-            </div>
+              <SideLeftBar />
+              <div className="flex-grow flex-1">
+                {children}
+              </div>
+              <Toaster position="top-center" />
             </Provider>
           </main>
         </body>
