@@ -2,7 +2,9 @@ import Image from "next/image"
 import { Separator } from "./ui/separator"
 import { SignedIn, UserButton } from "@clerk/nextjs"
 import { Button } from "./ui/button"
+import Profile from "./Profile"
 
+// createNewUser()
 const SideLeftBar = () => {
   return (
     <>
@@ -37,13 +39,15 @@ const SideLeftBar = () => {
         </div> */}
         <div>
           <button className="text-green-600 hover:text-white bg-secondaryColor rounded-full w-10 h-10 hover:rounded-xl hover:bg-green-600">
-            <p className=" text-3xl relative bottom-1">+</p>
+            <p className=" text-3xl relative bottom-1">+</p>{" "}
+            {/* creer serv -> dialog : nom + image(facultatif)*/}
           </button>
         </div>
         <div className="mt-auto mb-2 justify-end items-center">
-          <SignedIn>
+          {/* <SignedIn>
             <UserButton />
-          </SignedIn>
+          </SignedIn> */}
+          <Profile />
         </div>
       </div>
     </>
