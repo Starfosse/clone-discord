@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import SideLeftBar from "@/components/SideLeftBar"
 import { ClerkProvider } from "@clerk/nextjs"
 import Provider from "./_trpc/Provider"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -32,6 +33,7 @@ export default function RootLayout({
               <div className="flex-grow flex-1">
                 {children}
               </div>
+              <Toaster position="top-center" />
             </Provider>
           </main>
         </body>
