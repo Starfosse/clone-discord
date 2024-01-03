@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db"
 import { router, publicProcedure } from "./trpc"
 import { currentUser } from "@clerk/nextjs"
 import { ProfileValidator } from "@/lib/validator/profile-validator"
+import { ServerValidator } from "@/lib/validator/server-validator"
+import { NextResponse } from "next/server"
 
 export const appRouter = router({
   getTodos: publicProcedure.query(async () => {
@@ -37,6 +39,30 @@ export const appRouter = router({
         },
       })
       return
+    }),
+  createServer: publicProcedure
+    .input(ServerValidator)
+    .mutation(async ({ input }) => {
+      const user = await currentUser()
+      if (!user) {
+        return new NextResponse("Unauthorized", {
+          status: 401,
+        })
+      }
+      const { imageUrl, name } = input
+      const userOwner = await prisma.user.findFirst({
+        where: {
+          userId: user?.id,
+        },
+      })
+      return await prisma.server.create({
+        data: {
+          imageUrl: imageUrl,
+          name: name,
+          inviteCode: "alloa",
+          userId: user.id,
+        },
+      })
     }),
 })
 
