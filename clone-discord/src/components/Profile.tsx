@@ -54,7 +54,7 @@ const Profile = () => {
   const form = useForm<TProfileValidator>({
     resolver: zodResolver(ProfileValidator),
     defaultValues: {
-      imageUrl: data?.imageUrl,
+      imageUrl: data?.imageUrl ? data?.imageUrl : "",
       pseudo: data?.pseudo,
       state: stateList.BUSY,
     },
@@ -280,4 +280,5 @@ const Profile = () => {
 //permettre d'importer son image
 //ajouter preview image profile
 //ajouter une sous-description des state
+//reload la page à la fin du formulaire
 export default Profile

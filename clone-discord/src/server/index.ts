@@ -4,6 +4,8 @@ import { currentUser } from "@clerk/nextjs"
 import { ProfileValidator } from "@/lib/validator/profile-validator"
 import { ServerValidator } from "@/lib/validator/server-validator"
 import { NextResponse } from "next/server"
+import { MemberRole } from "@prisma/client"
+import { v4 as uuidv4 } from "uuid"
 
 export const appRouter = router({
   getTodos: publicProcedure.query(async () => {
@@ -27,7 +29,6 @@ export const appRouter = router({
           userId: user?.id,
         },
       })
-      console.log("ok02")
       return await prisma.user.update({
         where: {
           userId: user?.id,
@@ -55,14 +56,31 @@ export const appRouter = router({
           userId: user?.id,
         },
       })
-      return await prisma.server.create({
+      const server = await prisma.server.create({
         data: {
-          imageUrl: imageUrl,
+          imageUrl: imageUrl!,
           name: name,
-          inviteCode: "alloa",
+          inviteCode: uuidv4(),
           userId: user.id,
+          channels: {
+            create: [
+              {
+                name: "general",
+                userId: user.id,
+              },
+            ],
+          },
+          members: {
+            create: [
+              {
+                userId: user.id,
+                role: MemberRole.ADMIN,
+              },
+            ],
+          },
         },
       })
+      return
     }),
 })
 
