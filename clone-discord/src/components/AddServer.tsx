@@ -13,9 +13,39 @@ import {
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
+import { trpc } from "@/app/_trpc/client"
+import { useForm, SubmitHandler } from "react-hook-form"
+import {
+  ServerValidator,
+  TServerValidator,
+} from "@/lib/validator/server-validator"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 const AddServer = () => {
   const [open, setOpen] = useState<boolean>(false)
+
+  const { mutate } = trpc.createServer.useMutation()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TServerValidator>({
+    resolver: zodResolver(ServerValidator),
+    defaultValues: {
+      imageUrl: "",
+      name: "",
+    },
+  })
+
+  const onSubmit = ({
+    name,
+    imageUrl,
+  }: TServerValidator) => {
+    console.log("good")
+    setOpen(false)
+    mutate({ name, imageUrl })
+  }
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
@@ -25,29 +55,37 @@ const AddServer = () => {
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Créer votre serveur</DialogTitle>
-          <DialogDescription>
-            Vous pourrez tout modifier plus tard.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Image du serveur
-            </Label>
-            <Input className="col-span-3" />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogHeader>
+            <DialogTitle>Créer votre serveur</DialogTitle>
+            <DialogDescription>
+              Vous pourrez tout modifier plus tard.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Image du serveur (optionnel)
+              </Label>
+              <Input
+                {...register("imageUrl")}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">
+                Nom du serveur
+              </Label>
+              <Input
+                {...register("name")}
+                className="col-span-3"
+              />
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label className="text-right">
-              Nom du serveur
-            </Label>
-            <Input className="col-span-3" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Enregistrer</Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button type="submit">Enregistrer</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   )
