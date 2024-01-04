@@ -82,6 +82,33 @@ export const appRouter = router({
       })
       return
     }),
+  getUserListServ: publicProcedure.query(async () => {
+    const user = await currentUser()
+    // if (!user) {
+    //   return new NextResponse("Unauthorized", {
+    //     status: 401,
+    //   })
+    // }
+    const userListServer = await prisma.member.findMany({
+      where: {
+        userId: user!.id,
+      },
+      select: {
+        serverId: true,
+      },
+    })
+    const userListServerId = userListServer.map(
+      (server) => server.serverId
+    )
+    const servers = await prisma.server.findMany({
+      where: {
+        id: {
+          in: userListServerId,
+        },
+      },
+    })
+    return servers
+  }),
 })
 
 export type AppRouter = typeof appRouter
