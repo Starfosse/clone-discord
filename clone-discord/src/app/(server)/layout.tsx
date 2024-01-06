@@ -1,4 +1,4 @@
-import SideLeftServerBar from "@/components/SideLeftServerBar"
+import ServerSideBar from "@/components/ServerSideBar"
 
 export default function ServerLayout({
   children,
@@ -6,9 +6,9 @@ export default function ServerLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="">
-      <main className="relative flex flex-col min-h-screen">
-        <SideLeftServerBar />
+    <div className="h-full">
+      <main className="h-full relative">
+        <ServerSideBar />
         <div className="flex-grow flex-1">{children}</div>
       </main>
     </div>

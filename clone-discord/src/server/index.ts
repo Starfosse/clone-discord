@@ -6,7 +6,11 @@ import { ServerValidator } from "@/lib/validator/server-validator"
 import { NextResponse } from "next/server"
 import { MemberRole } from "@prisma/client"
 import { v4 as uuidv4 } from "uuid"
+import { z } from "zod"
 
+const ServerId = z.object({ serverId: z.string() })
+
+// type ServerId = string
 export const appRouter = router({
   getTodos: publicProcedure.query(async () => {
     return [10, 20, 30]
@@ -66,6 +70,12 @@ export const appRouter = router({
             create: [
               {
                 name: "general",
+                type: "TEXT",
+                userId: user.id,
+              },
+              {
+                name: "general",
+                type: "AUDIO",
                 userId: user.id,
               },
             ],
@@ -109,6 +119,26 @@ export const appRouter = router({
     })
     return servers
   }),
+  getServer: publicProcedure
+    .input(ServerId)
+    .query(async ({ input }) => {
+      return await prisma.server.findFirst({
+        where: {
+          id: input.serverId,
+        },
+      })
+    }),
+  getChannels: publicProcedure
+    .input(ServerId)
+    .query(async ({ input }) => {
+      const user = await currentUser()
+      return prisma.channel.findMany({
+        where: {
+          serverId: input.serverId,
+          userId: user?.id,
+        },
+      })
+    }),
 })
 
 export type AppRouter = typeof appRouter
