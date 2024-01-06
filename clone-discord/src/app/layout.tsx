@@ -27,7 +27,7 @@ export default function RootLayout({
             "relative h-full font-sans antialiased",
             inter.className
           )}>
-          <main className="relative flex flex-col min-h-screen">
+          <main className="relative flex min-h-screen">
             <Provider>
               <SideLeftBar />
               <div className="flex-grow flex-1">

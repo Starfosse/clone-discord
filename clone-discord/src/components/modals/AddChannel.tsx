@@ -39,14 +39,14 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "./ui/avatar"
-import { Separator } from "./ui/separator"
+} from "../ui/avatar"
+import { Separator } from "../ui/separator"
 import Image from "next/image"
 import { toast } from "sonner"
 import { useState } from "react"
 import { Check } from "lucide-react"
 
-const Profile = () => {
+const AddChannel = () => {
   const { data, isLoading } = trpc.getUser.useQuery()
 
   const [open, setOpen] = useState(false)
@@ -72,32 +72,11 @@ const Profile = () => {
     mutate({ imageUrl, pseudo, state })
   }
 
-  const stateUser = data?.state.toLocaleLowerCase()
   return (
     <>
-      {data?.imageUrl && (
-        <Image
-          className="relative top-11 left-6 z-10 bg- rounded-full border-[3px] border-tertiaryColor"
-          src={`/${stateUser}.png`}
-          width={16}
-          height={16}
-          alt="ok"
-        />
-      )}
       <Dialog onOpenChange={setOpen} open={open}>
         <DialogTrigger asChild>
-          {isLoading ? (
-            <p className="text-center text-xs text-white">
-              Chargement
-            </p>
-          ) : (
-            <Avatar className="cursor-pointer">
-              <AvatarImage src={data?.imageUrl} />
-              <AvatarFallback className="text-xs">
-                {data?.pseudo}
-              </AvatarFallback>
-            </Avatar>
-          )}
+          {/* <div>{textContent}</div> */}
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -110,14 +89,14 @@ const Profile = () => {
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid py-4">
                 {/* {data?.imageUrl && (
-                  <Image
-                    // className="relative top-11 left-6 z-10 bg- rounded-full border-[3px] border-tertiaryColor"
-                    src={data.imageUrl}
-                    width={16}
-                    height={16}
-                    alt="ok"
-                  />
-                )} */}
+                    <Image
+                      // className="relative top-11 left-6 z-10 bg- rounded-full border-[3px] border-tertiaryColor"
+                      src={data.imageUrl}
+                      width={16}
+                      height={16}
+                      alt="ok"
+                    />
+                  )} */}
                 <FormField
                   control={form.control}
                   name="imageUrl"
@@ -222,9 +201,9 @@ const Profile = () => {
                                 &nbsp;&nbsp;Occupé
                               </p>
                               {/* <p className="text-[0.6rem] text-muted-foreground text-right">
-                                Tu ne recevras aucune
-                                notification
-                              </p> */}
+                                  Tu ne recevras aucune
+                                  notification
+                                </p> */}
                             </SelectItem>
                             <SelectItem
                               value={stateList.OFFLINE}
@@ -240,9 +219,9 @@ const Profile = () => {
                                 &nbsp;&nbsp;Deconnecté
                               </p>
                               {/* <p className="text-[0.6rem] text-muted-foreground">
-                                Tu n'apparaîtras pas
-                                connecté
-                              </p> */}
+                                  Tu n'apparaîtras pas
+                                  connecté
+                                </p> */}
                             </SelectItem>
                           </SelectGroup>
                         </SelectContent>
@@ -276,9 +255,4 @@ const Profile = () => {
   )
 }
 
-//ajouter imageurl de discord par défaut
-//permettre d'importer son image
-//ajouter preview image profile
-//ajouter une sous-description des state
-//reload la page à la fin du formulaire
-export default Profile
+export default AddChannel
