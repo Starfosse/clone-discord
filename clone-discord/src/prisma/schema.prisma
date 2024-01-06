@@ -44,6 +44,7 @@ model Server{
 
   channels Channel[]
   members Member[]
+  channelGroups ChannelGroup[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -68,11 +69,31 @@ model Channel{
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  channelGroupId String
+  channelGroupe ChannelGroup @relation(fields: [channelGroupId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
   @@index([serverId])
   @@index([userId])
+  @@index([channelGroupId])
+}
+
+model ChannelGroup{
+  id String @id @default(uuid())
+  name String
+  roleRequired MemberRole @default(GUEST)
+
+  serverId String
+  server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
+
+  channels Channel[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([serverId])
 }
 
 enum MemberRole{
@@ -97,3 +118,4 @@ model Member{
   @@index([serverId])
   @@index([userId])
 }
+

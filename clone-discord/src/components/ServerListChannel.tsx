@@ -25,19 +25,25 @@ const ServerListChannel = (currentServer: Server) => {
   )
   return (
     <>
-      <div className="flex flex-col items-start text-muted-foreground">
-        <div className="py-1">Salons textuel</div>
+      <div className="flex flex-col items-start">
+        <div className="py-1 text-white">
+          Salons textuel
+        </div>
         {textChannels &&
           textChannels.map((textChannel) => (
-            <div key={textChannel.id}>
-              {textChannel.name}
+            <div
+              className="text-muted-foreground"
+              key={textChannel.id}>
+              &nbsp;&nbsp;{textChannel.name}
             </div>
           ))}
-        <div className="py-1">Salons audio</div>
+        <div className="py-1 text-white">Salons audio</div>
         {audioChannels &&
           audioChannels.map((audioChannel) => (
-            <div key={audioChannel.id}>
-              {audioChannel.name}
+            <div
+              className="text-muted-foreground"
+              key={audioChannel.id}>
+              &nbsp;&nbsp;{audioChannel.name}
             </div>
           ))}
       </div>
