@@ -4,8 +4,9 @@ import { z } from "zod"
 export const ProfileValidator = z.object({
   imageUrl: z
     .string()
-    .url({ message: "Url invalide" })
-    .optional(),
+    .url({ message: "url invalide" })
+    .optional()
+    .or(z.literal("")),
   pseudo: z
     .string()
     .min(8, {
