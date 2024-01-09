@@ -12,7 +12,6 @@ const getChannels = publicProcedure
     return prisma.channel.findMany({
       where: {
         serverId: input.serverId,
-        userId: user?.id,
       },
     })
   })

@@ -10,9 +10,9 @@ interface Server {
   updatedAt: Date
 }
 
-type serverId = {
-  serverId: Server["id"]
-}
+// type serverId = {
+//   serverId: Server["id"]
+// }
 const ServerListChannel = (currentServer: Server) => {
   const serverId = { serverId: currentServer.id }
   const { data: channels } =

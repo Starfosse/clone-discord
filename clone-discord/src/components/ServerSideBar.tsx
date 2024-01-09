@@ -13,11 +13,11 @@ const ServerSideBar = () => {
   // console.log(currentServer)
   return (
     <div className="flex h-full">
-      <div className="w-52 bg-secondaryColor sticky z-50 h-full flex flex-col px-2 py-2">
+      <div className="w-52 bg-secondaryColor sticky z-50 h-full flex flex-col">
         {currentServer && (
           <ServerLeftHeader {...currentServer} />
         )}
-        <Separator className=" w-4/5 my-4 justify-center mx-auto" />
+        <Separator className=" w-4/5 mb-4 justify-center mx-auto" />
         {currentServer && (
           <ServerListChannel {...currentServer} />
         )}

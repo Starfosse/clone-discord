@@ -27,7 +27,6 @@ model User {
 
   servers Server[]
   members Member[]
-  channels Channel[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -45,6 +44,7 @@ model Server{
   channels Channel[]
   members Member[]
   channelGroups ChannelGroup[]
+  memberRoles MemberRole[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -66,29 +66,27 @@ model Channel{
   serverId String
   server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
 
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channelGroupId String?
+  channelGroupe ChannelGroup? @relation(fields: [channelGroupId], references: [id], onDelete: Cascade)
 
-  channelGroupId String
-  channelGroupe ChannelGroup @relation(fields: [channelGroupId], references: [id], onDelete: Cascade)
+  roleRequired MemberRole[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
   @@index([serverId])
-  @@index([userId])
   @@index([channelGroupId])
 }
 
 model ChannelGroup{
   id String @id @default(uuid())
   name String
-  roleRequired MemberRole @default(GUEST)
 
   serverId String
   server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
 
   channels Channel[]
+  roleRequired MemberRole[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -96,21 +94,38 @@ model ChannelGroup{
   @@index([serverId])
 }
 
-enum MemberRole{
-  ADMIN
-  MODERATOR
-  GUEST
+model MemberRole{
+  id String @id @default(uuid())
+  role String
+
+  channelGroupId String?
+  channelGroup ChannelGroup? @relation(fields: [channelGroupId], references: [id], onDelete: Cascade)
+
+  channelId String?
+  channel Channel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  serverId String
+  server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
+
+  memberId String?
+  member Member? @relation(fields: [memberId], references:[id], onDelete: Cascade)
+
+  @@index([channelId])
+  @@index([channelGroupId])
+  @@index([serverId])
+  @@index([memberId])
 }
 
 model Member{
   id String @id @default(uuid())
-  role MemberRole @default(GUEST)
 
   serverId String
   server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
 
   userId String
   user User @relation(fields:[userId], references: [id], onDelete: Cascade)
+
+  role MemberRole[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
