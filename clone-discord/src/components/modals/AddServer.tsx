@@ -10,9 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Label } from "./ui/label"
-import { Input } from "./ui/input"
-import { Button } from "./ui/button"
+import { Label } from "../ui/label"
+import { Input } from "../ui/input"
+import { Button } from "../ui/button"
 import { trpc } from "@/app/_trpc/client"
 import { useForm, SubmitHandler } from "react-hook-form"
 import {
