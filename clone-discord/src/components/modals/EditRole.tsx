@@ -12,9 +12,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { MemberRole } from "@prisma/client"
-import { useState } from "react"
+import { ReactEventHandler, useState } from "react"
 import { Dialog, DialogContent } from "../ui/dialog"
 import { Button } from "../ui/button"
+import EditRolePermission from "./EditRolePermission"
 
 interface Server {
   id: string
@@ -38,7 +39,14 @@ const EditRole = (currentServer: Server) => {
   const [roles, setRoles] = useState<MemberRole[]>(
     listRole!
   )
+  const [MemberRole, setMemberRole] = useState<MemberRole>()
 
+  const [showModalEditRole, setShowModalEditRole] =
+    useState(false)
+
+  const onClickShowModalEditRole = () => {
+    setShowModalEditRole(false)
+  }
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
     id: string
@@ -61,34 +69,12 @@ const EditRole = (currentServer: Server) => {
       // draggedItemObject
       (role) => role.id === roleId
     )
-    // console.log("(----------)")
-    // console.log(roleId)
-    // console.log(draggedRole?.role)
-
-    {
-      /*if (draggedRole) {
-      const updatedRoles = roles.filter(
-        (role) => role.id.toString() !== roleId
-      )
-      const dropZoneId = e.currentTarget.dataset.id!
-      const dropZoneIndex = roles.findIndex(
-        (role) => role.id.toString() === dropZoneId
-      )
-
-      const updatedRolesWithDrop = [
-        ...updatedRoles.slice(0, dropZoneIndex),
-        draggedRole,
-        ...updatedRoles.slice(dropZoneIndex),
-      ]*/
-    }
-
     if (draggedRole) {
       const updatedRoles = [...roles]
 
       const draggedIndex = roles.findIndex(
         (role) => role.id === draggedRole?.id
-      ) //draggedItemIndex
-
+      )
       const droppedId = e.currentTarget.dataset.id
       const droppedIndex = roles.findIndex(
         (role) => role.id === droppedId
@@ -96,133 +82,93 @@ const EditRole = (currentServer: Server) => {
       const droppedRole = roles.find(
         (_, index) => index === droppedIndex
       )
-      console.log(
-        "------------------------------------------"
-      )
-      // console.log(draggedIndex)
-      // console.log(draggedRole)
-      // console.log(droppedIndex)
-      // console.log(droppedRole)
-
       const rolesWithoutDragDrop = updatedRoles.filter(
         (role, index) =>
           index !== draggedIndex && index !== droppedIndex
       )
-      console.log(0)
-      console.log(roles)
-      console.log(1)
-      console.log(rolesWithoutDragDrop)
-      console.log(2)
-
       if (draggedIndex < droppedIndex) {
-        console.log(">")
-        console.log(3)
         rolesWithoutDragDrop.splice(
           draggedIndex,
           0,
           droppedRole!
         )
-        console.log(4)
         rolesWithoutDragDrop.splice(
           droppedIndex,
           0,
           draggedRole
         )
-      } else {
-        console.log("<")
-        console.log(3)
+      } else if (draggedIndex > droppedIndex) {
         rolesWithoutDragDrop.splice(
           droppedIndex,
           0,
           draggedRole
         )
-        console.log(4)
-        console.log(rolesWithoutDragDrop)
         rolesWithoutDragDrop.splice(
           draggedIndex,
           0,
           droppedRole!
         )
-      }
-      // rolesWithoutDragDrop.splice(
-      //   draggedIndex,
-      //   0,
-      //   droppedRole!
-      // )
-      console.log(5)
-      console.log(rolesWithoutDragDrop)
-      console.log(
-        "------------------------------------------"
-      )
-      // Insere draggedRole à dropZoneIndex// Remove draggedTask from its previous position
-      // const test1 = updatedRoles.filter(
-      //   (_, index) => index !== dropZoneIndex
-      // )
-      // console.log(test1)
-      // updatedRoles.splice(dropZoneIndex, 1)
-      // test1.splice(dropZoneIndex, 1, draggedRole)
-      // console.log(test1)
-      // console.log(removedIndex.toString())
-      // console.log(dropZoneIndex)
-      // console.log(test1)
-
-      // console.log(test2)
-      // updatedRoles.splice(removedIndex, 1)
-
-      // updatedRoles.splice(0, 1)
+      } else return
       setRoles(rolesWithoutDragDrop)
     }
   }
 
-  // setRoles(updatedRolesWithDrop)
-  // console.log(listRole)
-  // console.log(updatedRolesWithDrop)
-  //envoyer un tableau avec id associé au numéro order
+  const handleClick = (id: string) => {
+    const roleToEdit = roles.filter(
+      (role) => role.id === id
+    )
+    setMemberRole(roleToEdit[0])
+    setShowModalEditRole(true)
+  }
   return (
     <Dialog
       open={currentServer.showModalEditRole}
       onOpenChange={currentServer.onClickEditRole}>
       <DialogContent className="sm:max-w-[425px] max-h-[90%] overflow-auto">
-        <Table className="">
-          <TableCaption>
-            A list of your recent invoices.
-          </TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">
-                Invoice
-              </TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Method</TableHead>
-              <TableHead className="text-right">
-                Amount
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        <Table className="mt-6">
+          <TableBody className="">
             {roles &&
               roles.map((role) => (
                 <TableRow
                   key={role.id}
-                  data-id={role.id}
-                  draggable
-                  onDragStart={(e) =>
-                    handleDragStart(e, role.id)
-                  }
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}>
-                  <div>⋮⋮</div>
+                  className=" flex items-center text-lg">
+                  <div
+                    data-id={role.id}
+                    draggable
+                    onDragStart={(e) =>
+                      handleDragStart(e, role.id)
+                    }
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                    className="py-2 px-4 hover:cursor-pointer">
+                    ⋮⋮
+                  </div>
                   <TableCell className="font-medium">
                     {role.role}
                   </TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     Nombre de membre de ce role
+                  </TableCell> */}
+                  <TableCell className="font-medium justify-end ml-auto">
+                    <Button
+                      onClick={() => handleClick(role.id)}>
+                      Modifier
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </DialogContent>
+      {showModalEditRole && (
+        <EditRolePermission
+          MemberRole={MemberRole}
+          showModalEditRole={showModalEditRole}
+          onClickShowModalEditRole={
+            onClickShowModalEditRole
+          }
+        />
+      )}
     </Dialog>
   )
 }
