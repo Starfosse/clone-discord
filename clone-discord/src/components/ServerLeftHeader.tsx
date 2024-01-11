@@ -44,6 +44,8 @@ import { useState } from "react"
 import AddCategory from "./modals/AddCategory"
 import AddChannel from "./modals/AddChannel"
 import EditServer from "./modals/EditServer"
+import CreateRole from "./modals/CreateRole"
+import EditRole from "./modals/EditRole"
 
 const ServerLeftHeader = (currentServer: Server) => {
   const serverId = { id: currentServer.id }
@@ -58,6 +60,12 @@ const ServerLeftHeader = (currentServer: Server) => {
   ] = useState(false)
 
   const [showModalEditServer, setshowModalEditServer] =
+    useState(false)
+
+  const [showModalCreateRole, setshowModalCreateRole] =
+    useState(false)
+
+  const [showModalEditRole, setshowModalEditRole] =
     useState(false)
 
   const router = useRouter()
@@ -102,6 +110,20 @@ const ServerLeftHeader = (currentServer: Server) => {
     setshowModalCreateChannel(false)
   }
 
+  const onSelectCreateRole = () => {
+    setshowModalCreateRole(true)
+  }
+  const onClickCreateRole = () => {
+    setshowModalCreateRole(false)
+  }
+
+  const onSelectEditRole = () => {
+    setshowModalEditRole(true)
+  }
+  const onClickEditRole = () => {
+    setshowModalEditRole(false)
+  }
+
   return (
     <>
       {/* <div className="flex w-full items-center text-white cursor-pointer hover:bg-gray-600 px-2 py-2 pb-4">
@@ -129,8 +151,14 @@ const ServerLeftHeader = (currentServer: Server) => {
               <Settings className="size-5" />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onSelect={onSelectCreateRole}>
             Créér des rôles
+            <DropdownMenuShortcut>
+              <PlusCircle className="size-5" />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={onSelectEditRole}>
+            Modifier des rôles
             <DropdownMenuShortcut>
               <PlusCircle className="size-5" />
             </DropdownMenuShortcut>
@@ -188,6 +216,20 @@ const ServerLeftHeader = (currentServer: Server) => {
           {...currentServer}
           onClickEditServer={onClickEditServer}
           showModalEditServer={showModalEditServer}
+        />
+      )}
+      {showModalCreateRole && (
+        <CreateRole
+          {...currentServer}
+          onClickCreateRole={onClickCreateRole}
+          showModalCreateRole={showModalCreateRole}
+        />
+      )}
+      {showModalEditRole && (
+        <EditRole
+          {...currentServer}
+          onClickEditRole={onClickEditRole}
+          showModalEditRole={showModalEditRole}
         />
       )}
     </>

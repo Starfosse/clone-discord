@@ -50,5 +50,5 @@ const ServerListChannel = (currentServer: Server) => {
     </>
   )
 }
-
+//Todo trier par date de création, et prendre en comtpe si c'est une catégorie ou non
 export default ServerListChannel
