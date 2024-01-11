@@ -33,7 +33,6 @@ interface Server {
 }
 
 const AddChannel = (currentServer: Server) => {
-  const [open, setOpen] = useState<boolean>(false)
   const { mutate } = trpc.createChannel.useMutation()
 
   const {
@@ -49,7 +48,6 @@ const AddChannel = (currentServer: Server) => {
   })
 
   const onSubmit = ({ name, id }: TChannelValidator) => {
-    setOpen(false)
     mutate({ name, id })
     currentServer.onClickCreateChannel()
   }

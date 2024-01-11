@@ -65,7 +65,6 @@ const EditServer = (currentServer: Server) => {
   // })
 
   const router = useRouter()
-  const [refresh, setRefresh] = useState(false)
   const { handleSubmit, register } =
     useForm<TServerValidatorId>({
       resolver: zodResolver(ServerValidatorId),
@@ -85,15 +84,12 @@ const EditServer = (currentServer: Server) => {
     console.log("good")
     currentServer.onClickEditServer()
     mutate({ name, imageUrl, id })
-    router.refresh()
-    console.log("good2")
-    router.push(currentServer.id)
-    console.log("good3")
+    // router.refresh()
+    // router.push("/")
+    // router.push(`/server/${currentServer.id}`)
   }
   return (
-    <Dialog
-      open={currentServer.showModalEditServer}
-      onOpenChange={currentServer.onClickEditServer}>
+    <Dialog open={currentServer.showModalEditServer}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>

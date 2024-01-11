@@ -11,6 +11,8 @@ import createGatory from "./procedures/createCategory"
 import createcategory from "./procedures/createCategory"
 import createChannel from "./procedures/createChannel"
 import editServer from "./procedures/editServer"
+import createRole from "./procedures/createRole"
+import getRoleServer from "./procedures/getRoleServer"
 
 export const appRouter = createTRPCRouter({
   getUser: getUser,
@@ -24,6 +26,8 @@ export const appRouter = createTRPCRouter({
   createcategory: createcategory,
   createChannel: createChannel,
   editServer: editServer,
+  createRole: createRole,
+  getRoleServer: getRoleServer,
 })
 
 export type AppRouter = typeof appRouter

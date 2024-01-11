@@ -62,6 +62,7 @@ model Channel{
   id String @id @default(uuid())
   name String
   type ChannelType @default(TEXT)
+  isPrivate Boolean @default(false)
 
   serverId String
   server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
@@ -81,6 +82,7 @@ model Channel{
 model ChannelGroup{
   id String @id @default(uuid())
   name String
+  isPrivate Boolean @default(false)
 
   serverId String
   server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
@@ -97,7 +99,7 @@ model ChannelGroup{
 model MemberRole{
   id String @id @default(uuid())
   role String
-
+  orderServ Int?
   channelGroupId String?
   channelGroup ChannelGroup? @relation(fields: [channelGroupId], references: [id], onDelete: Cascade)
 
@@ -110,6 +112,19 @@ model MemberRole{
   memberId String?
   member Member? @relation(fields: [memberId], references:[id], onDelete: Cascade)
 
+  invite_Member Boolean @default(false)
+  expulsate_Member Boolean @default(false)
+  edit_Server Boolean @default(false)
+  role_Management Boolean @default(false)
+  view_Logs Boolean @default(false)
+  create_Remove_Channel Boolean @default(false)
+  edit_Channel Boolean @default(false)
+  view_Channel Boolean @default(false)
+  write_Channel Boolean @default(false)
+  speak_Channel Boolean @default(false)
+  video_Channel Boolean @default(false)
+  download_Channel Boolean @default(false)
+  
   @@index([channelId])
   @@index([channelGroupId])
   @@index([serverId])
@@ -134,3 +149,11 @@ model Member{
   @@index([userId])
 }
 
+model LogServer{
+  id String @id @default(uuid())
+  log String[]
+  logDate DateTime[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
