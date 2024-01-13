@@ -1,10 +1,10 @@
 import { z } from "zod"
 
 const MemberRoleId = z.object({
-  serverId: z.string(),
-  orderServ: z.number(),
   id: z.string(),
   role: z.string(),
+  orderServ: z.number().optional(),
+  serverId: z.string().optional(),
   invite_Member: z.boolean(),
   expulsate_Member: z.boolean(),
   edit_Server: z.boolean(),

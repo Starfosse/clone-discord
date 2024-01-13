@@ -19,6 +19,8 @@ import {
   CategoryValidator,
   TCategoryValidator,
 } from "@/lib/validator/category-validator"
+import { Check } from "lucide-react"
+import { toast } from "sonner"
 
 interface Server {
   id: string
@@ -76,7 +78,20 @@ const AddCategory = (currentServer: Server) => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Enregistrer</Button>
+            <Button
+              type="submit"
+              onClick={() =>
+                toast.success(
+                  <div className="flex items-center">
+                    <Check />
+                    &nbsp;Vos modifications ont été
+                    enregristrées
+                  </div>,
+                  { duration: 3000 }
+                )
+              }>
+              Enregistrer
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

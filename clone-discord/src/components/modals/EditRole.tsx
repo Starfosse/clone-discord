@@ -8,10 +8,13 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { TMemberRoleId } from "@/lib/validator/member-role-validator"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "../ui/button"
 import { Dialog, DialogContent } from "../ui/dialog"
 import EditRolePermission from "./EditRolePermission"
+import { MemberRole } from "@prisma/client"
+import { toast } from "sonner"
+import { Check } from "lucide-react"
 
 interface Server {
   id: string
@@ -27,23 +30,33 @@ interface Server {
 
 const EditRole = (currentServer: Server) => {
   const serverId = { serverId: currentServer.id }
-  const { data: listRoleServer } =
+  const listRoleServerData =
     trpc.getRoleServer.useQuery(serverId)
-  const { mutate: mutateOrder } =
-    trpc.EditOrderMemberRole.useMutation()
-  const listRole = listRoleServer?.memberRoles.map(
-    (role) => role
-  )
-  listRole?.sort(
-    (a, b) => (a.orderServ ?? 0) - (b.orderServ ?? 0)
-  )
+  const [listRoleServer, setListRoleServer] = useState<
+    MemberRole[] | undefined
+  >()
+  useEffect(() => {
+    if (listRoleServerData.data) {
+      const listRole = listRoleServerData.data.map(
+        (role) => role
+      )
+      listRole?.sort(
+        (a, b) => (a.orderServ ?? 0) - (b.orderServ ?? 0)
+      )
+      setListRoleServer(listRole)
+    }
+  }, [listRoleServerData.data])
 
-  const [roles, setRoles] = useState<TMemberRoleId[]>( //@ts-ignore
-    listRole!
-  )
-  //TODO : corriger l'erreur de typage de listRole
-  const [MemberRole, setMemberRole] =
-    useState<TMemberRoleId>()
+  const { mutate: mutateOrder } =
+    trpc.EditOrderMemberRole.useMutation({
+      onSuccess: () => listRoleServerData.refetch(),
+    })
+
+  const { mutate: deleteRole } =
+    trpc.deleteRole.useMutation({
+      onSuccess: () => listRoleServerData.refetch(),
+    })
+  const [MemberRole, setMemberRole] = useState<MemberRole>()
 
   const [showModalEditRole, setShowModalEditRole] =
     useState(false)
@@ -69,28 +82,33 @@ const EditRole = (currentServer: Server) => {
   ) => {
     e.preventDefault()
     const roleId = e.dataTransfer.getData("roleId")
-    const draggedRole = roles.find(
+    const draggedRole = listRoleServer?.find(
       // draggedItemObject
       (role) => role.id === roleId
     )
     if (draggedRole) {
-      const updatedRoles = [...roles]
+      if (!listRoleServer) return
+      const updatedRoles = [...listRoleServer]
 
-      const draggedIndex = roles.findIndex(
+      const draggedIndex = listRoleServer?.findIndex(
         (role) => role.id === draggedRole?.id
       )
       const droppedId = e.currentTarget.dataset.id
-      const droppedIndex = roles.findIndex(
+      const droppedIndex = listRoleServer?.findIndex(
         (role) => role.id === droppedId
       )
-      const droppedRole = roles.find(
+      const droppedRole = listRoleServer?.find(
         (_, index) => index === droppedIndex
       )
       const rolesWithoutDragDrop = updatedRoles.filter(
         (role, index) =>
           index !== draggedIndex && index !== droppedIndex
       )
-      if (draggedIndex < droppedIndex) {
+      if (
+        draggedIndex &&
+        droppedIndex &&
+        draggedIndex < droppedIndex
+      ) {
         rolesWithoutDragDrop.splice(
           draggedIndex,
           0,
@@ -101,7 +119,11 @@ const EditRole = (currentServer: Server) => {
           0,
           draggedRole
         )
-      } else if (draggedIndex > droppedIndex) {
+      } else if (
+        draggedIndex &&
+        droppedIndex &&
+        draggedIndex > droppedIndex
+      ) {
         rolesWithoutDragDrop.splice(
           droppedIndex,
           0,
@@ -113,38 +135,45 @@ const EditRole = (currentServer: Server) => {
           droppedRole!
         )
       } else return
-      setRoles(rolesWithoutDragDrop)
+      setListRoleServer(rolesWithoutDragDrop)
     }
   }
 
   const handleClick = (id: string) => {
-    const roleToEdit = roles.filter(
+    const roleToEdit = listRoleServer?.filter(
       (role) => role.id === id
     )
-    setMemberRole(roleToEdit[0])
+    setMemberRole(roleToEdit![0])
     setShowModalEditRole(true)
   }
 
-  const handleClickValidate = () => {
-    // console.log("hello")
-    const memberRoles = roles
-    memberRoles.map(
-      (role, index) => (role.orderServ = index)
+  const handleClickX = (id: string) => {
+    const roleToDelete = listRoleServer?.filter(
+      (role) => role.id === id
     )
-    // console.log("post sort")
-    // console.log(memberRoles)
-    const memberRolesArray = { memberRoles }
-    mutateOrder(memberRolesArray)
+    if (!roleToDelete) return
+    const memberRoleId = { id: roleToDelete[0].id }
+    deleteRole(memberRoleId)
   }
+
+  const handleClickValidate = () => {
+    const memberRoles = listRoleServer
+    memberRoles?.map(
+      (role, index) => (role.orderServ = index)
+    ) //@ts-ignore
+    mutateOrder(memberRoles)
+    currentServer.onClickEditRole()
+  }
+
   return (
     <Dialog
       open={currentServer.showModalEditRole}
       onOpenChange={currentServer.onClickEditRole}>
-      <DialogContent className="sm:max-w-[425px] max-h-[90%] overflow-auto">
+      <DialogContent className="sm:max-w-[475px] max-h-[90%] overflow-auto">
         <Table className="mt-6">
           <TableBody className="">
-            {roles &&
-              roles.map((role) => (
+            {listRoleServer &&
+              listRoleServer.map((role) => (
                 <TableRow
                   key={role.id}
                   className=" flex items-center text-lg">
@@ -166,17 +195,32 @@ const EditRole = (currentServer: Server) => {
                   {/* <TableCell>
                     Nombre de membre de ce role
                   </TableCell> */}
-                  <TableCell className="font-medium justify-end ml-auto">
+                  <TableCell className="font-medium justify-end ml-auto flex flex-row gap-4">
                     <Button
                       onClick={() => handleClick(role.id)}>
                       Modifier
+                    </Button>
+                    <Button
+                      onClick={() => handleClickX(role.id)}>
+                      X
                     </Button>
                   </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
-        <Button onClick={handleClickValidate}>
+        <Button
+          onClick={() => {
+            handleClickValidate()
+            toast.success(
+              <div className="flex items-center">
+                <Check />
+                &nbsp;L'ordre des rôles a bien été
+                enregistré
+              </div>,
+              { duration: 3000 }
+            )
+          }}>
           Valider l'ordre
         </Button>
       </DialogContent>
@@ -188,6 +232,7 @@ const EditRole = (currentServer: Server) => {
           onClickShowModalEditRole={
             onClickShowModalEditRole
           }
+          refetch={listRoleServerData.refetch}
         />
       )}
     </Dialog>
