@@ -7,12 +7,13 @@ import getServer from "./procedures/getServ"
 import getChannels from "./procedures/getChannels"
 import deleteServer from "./procedures/deleteServer"
 import quitServer from "./procedures/quitServer"
-import createGatory from "./procedures/createCategory"
 import createcategory from "./procedures/createCategory"
 import createChannel from "./procedures/createChannel"
 import editServer from "./procedures/editServer"
 import createRole from "./procedures/createRole"
 import getRoleServer from "./procedures/getRoleServer"
+import EditMemberRole from "./procedures/EditMemberRole"
+import EditOrderMemberRole from "./procedures/EditOrderMemberRole"
 
 export const appRouter = createTRPCRouter({
   getUser: getUser,
@@ -28,6 +29,8 @@ export const appRouter = createTRPCRouter({
   editServer: editServer,
   createRole: createRole,
   getRoleServer: getRoleServer,
+  EditMemberRole: EditMemberRole,
+  EditOrderMemberRole: EditOrderMemberRole,
 })
 
 export type AppRouter = typeof appRouter

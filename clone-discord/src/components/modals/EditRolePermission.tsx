@@ -24,9 +24,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Input } from "../ui/input"
 import { MemberRole } from "@prisma/client"
+import MemberRoleId, {
+  TMemberRoleId,
+} from "@/lib/validator/member-role-validator"
 
 interface EditRolePermissionProps {
-  MemberRole: MemberRole
+  serverId: string
+  MemberRole: TMemberRoleId
   showModalEditRole: boolean
   onClickShowModalEditRole: () => void
 }
@@ -35,11 +39,12 @@ const EditRolePermission = (
   EditRolePermissionProps: EditRolePermissionProps
 ) => {
   const data = EditRolePermissionProps.MemberRole
-  const form = useForm<TAddRoleValidator>({
-    resolver: zodResolver(AddRoleValidator),
+  const form = useForm<TMemberRoleId>({
+    resolver: zodResolver(MemberRoleId),
     defaultValues: {
+      serverId: EditRolePermissionProps.serverId,
       id: data.id,
-      name_role: data.role,
+      role: data.role,
       invite_Member: data.invite_Member,
       expulsate_Member: data.expulsate_Member,
       edit_Server: data.edit_Server,
@@ -55,13 +60,14 @@ const EditRolePermission = (
     },
   })
 
-  //   const { mutate } = trpc.createRole.useMutation()
+  const { mutate } = trpc.EditMemberRole.useMutation()
 
-  //   const onSubmit = (data: TAddRoleValidator) => {
-  //     mutate(data)
-  //     console.log(data)
-  //     EditRolePermissionProps.onClickShowModalEditRole()
-  //   }
+  const onSubmit = (data: TMemberRoleId) => {
+    console.log(data)
+    mutate(data)
+    console.log(data)
+    EditRolePermissionProps.onClickShowModalEditRole()
+  }
 
   return (
     <Dialog
@@ -72,12 +78,12 @@ const EditRolePermission = (
       <DialogContent className="sm:max-w-[425px] max-h-[90%] overflow-auto">
         <Form {...form}>
           <form
-            // onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="w-full space-y-4">
             <div>
               <FormField
                 control={form.control}
-                name="name_role"
+                name="role"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Nom du rôle</FormLabel>
@@ -115,7 +121,7 @@ const EditRolePermission = (
                             <FormControl>
                               <Switch
                                 checked={field.value}
-                                // checked={field.value}
+                                // checked={action.value}
                                 onCheckedChange={
                                   field.onChange
                                 }

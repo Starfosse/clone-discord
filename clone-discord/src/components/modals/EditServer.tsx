@@ -52,6 +52,7 @@ interface Server {
   updatedAt: Date
   showModalEditServer: boolean
   onClickEditServer: () => void
+  refetch: () => Promise<any>
 }
 
 const EditServer = (currentServer: Server) => {
@@ -75,15 +76,23 @@ const EditServer = (currentServer: Server) => {
       },
     })
   const id = currentServer.id
-  const { mutate } = trpc.editServer.useMutation()
+  const utils = trpc.useUtils()
+
+  const { mutate } = trpc.editServer.useMutation({
+    onSuccess: () => {
+      // utils.getChannels.invalidate()
+      currentServer.refetch()
+    },
+  })
   const onSubmit = ({
     name,
     imageUrl,
     id,
   }: TServerValidatorId) => {
-    console.log("good")
+    // console.log("good")
     currentServer.onClickEditServer()
     mutate({ name, imageUrl, id })
+    // currentServer.()
     // router.refresh()
     // router.push("/")
     // router.push(`/server/${currentServer.id}`)

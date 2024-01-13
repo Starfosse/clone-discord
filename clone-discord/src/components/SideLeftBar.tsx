@@ -32,6 +32,7 @@ const SideLeftBar = () => {
         <Separator className="w-3/5" />
         {userListServ?.map((server) => (
           <Link
+            prefetch={true}
             key={server.id}
             href={`/server/${server.id}`}
             className="group flex cursor-pointer">
