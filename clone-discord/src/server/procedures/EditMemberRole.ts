@@ -6,8 +6,11 @@ import MemberRoleId from "@/lib/validator/member-role-validator"
 const EditMemberRole = publicProcedure
   .input(MemberRoleId)
   .mutation(async ({ input }) => {
-    console.log("gooood")
     const { serverId, id } = input
+    console.log("help")
+    console.log("help")
+    console.log("help")
+    console.log("help")
     return await prisma.server.update({
       where: {
         id: serverId,

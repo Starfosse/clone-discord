@@ -89,7 +89,6 @@ const EditServer = (currentServer: Server) => {
     imageUrl,
     id,
   }: TServerValidatorId) => {
-    // console.log("good")
     currentServer.onClickEditServer()
     mutate({ name, imageUrl, id })
     // currentServer.()
@@ -129,6 +128,7 @@ const EditServer = (currentServer: Server) => {
               />
             </div>
           </div>
+
           <DialogFooter>
             <Button
               type="submit"

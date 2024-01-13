@@ -36,9 +36,11 @@ const createServer = publicProcedure
           create: [
             {
               role: "propriétaire",
+              orderServ: 0,
             },
             {
               role: "membre",
+              orderServ: 1,
             },
           ],
         },
@@ -134,58 +136,7 @@ const createServer = publicProcedure
           },
         },
       })
-    // connect: [{id: "0"}]
-    // const updatedServerMemberRole =
-    //   await prisma.server.create({
-    //     where: { id: updatedServerChannels.id },
-    //     data: {
-    //       members: {
-    //         create: [
-    //           {
-    //             user: user.id,
-    //           },
-    //         ],
-    //       },
-    //     },
-    //   })
     return
   })
 
 export default createServer
-
-// channelGroups: {
-//   create: [
-//     {
-//       name: "SALONS TEXT",
-//       channels: {
-//         create: [
-//           {
-//             name: "général",
-
-//             userId:user.id,
-//           },
-//         ],
-//       },
-//     },
-//   ],
-// },
-
-// members: {
-//   create: [
-//     {
-//       userId: user.id,
-//       role: "test",
-//     },
-//   ],
-// },
-
-// console.log("test")
-// console.log(test)
-// console.log("test")
-// console.log("test?.memberRoles[0].role")
-// console.log(test?.memberRoles[0].role)
-// console.log("test?.memberRoles[0].role")
-// console.log("server")
-// console.log(server)
-// console.log("server")
-// console.log(server)
