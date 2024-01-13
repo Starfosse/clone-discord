@@ -5,7 +5,7 @@ import ServerLeftHeader from "./ServerLeftHeader"
 import { trpc } from "@/app/_trpc/client"
 import { Separator } from "./ui/separator"
 import ServerListChannel from "./ServerListChannel"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Server } from "@prisma/client"
 
 const ServerSideBar = () => {
@@ -14,6 +14,7 @@ const ServerSideBar = () => {
   const [currentServer, setCurrentServer] = useState<
     Server | undefined
   >()
+  const utils = trpc.useUtils()
   useEffect(() => {
     if (serverData.data) {
       setCurrentServer(serverData.data)
