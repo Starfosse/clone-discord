@@ -51,6 +51,11 @@ const EditRole = (currentServer: Server) => {
     trpc.EditOrderMemberRole.useMutation({
       onSuccess: () => listRoleServerData.refetch(),
     })
+
+  const { mutate: deleteRole } =
+    trpc.deleteRole.useMutation({
+      onSuccess: () => listRoleServerData.refetch(),
+    })
   const [MemberRole, setMemberRole] = useState<MemberRole>()
 
   const [showModalEditRole, setShowModalEditRole] =
@@ -142,6 +147,15 @@ const EditRole = (currentServer: Server) => {
     setShowModalEditRole(true)
   }
 
+  const handleClickX = (id: string) => {
+    const roleToDelete = listRoleServer?.filter(
+      (role) => role.id === id
+    )
+    if (!roleToDelete) return
+    const memberRoleId = { id: roleToDelete[0].id }
+    deleteRole(memberRoleId)
+  }
+
   const handleClickValidate = () => {
     const memberRoles = listRoleServer
     memberRoles?.map(
@@ -150,11 +164,12 @@ const EditRole = (currentServer: Server) => {
     mutateOrder(memberRoles)
     currentServer.onClickEditRole()
   }
+
   return (
     <Dialog
       open={currentServer.showModalEditRole}
       onOpenChange={currentServer.onClickEditRole}>
-      <DialogContent className="sm:max-w-[425px] max-h-[90%] overflow-auto">
+      <DialogContent className="sm:max-w-[475px] max-h-[90%] overflow-auto">
         <Table className="mt-6">
           <TableBody className="">
             {listRoleServer &&
@@ -180,10 +195,14 @@ const EditRole = (currentServer: Server) => {
                   {/* <TableCell>
                     Nombre de membre de ce role
                   </TableCell> */}
-                  <TableCell className="font-medium justify-end ml-auto">
+                  <TableCell className="font-medium justify-end ml-auto flex flex-row gap-4">
                     <Button
                       onClick={() => handleClick(role.id)}>
                       Modifier
+                    </Button>
+                    <Button
+                      onClick={() => handleClickX(role.id)}>
+                      X
                     </Button>
                   </TableCell>
                 </TableRow>
