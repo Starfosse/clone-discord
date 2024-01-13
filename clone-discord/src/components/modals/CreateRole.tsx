@@ -41,6 +41,7 @@ const CreateRole = (currentServer: Server) => {
     resolver: zodResolver(AddRoleValidator),
     defaultValues: {
       id: currentServer.id,
+      order_serv: 0,
       name_role: "",
       invite_Member: false,
       expulsate_Member: false,

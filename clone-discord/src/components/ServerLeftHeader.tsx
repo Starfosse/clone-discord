@@ -1,22 +1,13 @@
 "use client"
-
+// @refresh reset
 import { trpc } from "@/app/_trpc/client"
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Arrow } from "@radix-ui/react-dropdown-menu"
 
 interface Server {
   id: string
@@ -26,6 +17,7 @@ interface Server {
   userId: string
   createdAt: Date
   updatedAt: Date
+  refetch: () => Promise<any>
 }
 
 import {
@@ -43,9 +35,9 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import AddCategory from "./modals/AddCategory"
 import AddChannel from "./modals/AddChannel"
-import EditServer from "./modals/EditServer"
 import CreateRole from "./modals/CreateRole"
 import EditRole from "./modals/EditRole"
+import EditServer from "./modals/EditServer"
 
 const ServerLeftHeader = (currentServer: Server) => {
   const serverId = { id: currentServer.id }
@@ -216,6 +208,7 @@ const ServerLeftHeader = (currentServer: Server) => {
           {...currentServer}
           onClickEditServer={onClickEditServer}
           showModalEditServer={showModalEditServer}
+          refetch={currentServer.refetch}
         />
       )}
       {showModalCreateRole && (

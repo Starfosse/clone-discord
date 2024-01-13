@@ -4,17 +4,13 @@ import { trpc } from "@/app/_trpc/client"
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { MemberRole } from "@prisma/client"
-import { ReactEventHandler, useState } from "react"
-import { Dialog, DialogContent } from "../ui/dialog"
+import { TMemberRoleId } from "@/lib/validator/member-role-validator"
+import { useState } from "react"
 import { Button } from "../ui/button"
+import { Dialog, DialogContent } from "../ui/dialog"
 import EditRolePermission from "./EditRolePermission"
 
 interface Server {
@@ -31,15 +27,23 @@ interface Server {
 
 const EditRole = (currentServer: Server) => {
   const serverId = { serverId: currentServer.id }
-  const { data: listRoleServer, isLoading } =
+  const { data: listRoleServer } =
     trpc.getRoleServer.useQuery(serverId)
+  const { mutate: mutateOrder } =
+    trpc.EditOrderMemberRole.useMutation()
   const listRole = listRoleServer?.memberRoles.map(
     (role) => role
   )
-  const [roles, setRoles] = useState<MemberRole[]>(
+  listRole?.sort(
+    (a, b) => (a.orderServ ?? 0) - (b.orderServ ?? 0)
+  )
+
+  const [roles, setRoles] = useState<TMemberRoleId[]>( //@ts-ignore
     listRole!
   )
-  const [MemberRole, setMemberRole] = useState<MemberRole>()
+  //TODO : corriger l'erreur de typage de listRole
+  const [MemberRole, setMemberRole] =
+    useState<TMemberRoleId>()
 
   const [showModalEditRole, setShowModalEditRole] =
     useState(false)
@@ -120,6 +124,18 @@ const EditRole = (currentServer: Server) => {
     setMemberRole(roleToEdit[0])
     setShowModalEditRole(true)
   }
+
+  const handleClickValidate = () => {
+    // console.log("hello")
+    const memberRoles = roles
+    memberRoles.map(
+      (role, index) => (role.orderServ = index)
+    )
+    // console.log("post sort")
+    // console.log(memberRoles)
+    const memberRolesArray = { memberRoles }
+    mutateOrder(memberRolesArray)
+  }
   return (
     <Dialog
       open={currentServer.showModalEditRole}
@@ -134,6 +150,7 @@ const EditRole = (currentServer: Server) => {
                   className=" flex items-center text-lg">
                   <div
                     data-id={role.id}
+                    key={role.id}
                     draggable
                     onDragStart={(e) =>
                       handleDragStart(e, role.id)
@@ -159,10 +176,14 @@ const EditRole = (currentServer: Server) => {
               ))}
           </TableBody>
         </Table>
+        <Button onClick={handleClickValidate}>
+          Valider l'ordre
+        </Button>
       </DialogContent>
       {showModalEditRole && (
         <EditRolePermission
-          MemberRole={MemberRole}
+          serverId={currentServer.id}
+          MemberRole={MemberRole!}
           showModalEditRole={showModalEditRole}
           onClickShowModalEditRole={
             onClickShowModalEditRole
@@ -172,5 +193,5 @@ const EditRole = (currentServer: Server) => {
     </Dialog>
   )
 }
-
+//TODO: supprimer role
 export default EditRole
