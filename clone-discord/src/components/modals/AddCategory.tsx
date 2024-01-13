@@ -16,9 +16,9 @@ import { trpc } from "@/app/_trpc/client"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
-  ChannelValidator,
-  TChannelValidator,
-} from "@/lib/validator/channel-validator"
+  CategoryValidator,
+  TCategoryValidator,
+} from "@/lib/validator/category-validator"
 
 interface Server {
   id: string
@@ -28,38 +28,38 @@ interface Server {
   userId: string
   createdAt: Date
   updatedAt: Date
-  showModalCreateChannel: boolean
-  onClickCreateChannel: () => void
+  showModalCreateCategory: boolean
+  onClickCreateCategory: () => void
 }
 
-const AddChannel = (currentServer: Server) => {
-  const { mutate } = trpc.createChannel.useMutation()
+const AddCategory = (currentServer: Server) => {
+  const { mutate } = trpc.createcategory.useMutation()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TChannelValidator>({
-    resolver: zodResolver(ChannelValidator),
+  } = useForm<TCategoryValidator>({
+    resolver: zodResolver(CategoryValidator),
     defaultValues: {
       id: currentServer.id,
       name: "",
     },
   })
 
-  const onSubmit = ({ name, id }: TChannelValidator) => {
+  const onSubmit = ({ name, id }: TCategoryValidator) => {
     mutate({ name, id })
-    currentServer.onClickCreateChannel()
+    currentServer.onClickCreateCategory()
   }
 
   return (
     <Dialog
-      open={currentServer.showModalCreateChannel}
-      onOpenChange={currentServer.onClickCreateChannel}>
+      open={currentServer.showModalCreateCategory}
+      onOpenChange={currentServer.onClickCreateCategory}>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Créer votre salon</DialogTitle>
+            <DialogTitle>Créer votre catégorie</DialogTitle>
             <DialogDescription>
               Vous pourrez tout modifier plus tard.
             </DialogDescription>
@@ -67,7 +67,7 @@ const AddChannel = (currentServer: Server) => {
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
-                Nom du salon
+                Nom de la catégorie
               </Label>
               <Input
                 {...register("name")}
@@ -84,4 +84,4 @@ const AddChannel = (currentServer: Server) => {
   )
 }
 
-export default AddChannel
+export default AddCategory
