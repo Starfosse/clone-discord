@@ -7,10 +7,6 @@ const EditMemberRole = publicProcedure
   .input(MemberRoleId)
   .mutation(async ({ input }) => {
     const { serverId, id } = input
-    console.log("help")
-    console.log("help")
-    console.log("help")
-    console.log("help")
     return await prisma.server.update({
       where: {
         id: serverId,

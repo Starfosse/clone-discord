@@ -70,16 +70,8 @@ const EditRolePermission = (
   })
 
   const onSubmit = (data: TMemberRoleId) => {
-    console.log("???")
     mutate(data)
     EditRolePermissionProps.onClickShowModalEditRole()
-    console.log("???")
-    console.log("???")
-    console.log("???")
-    console.log("???")
-    console.log("???")
-
-    console.log("???")
   }
 
   return (
