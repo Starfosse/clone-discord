@@ -30,7 +30,8 @@ export default function RootLayout({
           <main className="relative flex min-h-screen">
             <Provider>
               <SideLeftBar />
-              <div className="flex-grow flex-1">
+              <div className="flex-grow flex-1 bg-black">
+                {/* retirer le bg*/}
                 {children}
               </div>
               <Toaster position="top-center" />

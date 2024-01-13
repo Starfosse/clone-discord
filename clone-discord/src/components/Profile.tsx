@@ -231,7 +231,7 @@ const Profile = () => {
                               key={stateList.OFFLINE}>
                               <p className="flex">
                                 <Image
-                                  src="/busy.png"
+                                  src="/offline.png"
                                   alt="test"
                                   width={16}
                                   height={16}
@@ -276,9 +276,10 @@ const Profile = () => {
   )
 }
 
-//ajouter imageurl de discord par défaut
+//TODO : ajouter imageurl de discord par défaut
 //permettre d'importer son image
-//ajouter preview image profile
+//ajouter preview image profile (carroussel shadcnui)
 //ajouter une sous-description des state
 //reload la page à la fin du formulaire
+// gérer les states avec .map
 export default Profile

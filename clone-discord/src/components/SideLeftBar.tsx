@@ -2,25 +2,15 @@
 
 import Image from "next/image"
 import { Separator } from "./ui/separator"
-import { SignedIn, UserButton } from "@clerk/nextjs"
-import { Button } from "./ui/button"
 import Profile from "./Profile"
-import AddServer from "./AddServer"
+import AddServer from "./modals/AddServer"
 import { trpc } from "@/app/_trpc/client"
-import { useEffect, useState } from "react"
-import { object } from "zod"
-import { Server } from "@prisma/client"
-import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 // createNewUser()
 const SideLeftBar = () => {
   const { data: userListServ } =
     trpc.getUserListServ.useQuery()
-
-  const router = useRouter()
-  const handleClick = (server: Server) => {
-    router.push(`/server/${server.id}`)
-  }
 
   return (
     <>
@@ -41,9 +31,10 @@ const SideLeftBar = () => {
         </div>
         <Separator className="w-3/5" />
         {userListServ?.map((server) => (
-          <div
+          <Link
+            prefetch={true}
             key={server.id}
-            onClick={() => handleClick(server)}
+            href={`/server/${server.id}`}
             className="group flex cursor-pointer">
             <div className="hidden group-hover:inline relative">
               <div className="absolute top-3 right-1 rounded w-10 h-4 bg-white"></div>
@@ -68,7 +59,7 @@ const SideLeftBar = () => {
                 </p>
               </div>
             )}
-          </div>
+          </Link>
         ))}
 
         <div>

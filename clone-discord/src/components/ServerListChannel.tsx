@@ -10,9 +10,9 @@ interface Server {
   updatedAt: Date
 }
 
-type serverId = {
-  serverId: Server["id"]
-}
+// type serverId = {
+//   serverId: Server["id"]
+// }
 const ServerListChannel = (currentServer: Server) => {
   const serverId = { serverId: currentServer.id }
   const { data: channels } =
@@ -50,5 +50,5 @@ const ServerListChannel = (currentServer: Server) => {
     </>
   )
 }
-
+//Todo trier par date de création, et prendre en comtpe si c'est une catégorie ou non
 export default ServerListChannel
