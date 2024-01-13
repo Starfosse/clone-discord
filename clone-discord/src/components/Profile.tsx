@@ -43,39 +43,54 @@ import {
 import { Separator } from "./ui/separator"
 import Image from "next/image"
 import { toast } from "sonner"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Check } from "lucide-react"
+import { User } from "@prisma/client"
 
 const Profile = () => {
-  const { data, isLoading } = trpc.getUser.useQuery()
+  const profileData = trpc.getUser.useQuery()
+
+  const [currentProfile, setCurrentProfile] = useState<
+    User | undefined
+  >()
+
+  useEffect(() => {
+    if (profileData.data) {
+      setCurrentProfile(profileData.data)
+    }
+  }, [profileData.data])
 
   const [open, setOpen] = useState(false)
 
   const form = useForm<TProfileValidator>({
     resolver: zodResolver(ProfileValidator),
     defaultValues: {
-      imageUrl: data?.imageUrl ? data?.imageUrl : "",
-      pseudo: data?.pseudo,
+      imageUrl: currentProfile?.imageUrl
+        ? currentProfile?.imageUrl
+        : "",
+      pseudo: currentProfile?.pseudo,
       state: stateList.BUSY,
     },
   })
 
-  const { mutate } = trpc.updateUser.useMutation()
+  const { mutate } = trpc.updateUser.useMutation({
+    onSuccess: () => profileData.refetch(),
+  })
 
   const onSubmit = ({
     imageUrl,
     pseudo,
     state,
   }: TProfileValidator) => {
-    console.log("ok")
     setOpen(false)
     mutate({ imageUrl, pseudo, state })
   }
 
-  const stateUser = data?.state.toLocaleLowerCase()
+  const stateUser =
+    currentProfile?.state.toLocaleLowerCase()
   return (
     <>
-      {data?.imageUrl && (
+      {currentProfile?.imageUrl && (
         <Image
           className="relative top-11 left-6 z-10 bg- rounded-full border-[3px] border-tertiaryColor"
           src={`/${stateUser}.png`}
@@ -86,15 +101,15 @@ const Profile = () => {
       )}
       <Dialog onOpenChange={setOpen} open={open}>
         <DialogTrigger asChild>
-          {isLoading ? (
+          {profileData.isLoading ? (
             <p className="text-center text-xs text-white">
               Chargement
             </p>
           ) : (
             <Avatar className="cursor-pointer">
-              <AvatarImage src={data?.imageUrl} />
+              <AvatarImage src={currentProfile?.imageUrl} />
               <AvatarFallback className="text-xs">
-                {data?.pseudo}
+                {currentProfile?.pseudo}
               </AvatarFallback>
             </Avatar>
           )}
@@ -128,7 +143,7 @@ const Profile = () => {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder={`${data?.imageUrl}`}
+                          placeholder={`${currentProfile?.imageUrl}`}
                           {...field}
                           className="col-span-3"
                         />
@@ -147,7 +162,7 @@ const Profile = () => {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder={`${data?.pseudo}`}
+                          placeholder={`${currentProfile?.pseudo}`}
                           {...field}
                           className="col-span-3"
                         />

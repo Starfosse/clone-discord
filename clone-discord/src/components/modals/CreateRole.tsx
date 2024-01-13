@@ -23,6 +23,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Input } from "../ui/input"
+import { Check } from "lucide-react"
+import { toast } from "sonner"
 
 interface Server {
   id: string
@@ -41,7 +43,7 @@ const CreateRole = (currentServer: Server) => {
     resolver: zodResolver(AddRoleValidator),
     defaultValues: {
       id: currentServer.id,
-      order_serv: 0,
+      order_serv: 1,
       name_role: "",
       invite_Member: false,
       expulsate_Member: false,
@@ -62,7 +64,6 @@ const CreateRole = (currentServer: Server) => {
 
   const onSubmit = (data: TAddRoleValidator) => {
     mutate(data)
-    console.log(data)
     currentServer.onClickCreateRole()
   }
 
@@ -126,7 +127,19 @@ const CreateRole = (currentServer: Server) => {
                 ))}
               </div>
               <div className="text-center mt-4">
-                <Button type="submit">Ajouter</Button>
+                <Button
+                  type="submit"
+                  onClick={() =>
+                    toast.success(
+                      <div className="flex items-center">
+                        <Check />
+                        &nbsp;Le rôle a bien été créé
+                      </div>,
+                      { duration: 3000 }
+                    )
+                  }>
+                  Ajouter
+                </Button>
               </div>
             </div>
           </form>

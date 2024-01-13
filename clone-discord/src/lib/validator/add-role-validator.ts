@@ -3,7 +3,7 @@ import { z } from "zod"
 export const AddRoleValidator = z.object({
   id: z.string(),
   name_role: z.string(),
-  order_serv: z.number(),
+  order_serv: z.number().default(1),
   invite_Member: z.boolean().default(false),
   expulsate_Member: z.boolean().default(false),
   edit_Server: z.boolean().default(false),

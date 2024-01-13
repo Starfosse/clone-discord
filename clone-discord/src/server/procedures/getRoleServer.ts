@@ -7,9 +7,8 @@ const ServerId = z.object({ serverId: z.string() })
 const getRoleServer = publicProcedure
   .input(ServerId)
   .query(async ({ input }) => {
-    return await prisma.server.findFirst({
-      where: { id: input.serverId },
-      select: { memberRoles: true },
+    return await prisma.memberRole.findMany({
+      where: { serverId: input.serverId },
     })
   })
 

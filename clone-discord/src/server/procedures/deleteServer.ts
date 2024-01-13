@@ -9,7 +9,6 @@ const deleteServer = publicProcedure
   .input(ServerId)
   .mutation(async ({ input }) => {
     const user = await currentUser()
-    console.log(input.id)
     const userToUpdate = await prisma.user.findFirst({
       where: {
         userId: user?.id,
