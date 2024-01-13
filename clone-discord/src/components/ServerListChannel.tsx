@@ -1,6 +1,6 @@
 "use client"
 import { trpc } from "@/app/_trpc/client"
-import { Channel } from "@prisma/client"
+import { Channel, ChannelGroup } from "@prisma/client"
 import { useEffect, useState } from "react"
 
 interface Server {
@@ -16,12 +16,24 @@ interface Server {
 const ServerListChannel = (currentServer: Server) => {
   const serverId = { serverId: currentServer.id }
   const channelsData = trpc.getChannels.useQuery(serverId)
+  const ChannelsGroupsData =
+    trpc.getChannelsGroups.useQuery(serverId)
+
+  const [channelsGroups, setChannelsGroups] = useState<
+    ChannelGroup[] | undefined
+  >()
   const [channels, setChannels] = useState<
     Channel[] | undefined
   >()
+
   useEffect(() => {
     if (channelsData.data) setChannels(channelsData.data)
   }, [channelsData.data])
+
+  useEffect(() => {
+    if (ChannelsGroupsData.data)
+      setChannelsGroups(ChannelsGroupsData.data)
+  }, [ChannelsGroupsData.data])
 
   const textChannels = channels?.filter(
     (channel) => channel.type === "TEXT"

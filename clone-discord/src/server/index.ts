@@ -15,6 +15,7 @@ import getRoleServer from "./procedures/getRoleServer"
 import EditMemberRole from "./procedures/EditMemberRole"
 import EditOrderMemberRole from "./procedures/EditOrderMemberRole"
 import deleteRole from "./procedures/DeleteRole"
+import getChannelsGroups from "./procedures/getChannelsGroups"
 
 export const appRouter = createTRPCRouter({
   getUser: getUser,
@@ -33,6 +34,7 @@ export const appRouter = createTRPCRouter({
   EditMemberRole: EditMemberRole,
   EditOrderMemberRole: EditOrderMemberRole,
   deleteRole: deleteRole,
+  getChannelsGroups: getChannelsGroups,
 })
 
 export type AppRouter = typeof appRouter
