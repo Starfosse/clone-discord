@@ -19,6 +19,8 @@ import {
   ChannelValidator,
   TChannelValidator,
 } from "@/lib/validator/channel-validator"
+import { toast } from "sonner"
+import { Check } from "lucide-react"
 
 interface Server {
   id: string
@@ -76,7 +78,20 @@ const AddChannel = (currentServer: Server) => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Enregistrer</Button>
+            <Button
+              type="submit"
+              onClick={() =>
+                toast.success(
+                  <div className="flex items-center">
+                    <Check />
+                    &nbsp;Vos modifications ont été
+                    enregristrées
+                  </div>,
+                  { duration: 3000 }
+                )
+              }>
+              Enregistrer
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

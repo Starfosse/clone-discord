@@ -3,13 +3,12 @@ import { publicProcedure } from "../trpc"
 import { prisma } from "@/lib/db"
 import { z } from "zod"
 
-const MemberRoleArray = z.object({
-  memberRoles: z.array(MemberRoleId),
-})
+const MemberRoleArray = z.array(MemberRoleId)
+
 const EditOrderMemberRole = publicProcedure
   .input(MemberRoleArray)
   .mutation(async ({ input }) => {
-    const { memberRoles } = input
+    const memberRoles = input
     const length = memberRoles.length
     for (let i = 0; i < length; i++) {
       let memberRole = memberRoles[i]

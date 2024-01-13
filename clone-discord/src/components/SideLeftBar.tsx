@@ -6,12 +6,20 @@ import Profile from "./Profile"
 import AddServer from "./modals/AddServer"
 import { trpc } from "@/app/_trpc/client"
 import Link from "next/link"
+import { Server } from "@prisma/client"
+import { useEffect, useState } from "react"
 
 // createNewUser()
 const SideLeftBar = () => {
-  const { data: userListServ } =
-    trpc.getUserListServ.useQuery()
+  const userListServData = trpc.getUserListServ.useQuery()
+  const [userListServ, setUserListServ] = useState<
+    Server[] | undefined
+  >()
 
+  useEffect(() => {
+    if (userListServData.data)
+      setUserListServ(userListServData.data)
+  }, [userListServData.data])
   return (
     <>
       <div className="flex flex-col sticky z-50 bg-tertiaryColor min-h-screen w-14 items-center gap-2 pt-2">
@@ -63,7 +71,7 @@ const SideLeftBar = () => {
         ))}
 
         <div>
-          <AddServer />
+          <AddServer refetch={userListServData.refetch} />
         </div>
         <div className="mt-auto mb-2 justify-end items-center">
           <Profile />

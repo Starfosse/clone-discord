@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { trpc } from "@/app/_trpc/client"
 import {
   Dialog,
   DialogContent,
@@ -10,21 +10,30 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Label } from "../ui/label"
-import { Input } from "../ui/input"
-import { Button } from "../ui/button"
-import { trpc } from "@/app/_trpc/client"
-import { useForm, SubmitHandler } from "react-hook-form"
 import {
   ServerValidator,
   TServerValidator,
 } from "@/lib/validator/server-validator"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { Label } from "../ui/label"
+import { Check } from "lucide-react"
+import { toast } from "sonner"
 
-const AddServer = () => {
+interface AddServerProps {
+  refetch: () => Promise<any>
+}
+const AddServer = (AddServerProps: AddServerProps) => {
   const [open, setOpen] = useState<boolean>(false)
 
-  const { mutate } = trpc.createServer.useMutation()
+  const { mutate } = trpc.createServer.useMutation({
+    onSuccess: () => {
+      AddServerProps.refetch()
+    },
+  })
 
   const {
     register,
@@ -42,7 +51,6 @@ const AddServer = () => {
     name,
     imageUrl,
   }: TServerValidator) => {
-    console.log("good")
     setOpen(false)
     mutate({ name, imageUrl })
   }
@@ -83,7 +91,19 @@ const AddServer = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Enregistrer</Button>
+            <Button
+              type="submit"
+              onClick={() =>
+                toast.success(
+                  <div className="flex items-center">
+                    <Check />
+                    &nbsp;Votre server a bien été enregistré
+                  </div>,
+                  { duration: 3000 }
+                )
+              }>
+              Enregistrer
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

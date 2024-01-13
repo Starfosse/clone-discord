@@ -27,12 +27,15 @@ import { MemberRole } from "@prisma/client"
 import MemberRoleId, {
   TMemberRoleId,
 } from "@/lib/validator/member-role-validator"
+import { toast } from "sonner"
+import { Check } from "lucide-react"
 
 interface EditRolePermissionProps {
   serverId: string
-  MemberRole: TMemberRoleId
+  MemberRole: MemberRole
   showModalEditRole: boolean
   onClickShowModalEditRole: () => void
+  refetch: () => Promise<any>
 }
 
 const EditRolePermission = (
@@ -60,12 +63,14 @@ const EditRolePermission = (
     },
   })
 
-  const { mutate } = trpc.EditMemberRole.useMutation()
+  const { mutate } = trpc.EditMemberRole.useMutation({
+    onSuccess: () => {
+      EditRolePermissionProps.refetch()
+    },
+  })
 
   const onSubmit = (data: TMemberRoleId) => {
-    console.log(data)
     mutate(data)
-    console.log(data)
     EditRolePermissionProps.onClickShowModalEditRole()
   }
 
@@ -135,7 +140,19 @@ const EditRolePermission = (
                 ))}
               </div>
               <div className="text-center mt-4">
-                <Button type="submit">Modifier</Button>
+                <Button
+                  type="submit"
+                  onClick={() =>
+                    toast.success(
+                      <div className="flex items-center">
+                        <Check />
+                        &nbsp;Le rôle a bien été créé
+                      </div>,
+                      { duration: 3000 }
+                    )
+                  }>
+                  Modifier
+                </Button>
               </div>
             </div>
           </form>
