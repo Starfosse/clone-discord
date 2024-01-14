@@ -2,6 +2,8 @@
 import { trpc } from "@/app/_trpc/client"
 import { Channel, ChannelGroup } from "@prisma/client"
 import { useEffect, useState } from "react"
+import ChannelsGroup from "./ChannelsGroup"
+import ChannelDisplay from "./ChannelDisplay"
 
 interface Server {
   id: string
@@ -34,39 +36,38 @@ const ServerListChannel = (currentServer: Server) => {
     if (ChannelsGroupsData.data)
       setChannelsGroups(ChannelsGroupsData.data)
   }, [ChannelsGroupsData.data])
+  // const textChannels = channels?.filter(
+  //   (channel) => channel.type === "TEXT"
+  // )
+  // const audioChannels = channels?.filter(
+  //   (channel) => channel.type === "AUDIO"
+  // )
 
-  const textChannels = channels?.filter(
-    (channel) => channel.type === "TEXT"
-  )
-  const audioChannels = channels?.filter(
-    (channel) => channel.type === "AUDIO"
-  )
   return (
     <>
-      <div className="flex flex-col items-start">
-        <div className="py-1 text-white">
-          Salons textuel
+      <div className="flex flex-col items-start text-white w-full">
+        <div className="w-full">
+          {channelsGroups &&
+            channelsGroups.map((channelsGroup) => (
+              <div key={channelsGroup.id}>
+                <ChannelsGroup
+                  channelsGroup={channelsGroup}
+                />
+              </div>
+            ))}
         </div>
-        {textChannels &&
-          textChannels.map((textChannel) => (
-            <div
-              className="text-muted-foreground"
-              key={textChannel.id}>
-              &nbsp;&nbsp;{textChannel.name}
-            </div>
-          ))}
-        <div className="py-1 text-white">Salons audio</div>
-        {audioChannels &&
-          audioChannels.map((audioChannel) => (
-            <div
-              className="text-muted-foreground"
-              key={audioChannel.id}>
-              &nbsp;&nbsp;{audioChannel.name}
-            </div>
-          ))}
+        <div className="pt-4 w-full">
+          {channels &&
+            channels.map((channel) => (
+              <div key={channel.id}>
+                <ChannelDisplay channel={channel} />
+              </div>
+            ))}
+        </div>
       </div>
     </>
   )
 }
+
 //Todo trier par date de création, et prendre en comtpe si c'est une catégorie ou non
 export default ServerListChannel

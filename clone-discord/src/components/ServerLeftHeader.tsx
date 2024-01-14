@@ -170,7 +170,7 @@ const ServerLeftHeader = (currentServer: Server) => {
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={onSelectCreateChannel}>
-            Créér un salon
+            Créér un channel
             <DropdownMenuShortcut>
               <MessageCirclePlus className="size-5" />
             </DropdownMenuShortcut>
