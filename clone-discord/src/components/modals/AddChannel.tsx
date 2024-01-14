@@ -61,7 +61,7 @@ const AddChannel = (currentServer: Server) => {
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Créer votre salon</DialogTitle>
+            <DialogTitle>Créer votre channel</DialogTitle>
             <DialogDescription>
               Vous pourrez tout modifier plus tard.
             </DialogDescription>
@@ -69,7 +69,7 @@ const AddChannel = (currentServer: Server) => {
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
-                Nom du salon
+                Nom du channel
               </Label>
               <Input
                 {...register("name")}
@@ -84,7 +84,7 @@ const AddChannel = (currentServer: Server) => {
                 toast.success(
                   <div className="flex items-center">
                     <Check />
-                    &nbsp;Vos modifications ont été
+                    &nbsp;Les informations ont bien été
                     enregristrées
                   </div>,
                   { duration: 3000 }
