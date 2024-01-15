@@ -12,6 +12,7 @@ import ChannelDisplay from "./ChannelDisplay"
 import { ArrowBigDown } from "lucide-react"
 import AddChannelByGroupId from "./modals/category/AddChannelByGroupId"
 import EditCategory from "./modals/category/EditCategory"
+import { cn } from "@/lib/utils"
 
 interface channnelsGroupProps {
   channelsGroup: ChannelGroup
@@ -27,6 +28,7 @@ const ChannelsGroup = (cGProps: channnelsGroupProps) => {
   const [currentChannels, setCurrentChannels] = useState<
     Channel[] | undefined
   >()
+  const [isOpen, setIsOpen] = useState(true)
   useEffect(() => {
     if (channels.data) setCurrentChannels(channels.data)
   }, [channels.data])
@@ -62,7 +64,17 @@ const ChannelsGroup = (cGProps: channnelsGroupProps) => {
     <div className="mt-4 pl-2">
       <ContextMenu>
         <ContextMenuTrigger className="flex w-full items-center">
-          {<ArrowBigDown />}{" "}
+          {
+            <ArrowBigDown
+              onClick={() => setIsOpen(!isOpen)}
+              className={cn(
+                "h-4 w-4 transition-all text-muted-foreground",
+                {
+                  "-rotate-90": !isOpen,
+                }
+              )}
+            />
+          }{" "}
           <div>{cGProps.channelsGroup.name}</div>{" "}
           <div className="justify-end ml-auto text-muted-foreground pr-2">
             <button
@@ -83,7 +95,8 @@ const ChannelsGroup = (cGProps: channnelsGroupProps) => {
         </ContextMenuContent>
       </ContextMenu>
 
-      {currentChannels &&
+      {isOpen &&
+        currentChannels &&
         currentChannels.map((channel) => (
           <div key={channel.id}>
             <ChannelDisplay
