@@ -13,6 +13,7 @@ interface Server {
   userId: string
   createdAt: Date
   updatedAt: Date
+  refetch: () => Promise<any>
 }
 
 const ServerListChannel = (currentServer: Server) => {
@@ -29,12 +30,15 @@ const ServerListChannel = (currentServer: Server) => {
   >()
 
   useEffect(() => {
-    if (channelsData.data) setChannels(channelsData.data)
+    if (channelsData.data) {
+      setChannels(channelsData.data)
+    }
   }, [channelsData.data])
 
   useEffect(() => {
-    if (ChannelsGroupsData.data)
+    if (ChannelsGroupsData.data) {
       setChannelsGroups(ChannelsGroupsData.data)
+    }
   }, [ChannelsGroupsData.data])
   // const textChannels = channels?.filter(
   //   (channel) => channel.type === "TEXT"
@@ -42,27 +46,43 @@ const ServerListChannel = (currentServer: Server) => {
   // const audioChannels = channels?.filter(
   //   (channel) => channel.type === "AUDIO"
   // )
-
   return (
     <>
-      <div className="flex flex-col items-start text-white w-full">
+      <div className="flex flex-col items-start text-white w-full overflow-auto">
         <div className="w-full">
           {channelsGroups &&
             channelsGroups.map((channelsGroup) => (
               <div key={channelsGroup.id}>
                 <ChannelsGroup
+                  refetchChannels={channelsData.refetch}
+                  refetchChannelsGroups={
+                    ChannelsGroupsData.refetch
+                  }
                   channelsGroup={channelsGroup}
+                  refetchServer={currentServer.refetch}
                 />
               </div>
             ))}
         </div>
         <div className="pt-4 w-full">
           {channels &&
-            channels.map((channel) => (
-              <div key={channel.id}>
-                <ChannelDisplay channel={channel} />
-              </div>
-            ))}
+            channels.map(
+              (channel) =>
+                !channel.channelGroupId && (
+                  <div key={channel.id}>
+                    <ChannelDisplay
+                      refetchChannels={
+                        ChannelsGroupsData.refetch
+                      }
+                      refetchChannelsGroups={
+                        ChannelsGroupsData.refetch
+                      }
+                      refetchServer={currentServer.refetch}
+                      channel={channel}
+                    />
+                  </div>
+                )
+            )}
         </div>
       </div>
     </>

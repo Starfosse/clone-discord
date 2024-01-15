@@ -33,11 +33,11 @@ import {
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import AddCategory from "./modals/AddCategory"
-import AddChannel from "./modals/AddChannel"
-import CreateRole from "./modals/CreateRole"
-import EditRole from "./modals/EditRole"
-import EditServer from "./modals/EditServer"
+import AddCategory from "./modals/category/AddCategory"
+import AddChannel from "./modals/channel/AddChannel"
+import CreateRole from "./modals/role/CreateRole"
+import EditRole from "./modals/role/EditRole"
+import EditServer from "./modals/server/EditServer"
 
 const ServerLeftHeader = (currentServer: Server) => {
   const serverId = { id: currentServer.id }
@@ -201,6 +201,7 @@ const ServerLeftHeader = (currentServer: Server) => {
           {...currentServer}
           showModalCreateChannel={showModalCreateChannel}
           onClickCreateChannel={onClickCreateChannel}
+          refetch={currentServer.refetch}
         />
       )}
       {showModalEditServer && (
