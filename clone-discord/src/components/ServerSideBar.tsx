@@ -31,7 +31,10 @@ const ServerSideBar = () => {
         )}
         <Separator className=" w-4/5 mb-4 justify-center mx-auto" />
         {currentServer && (
-          <ServerListChannel {...currentServer} />
+          <ServerListChannel
+            {...currentServer}
+            refetch={serverData.refetch}
+          />
         )}
       </div>
     </div>
