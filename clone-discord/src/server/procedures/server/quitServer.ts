@@ -26,16 +26,6 @@ const quitServer = publicProcedure
         },
       },
     })
-    // return await prisma.user.update({
-    //   where: {
-    //     userId: user?.id,
-    //   },
-    //   data: {
-    //     imageUrl: imageUrl,
-    //     pseudo: pseudo,
-    //     state: state,
-    //   },
-    // })
   })
 
 export default quitServer

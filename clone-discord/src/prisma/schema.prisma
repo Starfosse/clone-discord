@@ -133,7 +133,6 @@ model MemberRole{
 
 model Member{
   id String @id @default(uuid())
-
   serverId String
   server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
 
