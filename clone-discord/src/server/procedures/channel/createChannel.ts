@@ -7,19 +7,26 @@ const createChannel = publicProcedure
   .input(ChannelValidator)
   .mutation(async ({ input }) => {
     const user = await currentUser()
-    return await prisma.server.update({
-      where: {
-        id: input.id,
-      },
+    const res = await prisma.channel.create({
       data: {
-        channels: {
-          create: {
-            name: input.name,
-            type: input.type,
-          },
-        },
+        name: input.name,
+        type: input.type,
+        isPrivate: input.isPrivate,
+        serverId: input.id,
       },
     })
+    for (let i = 0; i < input.rolesRequired.length; i++) {
+      const res2 = await prisma.channel.update({
+        where: {
+          id: res.id,
+        },
+        data: {
+          roleRequired: {
+            connect: [{ id: input.rolesRequired[i] }],
+          },
+        },
+      })
+    }
   })
 
 export default createChannel

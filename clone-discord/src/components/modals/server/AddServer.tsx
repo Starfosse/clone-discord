@@ -28,11 +28,11 @@ interface AddServerProps {
 }
 const AddServer = (AddServerProps: AddServerProps) => {
   const [open, setOpen] = useState<boolean>(false)
-  // const utils = trpc.useUtils()
+  const utils = trpc.useUtils()
   const { mutate } = trpc.createServer.useMutation({
     onSuccess: () => {
       AddServerProps.refetch()
-      // utils.getUserListServ.invalidate()
+      utils.getUserListServ.invalidate()
     },
   })
 

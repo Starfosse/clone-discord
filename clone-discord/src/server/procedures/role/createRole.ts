@@ -5,6 +5,14 @@ import { prisma } from "@/lib/db"
 const createRole = publicProcedure
   .input(AddRoleValidator)
   .mutation(async ({ input }) => {
+    const sizeMemberRole = await prisma.server.findFirst({
+      where: {
+        id: input.id,
+      },
+      select: {
+        memberRoles: true,
+      },
+    })
     return await prisma.server.update({
       where: {
         id: input.id,
@@ -13,6 +21,9 @@ const createRole = publicProcedure
         memberRoles: {
           create: {
             role: input.name_role,
+            orderServ: sizeMemberRole?.memberRoles.length
+              ? sizeMemberRole?.memberRoles.length + 1
+              : 1000,
             invite_Member: input.invite_Member,
             expulsate_Member: input.expulsate_Member,
             edit_Server: input.edit_Server,

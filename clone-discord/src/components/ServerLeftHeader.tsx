@@ -41,6 +41,7 @@ import EditServer from "./modals/server/EditServer"
 
 const ServerLeftHeader = (currentServer: Server) => {
   const serverId = { id: currentServer.id }
+  const utils = trpc.useUtils()
   const [
     showModalCreateCategory,
     setshowModalCreateCategory,
@@ -63,7 +64,9 @@ const ServerLeftHeader = (currentServer: Server) => {
   const router = useRouter()
 
   const { mutate: deleteServer } =
-    trpc.deleteServer.useMutation()
+    trpc.deleteServer.useMutation({
+      onSuccess: () => utils.getUserListServ.invalidate(),
+    })
 
   const onSelectDeleteServer = () => {
     deleteServer(serverId)
@@ -72,7 +75,9 @@ const ServerLeftHeader = (currentServer: Server) => {
   }
 
   const { mutate: quitServer } =
-    trpc.quitServer.useMutation()
+    trpc.quitServer.useMutation({
+      onSuccess: () => utils.getUserListServ.invalidate(),
+    })
 
   const onSelectQuitServer = () => {
     quitServer(serverId)

@@ -7,6 +7,7 @@ import { Separator } from "./ui/separator"
 import ServerListChannel from "./ServerListChannel"
 import { useContext, useEffect, useState } from "react"
 import { Server } from "@prisma/client"
+import ServerListMember from "./ServerListMember"
 
 const ServerSideBar = () => {
   const serverId = useParams<{ serverId: string }>()
@@ -35,6 +36,11 @@ const ServerSideBar = () => {
             {...currentServer}
             refetch={serverData.refetch}
           />
+        )}
+      </div>
+      <div className="ml-auto w-52 bg-secondaryColor sticky z-50 h-full flex flex-col">
+        {currentServer && (
+          <ServerListMember {...currentServer} />
         )}
       </div>
     </div>

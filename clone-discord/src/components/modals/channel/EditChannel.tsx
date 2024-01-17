@@ -27,6 +27,7 @@ import { Button } from "../../ui/button"
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -43,6 +44,14 @@ import {
 } from "../../ui/select"
 import { Separator } from "../../ui/separator"
 import { Channel, ChannelType } from "@prisma/client"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Switch } from "@/components/ui/switch"
+import { useEffect, useState } from "react"
+
+interface memberRoleIdLabel {
+  id: string
+  label: string
+}
 
 interface editChannelProps {
   channel: Channel
@@ -60,8 +69,47 @@ const EditChannel = (
       id: editChannelProps.channel.id,
       name: editChannelProps.channel.name,
       type: editChannelProps.channel.type,
+      rolesRequired: [],
     },
   })
+
+  const ChannelId = { id: editChannelProps.channel.id }
+  const currentRequiredRoleData =
+    trpc.getRolesByChannel.useQuery(ChannelId)
+  const [currentRequiredRole, setCurrentRequiredRole] =
+    useState<memberRoleIdLabel[] | undefined>()
+  useEffect(() => {
+    if (currentRequiredRoleData.data) {
+      const items =
+        currentRequiredRoleData.data.roleRequired.map(
+          (memberRole) => ({
+            id: memberRole.id,
+            label: memberRole.role,
+          })
+        )
+      setCurrentRequiredRole(items)
+    }
+  }, [currentRequiredRoleData.data])
+
+  const serverId = {
+    serverId: editChannelProps.channel.serverId,
+  }
+  const listRoleServer =
+    trpc.getRoleServer.useQuery(serverId)
+  const [currentListRoleServer, setCurrentListRoleServer] =
+    useState<memberRoleIdLabel[] | undefined>()
+  useEffect(() => {
+    if (listRoleServer.data) {
+      const items = listRoleServer.data.map(
+        (memberRole) => ({
+          id: memberRole.id,
+          label: memberRole.role,
+          value: true,
+        })
+      )
+      setCurrentListRoleServer(items)
+    }
+  }, [listRoleServer.data])
 
   const { mutate: editChannel } =
     trpc.editChannel.useMutation({
@@ -75,9 +123,15 @@ const EditChannel = (
     name,
     id,
     type,
+    rolesRequired,
   }: TChannelValidator) => {
-    editChannel({ name, id, type })
+    editChannel({ name, id, type, rolesRequired })
     editChannelProps.unShowModal()
+  }
+
+  const [isPrivate, setIsPrivate] = useState(false)
+  const setPrivate = () => {
+    setIsPrivate(!isPrivate)
   }
   return (
     <Dialog
@@ -171,6 +225,76 @@ const EditChannel = (
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name={"isPrivate"}
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border px-2 m-2 gap-2 ml-6 relative left-2">
+                    <div className="space-y-0.5">
+                      <FormLabel className="">
+                        Privé ?
+                      </FormLabel>
+                      <FormDescription>
+                        Le salon ne sera visible que par les
+                        rôles selectionnés
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        onClick={setPrivate}
+                        // onChange={setPrivate}
+                        checked={field.value}
+                        // checked={action.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              {currentListRoleServer &&
+                currentRequiredRole &&
+                isPrivate &&
+                currentListRoleServer.map((item, index) => (
+                  <FormField
+                    key={item.id}
+                    control={form.control}
+                    name="rolesRequired"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={item.id}
+                          className="flex flex-row items-center justify-between rounded-lg border p-2 m-2 gap-1 ml-6 relative left-2">
+                          <FormLabel className="font-normal">
+                            {item.label}
+                          </FormLabel>
+                          <FormControl>
+                            <Checkbox
+                              checked={item.id.includes(
+                                currentRequiredRole[index]
+                                  ?.id ?? item.id
+                              )}
+                              onCheckedChange={(
+                                checked
+                              ) => {
+                                return checked
+                                  ? field.onChange([
+                                      ...field.value,
+                                      item.id,
+                                    ])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) =>
+                                          value !== item.id
+                                      )
+                                    )
+                              }}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )
+                    }}
+                  />
+                ))}
             </div>
             <DialogFooter>
               <Button

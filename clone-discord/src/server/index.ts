@@ -22,6 +22,9 @@ import deleteChannel from "./procedures/channel/deleteChannel"
 import editChannel from "./procedures/channel/editChannel"
 import editCategory from "./procedures/category/editCategory"
 import deleteCategory from "./procedures/category/deleteCategory"
+import getMemberByRole from "./procedures/member/getMemberByRole"
+import getUserByMember from "./procedures/user/getUserByMember"
+import getRolesByChannel from "./procedures/channel/getRolesByChannel"
 
 export const appRouter = createTRPCRouter({
   getUser,
@@ -47,6 +50,9 @@ export const appRouter = createTRPCRouter({
   editChannel,
   editCategory,
   deleteCategory,
+  getMemberByRole,
+  getUserByMember,
+  getRolesByChannel,
 })
 
 export type AppRouter = typeof appRouter
