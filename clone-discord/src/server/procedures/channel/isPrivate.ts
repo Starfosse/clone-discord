@@ -5,14 +5,15 @@ import { z } from "zod"
 
 const ChannelId = z.object({ id: z.string() })
 
-const getRolesByChannel = publicProcedure
+const isPrivate = publicProcedure
   .input(ChannelId)
   .query(async ({ input }) => {
-    return await prisma.role.findMany({
+    return await prisma.channel.findFirst({
       where: {
-        channelRole: { some: { ChannelId: input.id } },
+        id: input.id,
       },
+      select: { isPrivate: true },
     })
   })
 
-export default getRolesByChannel
+export default isPrivate

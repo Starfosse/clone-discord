@@ -32,7 +32,7 @@ const createServer = publicProcedure
             userId: user.id,
           },
         },
-        memberRoles: {
+        roles: {
           create: [
             {
               role: "propriétaire",
@@ -46,20 +46,36 @@ const createServer = publicProcedure
         },
       },
     })
-    const memberRolesServer = await prisma.server.findFirst(
-      {
-        where: { id: server.id },
-        select: {
-          memberRoles: true,
-        },
-      }
-    )
+    const rolesServer = await prisma.server.findFirst({
+      where: { id: server.id },
+      select: {
+        roles: true,
+      },
+    })
     const ownerServer = await prisma.server.findFirst({
       where: { id: server.id },
       select: {
         members: true,
       },
     })
+    if (!rolesServer) return
+    // const updatedOwerServer = await prisma.member.update({
+    //   where: {
+    //     id: ownerServer?.members[0].id,
+    //   },
+    //   data: {
+    //     role: {
+    //       create: [
+    //         {
+    //           RoleId: rolesServer.roles[0].id,
+    //         },
+    //         {
+    //           RoleId: rolesServer.roles[1].id,
+    //         },
+    //       ],
+    //     },
+    //   },
+    // })
 
     const updatedServerChannels =
       await prisma.server.update({
@@ -67,19 +83,15 @@ const createServer = publicProcedure
         data: {
           members: {
             update: {
-              where: {
-                id: ownerServer?.members[0].id,
-              },
+              where: { id: ownerServer?.members[0].id },
               data: {
                 role: {
-                  connect: [
+                  create: [
                     {
-                      id: memberRolesServer?.memberRoles[0]
-                        .id,
+                      RoleId: rolesServer.roles[0].id,
                     },
                     {
-                      id: memberRolesServer?.memberRoles[1]
-                        .id,
+                      RoleId: rolesServer.roles[1].id,
                     },
                   ],
                 },
@@ -90,25 +102,11 @@ const createServer = publicProcedure
             create: [
               {
                 name: "SALONS TEXT",
-                roleRequired: {
-                  connect: {
-                    id: memberRolesServer?.memberRoles[1]
-                      .id,
-                  },
-                },
                 channels: {
                   create: [
                     {
                       name: "général",
                       serverId: server.id,
-                      roleRequired: {
-                        connect: [
-                          {
-                            id: memberRolesServer
-                              ?.memberRoles[1].id,
-                          },
-                        ],
-                      },
                     },
                   ],
                 },
@@ -120,14 +118,6 @@ const createServer = publicProcedure
                     {
                       name: "Général",
                       serverId: server.id,
-                      roleRequired: {
-                        connect: [
-                          {
-                            id: memberRolesServer
-                              ?.memberRoles[1].id,
-                          },
-                        ],
-                      },
                     },
                   ],
                 },

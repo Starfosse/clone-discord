@@ -4,11 +4,6 @@ import { prisma } from "@/lib/db"
 
 const getUserListServ = publicProcedure.query(async () => {
   const user = await currentUser()
-  // if (!user) {
-  //   return new NextResponse("Unauthorized", {
-  //     status: 401,
-  //   })
-  // }
   const userListServer = await prisma.member.findMany({
     where: {
       userId: user!.id,

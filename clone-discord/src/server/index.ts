@@ -25,6 +25,8 @@ import deleteCategory from "./procedures/category/deleteCategory"
 import getMemberByRole from "./procedures/member/getMemberByRole"
 import getUserByMember from "./procedures/user/getUserByMember"
 import getRolesByChannel from "./procedures/channel/getRolesByChannel"
+import getRoleById from "./procedures/role/getRoleById"
+import isPrivate from "./procedures/channel/isPrivate"
 
 export const appRouter = createTRPCRouter({
   getUser,
@@ -53,6 +55,8 @@ export const appRouter = createTRPCRouter({
   getMemberByRole,
   getUserByMember,
   getRolesByChannel,
+  getRoleById,
+  isPrivate,
 })
 
 export type AppRouter = typeof appRouter

@@ -1,6 +1,7 @@
 "use client"
 
 import { trpc } from "@/app/_trpc/client"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogContent,
@@ -9,18 +10,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Switch } from "@/components/ui/switch"
 import {
   ChannelValidator,
   TChannelValidator,
 } from "@/lib/validator/channel-validator"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Channel, ChannelType } from "@prisma/client"
 import {
   Check,
   Hash,
   Headphones,
   Video,
 } from "lucide-react"
-import Image from "next/image"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { Button } from "../../ui/button"
@@ -42,15 +45,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select"
-import { Separator } from "../../ui/separator"
-import { Channel, ChannelType } from "@prisma/client"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Switch } from "@/components/ui/switch"
-import { useEffect, useState } from "react"
 
 interface memberRoleIdLabel {
   id: string
   label: string
+  value: boolean
 }
 
 interface editChannelProps {
@@ -69,6 +68,7 @@ const EditChannel = (
       id: editChannelProps.channel.id,
       name: editChannelProps.channel.name,
       type: editChannelProps.channel.type,
+      isPrivate: editChannelProps.channel.isPrivate,
       rolesRequired: [],
     },
   })
@@ -76,21 +76,6 @@ const EditChannel = (
   const ChannelId = { id: editChannelProps.channel.id }
   const currentRequiredRoleData =
     trpc.getRolesByChannel.useQuery(ChannelId)
-  const [currentRequiredRole, setCurrentRequiredRole] =
-    useState<memberRoleIdLabel[] | undefined>()
-  useEffect(() => {
-    if (currentRequiredRoleData.data) {
-      const items =
-        currentRequiredRoleData.data.roleRequired.map(
-          (memberRole) => ({
-            id: memberRole.id,
-            label: memberRole.role,
-          })
-        )
-      setCurrentRequiredRole(items)
-    }
-  }, [currentRequiredRoleData.data])
-
   const serverId = {
     serverId: editChannelProps.channel.serverId,
   }
@@ -99,17 +84,23 @@ const EditChannel = (
   const [currentListRoleServer, setCurrentListRoleServer] =
     useState<memberRoleIdLabel[] | undefined>()
   useEffect(() => {
-    if (listRoleServer.data) {
+    if (
+      listRoleServer.data &&
+      currentRequiredRoleData.data
+    ) {
       const items = listRoleServer.data.map(
-        (memberRole) => ({
+        (memberRole, i) => ({
           id: memberRole.id,
           label: memberRole.role,
-          value: true,
+          value: currentRequiredRoleData.data.some(
+            (requiredRole) =>
+              requiredRole.id.includes(memberRole.id)
+          ),
         })
       )
       setCurrentListRoleServer(items)
     }
-  }, [listRoleServer.data])
+  }, [listRoleServer.data, currentRequiredRoleData.data])
 
   const { mutate: editChannel } =
     trpc.editChannel.useMutation({
@@ -124,14 +115,43 @@ const EditChannel = (
     id,
     type,
     rolesRequired,
+    isPrivate,
   }: TChannelValidator) => {
-    editChannel({ name, id, type, rolesRequired })
+    rolesRequired =
+      currentListRoleServer
+        ?.filter((role) => role.value === true)
+        ?.map((role) => role.id) ?? []
+    editChannel({
+      name,
+      id,
+      type,
+      rolesRequired,
+      isPrivate,
+    })
     editChannelProps.unShowModal()
   }
-
   const [isPrivate, setIsPrivate] = useState(false)
+  const channelPrivate = trpc.isPrivate.useQuery(ChannelId)
+  useEffect(() => {
+    if (
+      channelPrivate.data &&
+      channelPrivate.data.isPrivate === true
+    )
+      setIsPrivate(true)
+  }, [channelPrivate.data])
+
   const setPrivate = () => {
     setIsPrivate(!isPrivate)
+  }
+
+  const updateMemberRoleValue = (roleId: string): void => {
+    const updatedRoles = currentListRoleServer?.map(
+      (role) =>
+        role.id === roleId
+          ? { ...role, value: !role.value }
+          : role
+    )
+    setCurrentListRoleServer(updatedRoles)
   }
   return (
     <Dialog
@@ -242,8 +262,8 @@ const EditChannel = (
                     <FormControl>
                       <Switch
                         onClick={setPrivate}
-                        // onChange={setPrivate}
-                        checked={field.value}
+                        onChange={setPrivate}
+                        checked={isPrivate}
                         // checked={action.value}
                         onCheckedChange={field.onChange}
                       />
@@ -252,7 +272,6 @@ const EditChannel = (
                 )}
               />
               {currentListRoleServer &&
-                currentRequiredRole &&
                 isPrivate &&
                 currentListRoleServer.map((item, index) => (
                   <FormField
@@ -269,24 +288,18 @@ const EditChannel = (
                           </FormLabel>
                           <FormControl>
                             <Checkbox
-                              checked={item.id.includes(
-                                currentRequiredRole[index]
-                                  ?.id ?? item.id
-                              )}
-                              onCheckedChange={(
-                                checked
-                              ) => {
-                                return checked
-                                  ? field.onChange([
-                                      ...field.value,
-                                      item.id,
-                                    ])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) =>
-                                          value !== item.id
-                                      )
-                                    )
+                              checked={
+                                currentListRoleServer[index]
+                                  .value
+                              }
+                              // defaultChecked={
+                              //   currentListRoleServer[index]
+                              //     .value
+                              // }
+                              onCheckedChange={() => {
+                                updateMemberRoleValue(
+                                  item.id
+                                )
                               }}
                             />
                           </FormControl>
