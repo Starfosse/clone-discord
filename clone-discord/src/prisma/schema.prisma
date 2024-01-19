@@ -44,7 +44,7 @@ model Server{
   channels Channel[]
   members Member[]
   channelGroups ChannelGroup[]
-  memberRoles MemberRole[]
+  roles Role[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -70,13 +70,23 @@ model Channel{
   channelGroupId String?
   channelGroupe ChannelGroup? @relation(fields: [channelGroupId], references: [id], onDelete: Cascade)
 
-  roleRequired MemberRole[]
+  channelRole ChannelRole[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
   @@index([serverId])
   @@index([channelGroupId])
+}
+
+model ChannelRole{
+  ChannelId String
+  channel Channel @relation(fields: [ChannelId], references: [id], onDelete: Cascade)
+  RoleId  String
+  role Role @relation(fields: [RoleId], references: [id], onDelete: Cascade)
+  @@id([ChannelId, RoleId])
+  @@index([ChannelId])
+  @@index([RoleId])
 }
 
 model ChannelGroup{
@@ -88,7 +98,7 @@ model ChannelGroup{
   server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
 
   channels Channel[]
-  roleRequired MemberRole[]
+  channelsGroupRole ChannelGroupRole[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -96,21 +106,27 @@ model ChannelGroup{
   @@index([serverId])
 }
 
-model MemberRole{
+model ChannelGroupRole{
+  ChannelGroupId String
+  channelGroup ChannelGroup @relation(fields: [ChannelGroupId], references: [id], onDelete: Cascade)
+  RoleId  String
+  role Role @relation(fields: [RoleId], references: [id], onDelete: Cascade)
+  @@id([ChannelGroupId, RoleId])
+  @@index([ChannelGroupId])
+  @@index([RoleId])
+}
+
+model Role{
   id String @id @default(uuid())
   role String
   orderServ Int?
-  channelGroupId String?
-  channelGroup ChannelGroup? @relation(fields: [channelGroupId], references: [id], onDelete: Cascade)
 
-  channelId String?
-  channel Channel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  serverId String?
+  server Server? @relation(fields: [serverId], references:[id], onDelete: Cascade)
 
-  serverId String
-  server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
-
-  memberId String?
-  member Member? @relation(fields: [memberId], references:[id], onDelete: Cascade)
+  memberRole  MemberRole[]
+  channelsGroupRole ChannelGroupRole[]
+  channelRole ChannelRole[]
 
   invite_Member Boolean @default(false)
   expulsate_Member Boolean @default(false)
@@ -125,14 +141,22 @@ model MemberRole{
   video_Channel Boolean @default(false)
   download_Channel Boolean @default(false)
   
-  @@index([channelId])
-  @@index([channelGroupId])
   @@index([serverId])
-  @@index([memberId])
+}
+
+model MemberRole{
+  MemberId String
+  member Member @relation(fields: [MemberId], references: [id], onDelete: Cascade)
+  RoleId  String
+  role Role @relation(fields: [RoleId], references: [id], onDelete: Cascade)
+  @@id([MemberId, RoleId])
+  @@index([MemberId])
+  @@index([RoleId])
 }
 
 model Member{
   id String @id @default(uuid())
+  
   serverId String
   server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
 

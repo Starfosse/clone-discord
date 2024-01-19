@@ -88,8 +88,6 @@ const AddChannel = (currentServer: Server) => {
     }
   }, [listRoleServer.data])
 
-  // console.log(currentListRoleServer)
-
   const form = useForm<TChannelValidator>({
     resolver: zodResolver(ChannelValidator),
     defaultValues: {
@@ -106,10 +104,9 @@ const AddChannel = (currentServer: Server) => {
     id,
     type,
     rolesRequired,
+    isPrivate,
   }: TChannelValidator) => {
-    console.log("ok")
-    console.log(rolesRequired)
-    mutate({ name, id, type, rolesRequired })
+    mutate({ name, id, type, rolesRequired, isPrivate })
     currentServer.onClickCreateChannel()
   }
 
@@ -222,7 +219,7 @@ const AddChannel = (currentServer: Server) => {
                     <FormControl>
                       <Switch
                         onClick={setPrivate}
-                        // onChange={setPrivate}
+                        onChange={setPrivate}
                         checked={field.value}
                         // checked={action.value}
                         onCheckedChange={field.onChange}

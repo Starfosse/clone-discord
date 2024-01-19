@@ -1,7 +1,7 @@
-import { currentUser } from "@clerk/nextjs"
-import { publicProcedure } from "../../trpc"
 import { prisma } from "@/lib/db"
 import { ChannelValidator } from "@/lib/validator/channel-validator"
+import { currentUser } from "@clerk/nextjs"
+import { publicProcedure } from "../../trpc"
 
 const createChannel = publicProcedure
   .input(ChannelValidator)
@@ -15,14 +15,19 @@ const createChannel = publicProcedure
         serverId: input.id,
       },
     })
+
     for (let i = 0; i < input.rolesRequired.length; i++) {
       const res2 = await prisma.channel.update({
         where: {
           id: res.id,
         },
         data: {
-          roleRequired: {
-            connect: [{ id: input.rolesRequired[i] }],
+          channelRole: {
+            create: [
+              {
+                RoleId: input.rolesRequired[i],
+              },
+            ],
           },
         },
       })
@@ -30,3 +35,18 @@ const createChannel = publicProcedure
   })
 
 export default createChannel
+
+// repasser
+// for (let i = 0; i < input.rolesRequired.length; i++) {
+//   const res2 = await prisma.channel.update({
+//     where: {
+//       id: res.id,
+//     },
+//     data: {
+//       roleRequired: {
+//         connect: [{ id: input.rolesRequired[i] }],
+//       },
+//     },
+//   })
+// }
+// })

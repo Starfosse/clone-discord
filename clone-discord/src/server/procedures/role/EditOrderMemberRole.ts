@@ -12,7 +12,7 @@ const EditOrderMemberRole = publicProcedure
     const length = memberRoles.length
     for (let i = 0; i < length; i++) {
       let memberRole = memberRoles[i]
-      const result = await prisma.memberRole.update({
+      const result = await prisma.role.update({
         where: { id: memberRole.id },
         data: { orderServ: memberRole.orderServ },
       })

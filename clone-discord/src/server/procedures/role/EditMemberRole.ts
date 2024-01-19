@@ -12,7 +12,7 @@ const EditMemberRole = publicProcedure
         id: serverId,
       },
       data: {
-        memberRoles: {
+        roles: {
           update: {
             where: {
               id: id,

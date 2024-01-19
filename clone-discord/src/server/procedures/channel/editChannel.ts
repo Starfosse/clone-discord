@@ -21,33 +21,38 @@ const editChannel = publicProcedure
     })
     const size = await prisma.channel.findFirst({
       where: { id: input.id },
-      include: { roleRequired: true },
+      include: { channelRole: true },
     })
-    const roleRequiredSize = size?.roleRequired.length
+    const roleRequiredSize = size?.channelRole.length
     if (roleRequiredSize) {
       for (let i = 0; i < roleRequiredSize; i++) {
         const res2 = await prisma.channel.update({
           where: { id: input.id },
           data: {
-            roleRequired: {
-              disconnect: [{ id: size.roleRequired[i].id }],
+            channelRole: {
+              deleteMany: {},
             },
           },
         })
       }
     }
-    // for (let i = 0; i < input.rolesRequired.length; i++) {
-    //   const res3 = await prisma.channel.update({
-    //     where: {
-    //       id: res.id,
-    //     },
-    //     data: {
-    //       roleRequired: {
-    //         connect: [{ id: input.rolesRequired[i] }],
-    //       },
-    //     },
-    //   })
-    // }
+    for (let i = 0; i < input.rolesRequired.length; i++) {
+      const res3 = await prisma.channel.update({
+        where: {
+          id: res.id,
+        },
+        data: {
+          channelRole: {
+            create: [
+              {
+                RoleId: input.rolesRequired[i],
+              },
+            ],
+          },
+        },
+      })
+    }
   })
 
 export default editChannel
+// repasser

@@ -3,27 +3,17 @@ import { trpc } from "@/app/_trpc/client"
 import {
   Member,
   MemberRole,
+  Role,
   Server,
   User,
 } from "@prisma/client"
+import Image from "next/image"
 import { useEffect, useState } from "react"
-import { object } from "zod"
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "./ui/avatar"
-import Image from "next/image"
-
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 
 interface ServerListMemberProps {
   id: string
@@ -36,7 +26,7 @@ interface ServerListMemberProps {
 }
 
 interface DataDisplay {
-  role: MemberRole
+  role: Role
   member: Member[]
 }
 const getDataDisplay = (id: string): DataDisplay[] => {
@@ -50,7 +40,7 @@ const getDataDisplay = (id: string): DataDisplay[] => {
       setCurrentListMember(ServerListMemberData.data)
   }, [ServerListMemberData.data])
   const roles = ServerListMemberData.data
-    ? ServerListMemberData.data.memberRoles.sort(
+    ? ServerListMemberData.data.roles.sort(
         (a, b) => (a.orderServ ?? 0) - (b.orderServ ?? 0)
       )
     : undefined
@@ -61,7 +51,7 @@ const getDataDisplay = (id: string): DataDisplay[] => {
   const DataDisplay: DataDisplay[] = []
   if (ServerListMemberData.data && members && roles) {
     for (let i = 0; i < roles.length; i++) {
-      const role: MemberRole = roles[i]
+      const role: Role = roles[i]
       const memberList: Member[] = []
       for (let j = 0; j < members.length; j++) {
         const isMemberExist = DataDisplay.some((data) =>
@@ -69,7 +59,7 @@ const getDataDisplay = (id: string): DataDisplay[] => {
         )
         if (
           members[j].role.find(
-            (r) => r.id === roles[i].id
+            (r) => r.RoleId === roles[i].id
           ) &&
           members[j] &&
           !isMemberExist
@@ -96,7 +86,7 @@ const ServerListMember = (
   const dataDisplay: DataDisplay[] = getDataDisplay(
     currentServer.id
   )
-  getDataDisplay(currentServer.id)
+  // getDataDisplay(currentServer.id)
 
   return (
     <div className="pl-4 pt-4 relative right-2">
@@ -131,14 +121,11 @@ const AvatarMember = (member: Member) => {
   }, [memberData.data])
   const stateUser = currentMember?.state.toLocaleLowerCase()
   const [open, setOpen] = useState(false)
-  console.log(open)
   const setOpenTrue = () => {
     setOpen(true)
   }
   const setOpenFalse = () => {
-    console.log(open)
     setOpen(false)
-    console.log(open)
   }
 
   return (

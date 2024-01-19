@@ -11,7 +11,7 @@ const getMemberByRole = publicProcedure
         members: {
           include: { role: true },
         },
-        memberRoles: true,
+        roles: true,
       },
     })
   })

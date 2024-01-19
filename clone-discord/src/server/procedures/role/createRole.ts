@@ -10,7 +10,7 @@ const createRole = publicProcedure
         id: input.id,
       },
       select: {
-        memberRoles: true,
+        roles: true,
       },
     })
     return await prisma.server.update({
@@ -18,11 +18,11 @@ const createRole = publicProcedure
         id: input.id,
       },
       data: {
-        memberRoles: {
+        roles: {
           create: {
             role: input.name_role,
-            orderServ: sizeMemberRole?.memberRoles.length
-              ? sizeMemberRole?.memberRoles.length + 1
+            orderServ: sizeMemberRole?.roles.length
+              ? sizeMemberRole?.roles.length + 1
               : 1000,
             invite_Member: input.invite_Member,
             expulsate_Member: input.expulsate_Member,
