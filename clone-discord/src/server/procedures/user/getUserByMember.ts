@@ -8,7 +8,13 @@ const getUserByMember = publicProcedure
   .input(MemberId)
   .query(async ({ input }) => {
     return await prisma.user.findFirst({
-      where: { userId: input.id },
+      where: {
+        members: {
+          every: {
+            id: input.id,
+          },
+        },
+      },
     })
   })
 

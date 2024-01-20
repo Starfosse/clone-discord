@@ -28,6 +28,7 @@ import getRolesByChannel from "./procedures/channel/getRolesByChannel"
 import getRoleById from "./procedures/role/getRoleById"
 import isPrivate from "./procedures/channel/isPrivate"
 import getRolesOfMember from "./procedures/member/getRolesOfMember"
+import giveMemberRoles from "./procedures/member/giveMemberRoles"
 
 export const appRouter = createTRPCRouter({
   getUser,
@@ -59,6 +60,7 @@ export const appRouter = createTRPCRouter({
   getRoleById,
   isPrivate,
   getRolesOfMember,
+  giveMemberRoles,
 })
 
 export type AppRouter = typeof appRouter

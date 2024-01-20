@@ -59,23 +59,6 @@ const createServer = publicProcedure
       },
     })
     if (!rolesServer) return
-    // const updatedOwerServer = await prisma.member.update({
-    //   where: {
-    //     id: ownerServer?.members[0].id,
-    //   },
-    //   data: {
-    //     role: {
-    //       create: [
-    //         {
-    //           RoleId: rolesServer.roles[0].id,
-    //         },
-    //         {
-    //           RoleId: rolesServer.roles[1].id,
-    //         },
-    //       ],
-    //     },
-    //   },
-    // })
 
     const updatedServerChannels =
       await prisma.server.update({
