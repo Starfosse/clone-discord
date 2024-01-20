@@ -16,6 +16,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { Switch } from "@/components/ui/switch"
+import { Form } from "@/components/ui/form"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
+import { Check } from "lucide-react"
 
 interface aMRProps {
   id: string
@@ -45,7 +50,6 @@ const AddMemberRole = (currentServer: aMRProps) => {
       setCurrentRoles(listMemberRoleData.data.roles)
     }
   }, [listMemberRoleData.data])
-  console.log(currentRoles)
   return (
     <Dialog
       open={currentServer.showModalAddMemberRole}
@@ -88,13 +92,19 @@ interface AccordionMemberProps {
   currentServer: aMRProps
 }
 
+interface memberRoleIdLabel {
+  id: string
+  label: string
+  value: boolean
+}
+
 const AccordionMember = ({
   member,
   roles,
   currentServer,
 }: AccordionMemberProps) => {
   const ServerId = { serverId: currentServer.id }
-  const MemberId = { id: member.userId }
+  const MemberId = { id: member.id }
   const memberData = trpc.getUserByMember.useQuery(MemberId)
   const memberRolesData =
     trpc.getRolesOfMember.useQuery(MemberId)
@@ -103,22 +113,53 @@ const AccordionMember = ({
   const [currentMember, setCurrentMember] = useState<
     User | undefined
   >()
-  const [currentMemberRoles, setCurrentMemberRoles] =
-    useState<Role[] | undefined>()
   const [currentServerRoles, setCurrentServerRoles] =
-    useState<Role[] | undefined>()
+    useState<memberRoleIdLabel[] | undefined>()
   useEffect(() => {
-    if (memberData.data) setCurrentMember(memberData.data)
-    if (memberRolesData.data)
-      setCurrentMemberRoles(memberRolesData.data)
-    if (rolesServerData.data)
-      setCurrentServerRoles(rolesServerData.data)
+    if (memberData.data) {
+      setCurrentMember(memberData.data)
+    }
+    if (rolesServerData.data && memberRolesData.data) {
+      const memberRoleIdLabel: memberRoleIdLabel[] =
+        rolesServerData.data.map((role) => ({
+          id: role.id,
+          label: role.role,
+          value: memberRolesData.data.some((requiredRole) =>
+            requiredRole.id.includes(role.id)
+          ),
+        }))
+      setCurrentServerRoles(memberRoleIdLabel)
+    }
   }, [
     memberData.data,
     memberRolesData.data,
     rolesServerData.data,
   ])
 
+  const updateMemberRoleValue = (roleId: string): void => {
+    const updatedRoles = currentServerRoles?.map(
+      (role, index) =>
+        role.id === roleId
+          ? { ...role, value: !role.value }
+          : role
+    )
+    setCurrentServerRoles(updatedRoles)
+  }
+
+  const utils = trpc.useUtils()
+  const { mutate: giveMemberRoles } =
+    trpc.giveMemberRoles.useMutation({
+      onSuccess: () => utils.getRolesOfMember.invalidate(),
+    })
+
+  const handleClickSubmit = () => {
+    const id = member.id
+    const RoleId =
+      currentServerRoles
+        ?.filter((role) => role.value === true)
+        ?.map((role) => role.id) ?? []
+    if (RoleId) giveMemberRoles({ id, RoleId })
+  }
   return (
     <div>
       <AccordionItem value="item-1">
@@ -126,9 +167,25 @@ const AccordionMember = ({
           {currentMember?.pseudo}
         </AccordionTrigger>
         <AccordionContent>
-          {roles.map((role) => (
-            <div key={role.id}>{role.role}</div>
-          ))}
+          {currentServerRoles &&
+            roles.map((role, index) => (
+              <div
+                key={role.id}
+                className="flex justify-between">
+                {role.role}
+                <Switch
+                  defaultChecked={
+                    currentServerRoles[index].value
+                  }
+                  onCheckedChange={() => {
+                    updateMemberRoleValue(role.id)
+                  }}
+                />
+              </div>
+            ))}
+          <Button type="submit" onClick={handleClickSubmit}>
+            Enregistrer
+          </Button>
         </AccordionContent>
       </AccordionItem>
     </div>

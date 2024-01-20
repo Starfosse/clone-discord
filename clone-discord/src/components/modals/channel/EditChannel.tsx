@@ -89,7 +89,7 @@ const EditChannel = (
       currentRequiredRoleData.data
     ) {
       const items = listRoleServer.data.map(
-        (memberRole, i) => ({
+        (memberRole) => ({
           id: memberRole.id,
           label: memberRole.role,
           value: currentRequiredRoleData.data.some(
