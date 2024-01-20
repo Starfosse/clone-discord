@@ -33,14 +33,16 @@ import {
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import AddCategory from "./modals/AddCategory"
-import AddChannel from "./modals/AddChannel"
-import CreateRole from "./modals/CreateRole"
-import EditRole from "./modals/EditRole"
-import EditServer from "./modals/EditServer"
+import AddCategory from "./modals/category/AddCategory"
+import AddChannel from "./modals/channel/AddChannel"
+import CreateRole from "./modals/role/CreateRole"
+import EditRole from "./modals/role/EditRole"
+import EditServer from "./modals/server/EditServer"
+import AddMemberRole from "./modals/member/AddMemberRole"
 
 const ServerLeftHeader = (currentServer: Server) => {
   const serverId = { id: currentServer.id }
+  const utils = trpc.useUtils()
   const [
     showModalCreateCategory,
     setshowModalCreateCategory,
@@ -60,10 +62,17 @@ const ServerLeftHeader = (currentServer: Server) => {
   const [showModalEditRole, setshowModalEditRole] =
     useState(false)
 
+  const [
+    showModalAddMemberRole,
+    setShowModalAddMemberRole,
+  ] = useState(false)
+
   const router = useRouter()
 
   const { mutate: deleteServer } =
-    trpc.deleteServer.useMutation()
+    trpc.deleteServer.useMutation({
+      onSuccess: () => utils.getUserListServ.invalidate(),
+    })
 
   const onSelectDeleteServer = () => {
     deleteServer(serverId)
@@ -72,7 +81,9 @@ const ServerLeftHeader = (currentServer: Server) => {
   }
 
   const { mutate: quitServer } =
-    trpc.quitServer.useMutation()
+    trpc.quitServer.useMutation({
+      onSuccess: () => utils.getUserListServ.invalidate(),
+    })
 
   const onSelectQuitServer = () => {
     quitServer(serverId)
@@ -116,6 +127,13 @@ const ServerLeftHeader = (currentServer: Server) => {
     setshowModalEditRole(false)
   }
 
+  const onSelectAddMemberRole = () => {
+    setShowModalAddMemberRole(true)
+  }
+  const onClickAddMemberRole = () => {
+    setShowModalAddMemberRole(false)
+  }
+
   return (
     <>
       {/* <div className="flex w-full items-center text-white cursor-pointer hover:bg-gray-600 px-2 py-2 pb-4">
@@ -155,7 +173,8 @@ const ServerLeftHeader = (currentServer: Server) => {
               <PlusCircle className="size-5" />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={onSelectAddMemberRole}>
             Attribuer des rôles
             <DropdownMenuShortcut>
               <Pencil className="size-5" />
@@ -170,7 +189,7 @@ const ServerLeftHeader = (currentServer: Server) => {
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={onSelectCreateChannel}>
-            Créér un salon
+            Créér un channel
             <DropdownMenuShortcut>
               <MessageCirclePlus className="size-5" />
             </DropdownMenuShortcut>
@@ -201,6 +220,7 @@ const ServerLeftHeader = (currentServer: Server) => {
           {...currentServer}
           showModalCreateChannel={showModalCreateChannel}
           onClickCreateChannel={onClickCreateChannel}
+          refetch={currentServer.refetch}
         />
       )}
       {showModalEditServer && (
@@ -223,6 +243,13 @@ const ServerLeftHeader = (currentServer: Server) => {
           {...currentServer}
           onClickEditRole={onClickEditRole}
           showModalEditRole={showModalEditRole}
+        />
+      )}
+      {showModalAddMemberRole && (
+        <AddMemberRole
+          {...currentServer}
+          onClickAddMemberRole={onClickAddMemberRole}
+          showModalAddMemberRole={showModalAddMemberRole}
         />
       )}
     </>
