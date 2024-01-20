@@ -71,6 +71,7 @@ model Channel{
   channelGroupe ChannelGroup? @relation(fields: [channelGroupId], references: [id], onDelete: Cascade)
 
   channelRole ChannelRole[]
+  InputChannel InputChannel[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -179,4 +180,17 @@ model LogServer{
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+}
+
+model InputChannel{
+  id String @id @default(uuid())
+  message String
+
+  channelId String
+  channel Channel @relation(fields:[channelId], references:[id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([channelId])
 }
