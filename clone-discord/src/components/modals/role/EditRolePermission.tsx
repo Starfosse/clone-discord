@@ -23,7 +23,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Input } from "../../ui/input"
-import { MemberRole } from "@prisma/client"
+import { MemberRole, Role } from "@prisma/client"
 import MemberRoleId, {
   TMemberRoleId,
 } from "@/lib/validator/member-role-validator"
@@ -32,7 +32,7 @@ import { Check } from "lucide-react"
 
 interface EditRolePermissionProps {
   serverId: string
-  MemberRole: MemberRole
+  MemberRole: Role
   showModalEditRole: boolean
   onClickShowModalEditRole: () => void
   refetch: () => Promise<any>
