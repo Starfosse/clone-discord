@@ -12,7 +12,7 @@ import { useEffect, useState } from "react"
 import { Button } from "../../ui/button"
 import { Dialog, DialogContent } from "../../ui/dialog"
 import EditRolePermission from "./EditRolePermission"
-import { MemberRole } from "@prisma/client"
+import { MemberRole, Role } from "@prisma/client"
 import { toast } from "sonner"
 import { Check } from "lucide-react"
 
@@ -33,7 +33,7 @@ const EditRole = (currentServer: Server) => {
   const listRoleServerData =
     trpc.getRoleServer.useQuery(serverId)
   const [listRoleServer, setListRoleServer] = useState<
-    MemberRole[] | undefined
+    Role[] | undefined
   >()
   useEffect(() => {
     if (listRoleServerData.data) {
@@ -56,7 +56,7 @@ const EditRole = (currentServer: Server) => {
     trpc.deleteRole.useMutation({
       onSuccess: () => listRoleServerData.refetch(),
     })
-  const [MemberRole, setMemberRole] = useState<MemberRole>()
+  const [MemberRole, setMemberRole] = useState<Role>()
 
   const [showModalEditRole, setShowModalEditRole] =
     useState(false)

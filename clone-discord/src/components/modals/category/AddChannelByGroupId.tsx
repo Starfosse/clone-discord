@@ -27,6 +27,7 @@ import { Button } from "../../ui/button"
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -41,6 +42,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select"
+import { useEffect, useState } from "react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Switch } from "@/components/ui/switch"
 
 interface cHGroup {
   channelsGroup: ChannelGroup
@@ -48,6 +52,11 @@ interface cHGroup {
   closeAddChannel: () => void
   refetchListChannels: () => Promise<any>
   refetchCategory: () => Promise<any>
+}
+
+interface memberRoleIdLabel {
+  id: string
+  label: string
 }
 
 const AddChannelByGroupId = (cHGroup: cHGroup) => {
@@ -58,6 +67,26 @@ const AddChannelByGroupId = (cHGroup: cHGroup) => {
         cHGroup.refetchListChannels()
       },
     })
+  // ------------
+
+  const serverId = {
+    serverId: cHGroup.channelsGroup.serverId,
+  }
+  const listRoleServer =
+    trpc.getRoleServer.useQuery(serverId)
+  const [currentListRoleServer, setCurrentListRoleServer] =
+    useState<memberRoleIdLabel[] | undefined>()
+  useEffect(() => {
+    if (listRoleServer.data) {
+      const items = listRoleServer.data.map(
+        (memberRole) => ({
+          id: memberRole.id,
+          label: memberRole.role,
+        })
+      )
+      setCurrentListRoleServer(items)
+    }
+  }, [listRoleServer.data])
 
   const form = useForm<TChannelValidator>({
     resolver: zodResolver(ChannelValidator),
@@ -66,6 +95,8 @@ const AddChannelByGroupId = (cHGroup: cHGroup) => {
       id: cHGroup.channelsGroup.id,
       name: "",
       type: ChannelType.TEXT,
+      isPrivate: false,
+      rolesRequired: [],
     },
   })
 
@@ -73,10 +104,24 @@ const AddChannelByGroupId = (cHGroup: cHGroup) => {
     name,
     id,
     type,
+    rolesRequired,
+    isPrivate,
     serverId,
   }: TChannelValidator) => {
-    mutate({ name, id, type, serverId })
+    mutate({
+      name,
+      id,
+      type,
+      rolesRequired,
+      isPrivate,
+      serverId,
+    })
     cHGroup.closeAddChannel()
+  }
+
+  const [isPrivate, setIsPrivate] = useState(false)
+  const setPrivate = () => {
+    setIsPrivate(!isPrivate)
   }
 
   return (
@@ -166,6 +211,74 @@ const AddChannelByGroupId = (cHGroup: cHGroup) => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name={"isPrivate"}
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border px-2 m-2 gap-2 ml-6 relative left-2">
+                    <div className="space-y-0.5">
+                      <FormLabel className="">
+                        Privé ?
+                      </FormLabel>
+                      <FormDescription>
+                        Le salon ne sera visible que par les
+                        rôles selectionnés
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        onClick={setPrivate}
+                        onChange={setPrivate}
+                        checked={field.value}
+                        // checked={action.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              {currentListRoleServer &&
+                isPrivate &&
+                currentListRoleServer.map((item) => (
+                  <FormField
+                    key={item.id}
+                    control={form.control}
+                    name="rolesRequired"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={item.id}
+                          className="flex flex-row items-center justify-between rounded-lg border p-2 m-2 gap-1 ml-6 relative left-2">
+                          <FormLabel className="font-normal">
+                            {item.label}
+                          </FormLabel>
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(
+                                item.id
+                              )}
+                              onCheckedChange={(
+                                checked
+                              ) => {
+                                return checked
+                                  ? field.onChange([
+                                      ...field.value,
+                                      item.id,
+                                    ])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) =>
+                                          value !== item.id
+                                      )
+                                    )
+                              }}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )
+                    }}
+                  />
+                ))}
             </div>
             <DialogFooter>
               <Button

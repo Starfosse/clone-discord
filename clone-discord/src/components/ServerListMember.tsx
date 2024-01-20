@@ -41,7 +41,8 @@ const getDataDisplay = (id: string): DataDisplay[] => {
   }, [ServerListMemberData.data])
   const roles = ServerListMemberData.data
     ? ServerListMemberData.data.roles.sort(
-        (a, b) => (a.orderServ ?? 0) - (b.orderServ ?? 0)
+        (a: Role, b: Role) =>
+          (a.orderServ ?? 0) - (b.orderServ ?? 0)
       )
     : undefined
 

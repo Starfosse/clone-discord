@@ -7,8 +7,10 @@ const createChannelByGroupId = publicProcedure
   .input(ChannelValidator)
   .mutation(async ({ input }) => {
     const user = await currentUser()
+
     if (!input.serverId) return
-    return await prisma.channelGroup.update({
+
+    const res = await prisma.channelGroup.update({
       where: {
         id: input.id,
       },
@@ -18,10 +20,27 @@ const createChannelByGroupId = publicProcedure
             serverId: input.serverId,
             name: input.name,
             type: input.type,
+            isPrivate: input.isPrivate,
           },
         },
       },
     })
+    for (let i = 0; i < input.rolesRequired.length; i++) {
+      const res2 = await prisma.channel.update({
+        where: {
+          id: res.id,
+        },
+        data: {
+          channelRole: {
+            create: [
+              {
+                RoleId: input.rolesRequired[i],
+              },
+            ],
+          },
+        },
+      })
+    }
   })
 
 export default createChannelByGroupId

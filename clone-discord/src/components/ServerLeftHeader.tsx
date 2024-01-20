@@ -38,6 +38,7 @@ import AddChannel from "./modals/channel/AddChannel"
 import CreateRole from "./modals/role/CreateRole"
 import EditRole from "./modals/role/EditRole"
 import EditServer from "./modals/server/EditServer"
+import AddMemberRole from "./modals/member/AddMemberRole"
 
 const ServerLeftHeader = (currentServer: Server) => {
   const serverId = { id: currentServer.id }
@@ -60,6 +61,11 @@ const ServerLeftHeader = (currentServer: Server) => {
 
   const [showModalEditRole, setshowModalEditRole] =
     useState(false)
+
+  const [
+    showModalAddMemberRole,
+    setShowModalAddMemberRole,
+  ] = useState(false)
 
   const router = useRouter()
 
@@ -121,6 +127,13 @@ const ServerLeftHeader = (currentServer: Server) => {
     setshowModalEditRole(false)
   }
 
+  const onSelectAddMemberRole = () => {
+    setShowModalAddMemberRole(true)
+  }
+  const onClickAddMemberRole = () => {
+    setShowModalAddMemberRole(false)
+  }
+
   return (
     <>
       {/* <div className="flex w-full items-center text-white cursor-pointer hover:bg-gray-600 px-2 py-2 pb-4">
@@ -160,7 +173,8 @@ const ServerLeftHeader = (currentServer: Server) => {
               <PlusCircle className="size-5" />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={onSelectAddMemberRole}>
             Attribuer des rôles
             <DropdownMenuShortcut>
               <Pencil className="size-5" />
@@ -229,6 +243,13 @@ const ServerLeftHeader = (currentServer: Server) => {
           {...currentServer}
           onClickEditRole={onClickEditRole}
           showModalEditRole={showModalEditRole}
+        />
+      )}
+      {showModalAddMemberRole && (
+        <AddMemberRole
+          {...currentServer}
+          onClickAddMemberRole={onClickAddMemberRole}
+          showModalAddMemberRole={showModalAddMemberRole}
         />
       )}
     </>
