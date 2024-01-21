@@ -21,13 +21,15 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="fr" className="h-full">
+      <html
+        lang="fr"
+        className="h-full max-h-full overflow-auto">
         <body
           className={cn(
-            "relative h-full font-sans antialiased",
+            "relative h-full font-sans antialiased ",
             inter.className
           )}>
-          <main className="relative flex min-h-screen">
+          <main className="relative flex min-h-screen max-h-screen">
             <Provider>
               <SideLeftBar />
               <div className="flex-grow flex-1 bg-black">
