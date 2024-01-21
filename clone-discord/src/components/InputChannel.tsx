@@ -19,8 +19,11 @@ import {
 import { useRef, useState } from "react"
 
 const InputChannel = (currentChannel: Channel) => {
+  const utils = trpc.useUtils()
   const { mutate: addMessage } =
-    trpc.addInputChannel.useMutation()
+    trpc.addInputChannel.useMutation({
+      onSuccess: () => utils.getInputChannel.invalidate(),
+    })
   const form = useForm<TInputContent>({
     resolver: zodResolver(inputContent),
     defaultValues: {
@@ -35,7 +38,7 @@ const InputChannel = (currentChannel: Channel) => {
     form.reset()
   }
   return (
-    <div className="bg-tertiaryColor h-14 w-full">
+    <div className="bg-primaryColor h-14 w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField

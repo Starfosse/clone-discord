@@ -22,7 +22,7 @@ const ChannelIdPage = () => {
   return (
     <>
       <div className="text-white flex flex-col h-full">
-        <div className="bg-primaryColor h-14 sticky w-full flex items-center pl-4 text-2xl">
+        <div className=" bg-primaryColor h-14 sticky w-full flex items-center pl-4 text-2xl border-b border-b-black z-50">
           {currentChannel &&
           currentChannel.type === "TEXT" ? (
             <Hash width={20} />
@@ -36,7 +36,7 @@ const ChannelIdPage = () => {
         {currentChannel && (
           <ChatDisplay {...currentChannel} />
         )}
-        <div className="mt-auto">
+        <div className="mt-auto sticky">
           {currentChannel && (
             <InputChannel {...currentChannel} />
           )}

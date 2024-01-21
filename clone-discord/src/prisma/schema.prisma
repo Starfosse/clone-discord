@@ -27,6 +27,7 @@ model User {
 
   servers Server[]
   members Member[]
+  InputChannel InputChannel[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -189,8 +190,12 @@ model InputChannel{
   channelId String
   channel Channel @relation(fields:[channelId], references:[id], onDelete: Cascade)
 
+  userId String
+  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
+  @@index([userId])
   @@index([channelId])
 }
