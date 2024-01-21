@@ -19,7 +19,6 @@ import {
 import { useRef, useState } from "react"
 
 const InputChannel = (currentChannel: Channel) => {
-  const champInputRef = useRef(null)
   const { mutate: addMessage } =
     trpc.addInputChannel.useMutation()
   const form = useForm<TInputContent>({
@@ -29,15 +28,11 @@ const InputChannel = (currentChannel: Channel) => {
       message: "",
     },
   })
-  const [refresh, setRefresh] = useState(false)
   const onSubmit = ({ message }: TInputContent) => {
-    if (!champInputRef.current) return
-    if (!!champInputRef.current.value) return
-    champInputRef.current.value = ""
-    setRefresh(!refresh)
     console.log("good")
     const id = currentChannel.id
     addMessage({ id, message })
+    form.reset()
   }
   return (
     <div className="bg-tertiaryColor h-14 w-full">
@@ -50,7 +45,6 @@ const InputChannel = (currentChannel: Channel) => {
               <FormItem>
                 <FormControl>
                   <Input
-                    ref={champInputRef}
                     {...field}
                     placeholder={`Envoyez un message dans ${currentChannel?.name}`}
                     className="relative bottom-1 w-[98%] mx-auto bg-secondaryColor border border-secondaryColor"
