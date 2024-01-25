@@ -128,7 +128,6 @@ const AvatarMember = (member: Member) => {
   const setOpenFalse = () => {
     setOpen(false)
   }
-
   return (
     <div
       onClick={setOpenTrue}
