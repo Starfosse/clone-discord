@@ -14,7 +14,7 @@ const getUsersByMemberByServer = publicProcedure
     let listUserServer = []
     for (let i = 0; i < members.length; i++) {
       const usersServer = await prisma.user.findFirst({
-        where: { userId: members[i].userId },
+        where: { id: members[i].userId },
       })
       if (!usersServer) return
       listUserServer.push(usersServer)

@@ -32,7 +32,6 @@ const InputChannel = (currentChannel: Channel) => {
     },
   })
   const onSubmit = ({ message }: TInputContent) => {
-    console.log("good")
     const id = currentChannel.id
     addMessage({ id, message })
     form.reset()

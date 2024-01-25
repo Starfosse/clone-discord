@@ -10,8 +10,8 @@ const getUserByMember = publicProcedure
     return await prisma.user.findFirst({
       where: {
         members: {
-          every: {
-            id: input.id,
+          some: {
+            userId: input.id,
           },
         },
       },

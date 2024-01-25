@@ -2,11 +2,11 @@ import { stateList } from "@prisma/client"
 import { z } from "zod"
 
 export const ProfileValidator = z.object({
-  imageUrl: z
-    .string()
-    .url({ message: "url invalide" })
-    .optional()
-    .or(z.literal("")),
+  imageUrl: z.any(),
+  // .string()
+  // .url({ message: "url invalide" })
+  // .optional()
+  // .or(z.literal("")),
   pseudo: z
     .string()
     .min(8, {

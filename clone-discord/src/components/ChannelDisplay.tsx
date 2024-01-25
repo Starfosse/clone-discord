@@ -10,6 +10,7 @@ import { Hash, Headphones, Video } from "lucide-react"
 import { useState } from "react"
 import EditChannel from "./modals/channel/EditChannel"
 import Link from "next/link"
+import ActiveUser from "./ActiveUser"
 
 interface channelProps {
   channel: Channel
@@ -20,6 +21,7 @@ interface channelProps {
 
 const ChannelDisplay = (channelProps: channelProps) => {
   const utils = trpc.useUtils()
+
   const [showModalEditChannel, setShowModalEditChannel] =
     useState(false)
   const { mutate: deleteChannel } =
@@ -81,6 +83,7 @@ const ChannelDisplay = (channelProps: channelProps) => {
           />
         )}
       </Link>
+      <ActiveUser {...channelProps.channel} />
     </div>
   )
 }

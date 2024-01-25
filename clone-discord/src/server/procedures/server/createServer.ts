@@ -21,6 +21,7 @@ const createServer = publicProcedure
         userId: user?.id,
       },
     })
+    if (!userOwner) return
     const server = await prisma.server.create({
       data: {
         imageUrl: imageUrl!,
@@ -29,7 +30,7 @@ const createServer = publicProcedure
         userId: user.id,
         members: {
           create: {
-            userId: user.id,
+            userId: userOwner.id,
           },
         },
         roles: {
@@ -59,7 +60,6 @@ const createServer = publicProcedure
       },
     })
     if (!rolesServer) return
-
     const updatedServerChannels =
       await prisma.server.update({
         where: { id: server.id },

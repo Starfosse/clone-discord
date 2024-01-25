@@ -43,9 +43,10 @@ import {
 import { Separator } from "./ui/separator"
 import Image from "next/image"
 import { toast } from "sonner"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Check } from "lucide-react"
 import { User } from "@prisma/client"
+import { uploadFile } from "@/lib/upload.action"
 
 const Profile = () => {
   const profileData = trpc.getUser.useQuery()
@@ -65,9 +66,6 @@ const Profile = () => {
   const form = useForm<TProfileValidator>({
     resolver: zodResolver(ProfileValidator),
     defaultValues: {
-      imageUrl: currentProfile?.imageUrl
-        ? currentProfile?.imageUrl
-        : "",
       pseudo: currentProfile?.pseudo,
       state: stateList.BUSY,
     },
@@ -77,12 +75,23 @@ const Profile = () => {
     onSuccess: () => profileData.refetch(),
   })
 
-  const onSubmit = ({
+  // const formData = new FormData(imageUrl)
+  // const file = formData.get("file") as File
+  // console.log(file)
+  // // console.log(url)
+  // console.log(imageUrl)
+  // const url = await uploadFile(imageUrl as File)
+
+  const onSubmit = async ({
     imageUrl,
     pseudo,
     state,
   }: TProfileValidator) => {
+    const url = await uploadFile(imageUrl)
+    imageUrl = url
+    console.log(imageUrl)
     setOpen(false)
+    form.reset()
     mutate({ imageUrl, pseudo, state })
   }
 
@@ -146,6 +155,7 @@ const Profile = () => {
                         </FormLabel>
                         <FormControl>
                           <Input
+                            type="file"
                             placeholder={`${currentProfile?.imageUrl}`}
                             {...field}
                             className="col-span-3"

@@ -1,47 +1,65 @@
 "use client"
 
 import { trpc } from "@/app/_trpc/client"
-import ChatDisplay from "@/components/ChatDisplay"
-import InputChannel from "@/components/InputChannel"
-import { Channel } from "@prisma/client"
-import { Hash, Headphones, Video } from "lucide-react"
+import ChannelAudio from "@/components/ChannelAudio"
+import ChannelText from "@/components/ChannelText"
+import ChannelVideo from "@/components/ChannelVideo"
+import { Channel, User } from "@prisma/client"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 const ChannelIdPage = () => {
+  const utils = trpc.useUtils()
   const channelId = useParams<{ channelId: string }>()
   const channelData =
     trpc.getChannelById.useQuery(channelId)
   const [currentChannel, setCurrentChannel] = useState<
     Channel | undefined
   >()
+  const userData = trpc.getUser.useQuery()
+  const [currentUser, setCurrentUser] = useState<
+    User | undefined
+  >()
+  const whoData = trpc.getMemberByUser.useQuery(channelId)
+  const { mutate: joinChannel } =
+    trpc.joinMemberToChannel.useMutation({
+      onSuccess: () => utils.getChannelUsers.invalidate(),
+    })
   useEffect(() => {
     if (channelData.data)
       setCurrentChannel(channelData.data)
-  }, [channelData.data])
+    if (userData.data) setCurrentUser(userData.data)
+    if (whoData.data && channelData.data) {
+      const MemberIdChannelId = {
+        memberId: whoData.data.id,
+        channelId: channelData.data.id,
+      }
+      if (
+        currentChannel?.type === "AUDIO" ||
+        currentChannel?.type === "VIDEO"
+      )
+        console.log(MemberIdChannelId)
+      joinChannel(MemberIdChannelId)
+    }
+  }, [channelData.data, userData.data, whoData.data])
+
   return (
     <>
-      <div className="text-white flex flex-col h-full">
-        <div className=" bg-primaryColor h-14 sticky w-full flex items-center pl-4 text-2xl border-b border-b-black z-50">
-          {currentChannel &&
-          currentChannel.type === "TEXT" ? (
-            <Hash width={20} />
-          ) : currentChannel?.type === "AUDIO" ? (
-            <Headphones width={20} />
-          ) : (
-            <Video width={20} />
-          )}
-          &nbsp;{currentChannel?.name}
-        </div>
-        {currentChannel && (
-          <ChatDisplay {...currentChannel} />
-        )}
-        <div className="mt-auto sticky">
-          {currentChannel && (
-            <InputChannel {...currentChannel} />
-          )}
-        </div>
-      </div>
+      {currentChannel &&
+        currentUser &&
+        (currentChannel.type === "TEXT" ? (
+          <ChannelText {...currentChannel} />
+        ) : currentChannel.type === "AUDIO" ? (
+          <ChannelAudio
+            currentChannel={currentChannel}
+            currentUser={currentUser}
+          />
+        ) : (
+          <ChannelVideo
+            {...currentChannel}
+            {...currentUser}
+          />
+        ))}
     </>
   )
 }
