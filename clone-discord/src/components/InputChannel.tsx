@@ -17,9 +17,15 @@ import {
   inputContent,
 } from "@/lib/validator/input-content-validator"
 import { useRef, useState } from "react"
+import GiphySearch from "./GiphySearch"
 
 const InputChannel = (currentChannel: Channel) => {
   const utils = trpc.useUtils()
+  const [selectedGif, setSelectedGif] = useState<string>("")
+  const handleGifSelect = (url: string) => {
+    setSelectedGif(url)
+    console.log(selectedGif)
+  }
   const { mutate: addMessage } =
     trpc.addInputChannel.useMutation({
       onSuccess: () => utils.getInputChannel.invalidate(),
@@ -52,6 +58,16 @@ const InputChannel = (currentChannel: Channel) => {
                     className="relative bottom-1 w-[98%] mx-auto bg-secondaryColor border border-secondaryColor"
                   />
                 </FormControl>
+                <div className="text-xs">
+                  <Button className="flex relative bottom-14 ml-auto p-[-4] text-xs pt-[-4]">
+                    GIF
+                  </Button>
+                </div>
+                <div className="relative bottom-40 text-black">
+                  <GiphySearch
+                    onGifSelect={handleGifSelect}
+                  />
+                </div>
               </FormItem>
             )}
           />
@@ -63,3 +79,4 @@ const InputChannel = (currentChannel: Channel) => {
 
 export default InputChannel
 //todo retirer la couleur en bg au profit de celle pour le chat, retirer ler border blanc quand focus
+//gérer l'envoie du gif dans le formulaire pour l'intégrer dans les input

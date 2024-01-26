@@ -15,6 +15,8 @@ export const createNewUser = async () => {
       data: {
         userId: user.id,
         pseudo: user.username,
+        imageUrl:
+          "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-icone-png-2-ac4mdWmeYGRr80YhUL0nhcHOTQVh7U.png",
       },
     })
   }

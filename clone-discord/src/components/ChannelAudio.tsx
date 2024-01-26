@@ -15,6 +15,7 @@ import { Track } from "livekit-client"
 import { Channel, Member, User } from "@prisma/client"
 import { Hash, Headphones } from "lucide-react"
 import { trpc } from "@/app/_trpc/client"
+import { useDisconnectButton } from "@livekit/components-react"
 
 interface ChannelAudioProps {
   currentChannel: Channel
@@ -24,7 +25,7 @@ interface ChannelAudioProps {
 const ChannelAudio = (cAPRops: ChannelAudioProps) => {
   // console.log(cAPRops.currentChannel.id)
   // console.log(cAPRops.currentUser.id)
-  const ChannelId = { id: cAPRops.currentChannel.id }
+  // const ChannelId = { id: cAPRops.currentChannel.id }
   const [token, setToken] = useState("")
   useEffect(() => {
     ;(async () => {
@@ -43,30 +44,36 @@ const ChannelAudio = (cAPRops: ChannelAudioProps) => {
   if (token === "") {
     return <div>Getting token...</div>
   }
+  // const { buttonProps } = useDisconnectButton({
+  //   stopTracks: true,
+  // })
 
   return (
     // <div className="text-white flex flex-col max-h-screen">
     //   <div className=" bg-primaryColor h-14 sticky w-full flex items-center pl-4 text-2xl border-b border-b-black z-50">
     //     <Headphones width={20} />
     //     &nbsp;{currentChannel?.name}
-    //   </div>
-    <LiveKitRoom
-      video={false}
-      audio={true}
-      token={token}
-      serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
-      // Use the default LiveKit theme for nice styles.
-      data-lk-theme="default"
-      style={{ height: "100vh - 3.5rem" }}>
-      {/* Your custom component with basic video conferencing functionality. */}
-      <MyVideoConference />
-      {/* The RoomAudioRenderer takes care of room-wide audio for you. */}
-      <RoomAudioRenderer />
-      {/* Controls for the user to start/stop audio, video, and screen 
+    //   </div>+
+    <>
+      <LiveKitRoom
+        video={false}
+        audio={true}
+        token={token}
+        serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
+        // Use the default LiveKit theme for nice styles.
+        data-lk-theme="default"
+        style={{ height: "100vh - 3.5rem" }}>
+        {/* Your custom component with basic video conferencing functionality. */}
+        <MyVideoConference />
+        {/* The RoomAudioRenderer takes care of room-wide audio for you. */}
+        <RoomAudioRenderer />
+        {/* Controls for the user to start/stop audio, video, and screen 
       share tracks and to leave the room. */}
-      <ControlBar />
-    </LiveKitRoom>
-    // </div>
+        <ControlBar />
+      </LiveKitRoom>
+      {/* <button {...buttonProps}>Disconnect</button>; */}
+      {/* // </div> */}
+    </>
   )
 }
 

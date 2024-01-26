@@ -15,19 +15,19 @@ import { Track } from "livekit-client"
 import { Channel, User } from "@prisma/client"
 import { Video } from "lucide-react"
 
-const ChannelVideo = (
-  currentChannel: Channel,
+interface ChannelVideoProps {
+  currentChannel: Channel
   currentUser: User
-) => {
-  const room = currentChannel.name
-  const name = currentUser.pseudo
+}
+
+const ChannelVideo = (cVPRops: ChannelVideoProps) => {
   const [token, setToken] = useState("")
 
   useEffect(() => {
     ;(async () => {
       try {
         const resp = await fetch(
-          `/api/get-participant-token?room=${room}&username=${name}`
+          `/api/get-participant-token?room=${cVPRops.currentChannel.name}&username=${cVPRops.currentUser.pseudo}`
         )
         const data = await resp.json()
         setToken(data.token)

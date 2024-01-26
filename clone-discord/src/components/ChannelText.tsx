@@ -1,3 +1,5 @@
+"use client"
+
 import { Channel } from "@prisma/client"
 import { Hash } from "lucide-react"
 import ChatDisplay from "./ChatDisplay"

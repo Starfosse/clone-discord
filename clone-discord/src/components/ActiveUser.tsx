@@ -19,12 +19,13 @@ const ActiveUser = (currentChannel: Channel) => {
   return (
     <>
       <div className="flex flex-col ml-10">
-        {currentChannelUsers?.map((user) => (
-          <div className="flex" key={user.id}>
-            {/* <Image alt="avatar" fill src={user.imageUrl} />{" "} */}
-            {user.pseudo}
-          </div>
-        ))}
+        {currentChannel.type !== "TEXT" &&
+          currentChannelUsers?.map((user) => (
+            <div className="flex" key={user.id}>
+              {/* <Image alt="avatar" fill src={user.imageUrl} />{" "} */}
+              {user.pseudo}
+            </div>
+          ))}
       </div>
     </>
   )
