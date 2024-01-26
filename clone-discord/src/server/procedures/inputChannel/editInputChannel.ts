@@ -10,6 +10,7 @@ const editInputChannel = publicProcedure
       where: { id: input.id },
       data: {
         message: input.message,
+        isEdit: true,
       },
     })
   })

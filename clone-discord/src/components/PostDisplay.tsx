@@ -102,7 +102,12 @@ const PostDisplay = ({
             </p>
           </div>
           {!edit ? (
-            <p>{msg.message}</p>
+            <div className="flex">
+              <p>{msg.message}</p>
+              <p className="text-muted-foreground text-xs my-auto pl-1">
+                (modifié)
+              </p>
+            </div>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)}>
               <Input

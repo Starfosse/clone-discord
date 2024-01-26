@@ -28,25 +28,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { uploadFile } from "@/lib/upload.action"
 import {
   ProfileValidator,
   TProfileValidator,
 } from "@/lib/validator/profile-validator"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { stateList } from "@prisma/client"
+import { User, stateList } from "@prisma/client"
+import { Check } from "lucide-react"
+import Image from "next/image"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "./ui/avatar"
 import { Separator } from "./ui/separator"
-import Image from "next/image"
-import { toast } from "sonner"
-import { useEffect, useRef, useState } from "react"
-import { Check } from "lucide-react"
-import { User } from "@prisma/client"
-import { uploadFile } from "@/lib/upload.action"
 
 const Profile = () => {
   const profileData = trpc.getUser.useQuery()
@@ -58,6 +57,7 @@ const Profile = () => {
   useEffect(() => {
     if (profileData.data) {
       setCurrentProfile(profileData.data)
+      setTmpImgUser(profileData.data.imageUrl)
     }
   }, [profileData.data])
 
@@ -74,23 +74,33 @@ const Profile = () => {
   const { mutate } = trpc.updateUser.useMutation({
     onSuccess: () => profileData.refetch(),
   })
-
-  // const formData = new FormData(imageUrl)
-  // const file = formData.get("file") as File
-  // console.log(file)
-  // // console.log(url)
-  // console.log(imageUrl)
-  // const url = await uploadFile(imageUrl as File)
+  const [tmpImgUser, setTmpImgUser] = useState<
+    string | undefined
+  >()
+  const [currentFormaData, setCurrentFormaData] =
+    useState<FormData | null>()
+  const getBlobUrl = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const formData = new FormData()
+    if (e.target.files) {
+      const file = e.target.files[0]
+      formData.append("file", file)
+      setCurrentFormaData(formData)
+      // if(tmpImgUser !== currentProfile?.imageUrl) // supprime l'image de preview précédente
+      const url = await uploadFile(formData)
+      setTmpImgUser(url)
+    }
+  }
 
   const onSubmit = async ({
-    imageUrl,
     pseudo,
     state,
+    imageUrl,
   }: TProfileValidator) => {
-    const url = await uploadFile(imageUrl)
-    imageUrl = url
-    console.log(imageUrl)
     setOpen(false)
+    if (currentFormaData)
+      imageUrl = await uploadFile(currentFormaData)
     form.reset()
     mutate({ imageUrl, pseudo, state })
   }
@@ -118,7 +128,7 @@ const Profile = () => {
             ) : (
               <Avatar className="cursor-pointer">
                 <AvatarImage
-                  src={currentProfile?.imageUrl}
+                  src={currentProfile.imageUrl}
                 />
                 <AvatarFallback className="text-xs">
                   {currentProfile?.pseudo}
@@ -136,15 +146,15 @@ const Profile = () => {
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="grid py-4">
-                  {/* {data?.imageUrl && (
-                  <Image
-                    // className="relative top-11 left-6 z-10 bg- rounded-full border-[3px] border-tertiaryColor"
-                    src={data.imageUrl}
-                    width={16}
-                    height={16}
-                    alt="ok"
-                  />
-                )} */}
+                  {tmpImgUser && (
+                    <Image
+                      className="relative mx-auto z-10 mb-8 rounded-full border-[1px] border-tertiaryColor object-cover object-center"
+                      src={tmpImgUser}
+                      width={60}
+                      height={60}
+                      alt="ok"
+                    />
+                  )}
                   <FormField
                     control={form.control}
                     name="imageUrl"
@@ -159,6 +169,7 @@ const Profile = () => {
                             placeholder={`${currentProfile?.imageUrl}`}
                             {...field}
                             className="col-span-3"
+                            onChange={getBlobUrl}
                           />
                         </FormControl>
                         <FormMessage className="col-span-4 text-right" />
@@ -283,7 +294,7 @@ const Profile = () => {
                 <DialogFooter>
                   <Button
                     type="submit"
-                    onClick={() =>
+                    onClick={() => {
                       toast.success(
                         <div className="flex items-center">
                           <Check />
@@ -292,7 +303,7 @@ const Profile = () => {
                         </div>,
                         { duration: 3000 }
                       )
-                    }>
+                    }}>
                     Sauvegarder
                   </Button>
                 </DialogFooter>
@@ -305,10 +316,5 @@ const Profile = () => {
   )
 }
 
-//TODO : ajouter imageurl de discord par défaut
-//permettre d'importer son image
-//ajouter preview image profile (carroussel shadcnui)
-//ajouter une sous-description des state
-//reload la page à la fin du formulaire
-// gérer les states avec .map
+//TODO : supprimer l'image de preview
 export default Profile
