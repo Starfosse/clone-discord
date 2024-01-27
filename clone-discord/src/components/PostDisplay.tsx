@@ -90,10 +90,11 @@ const PostDisplay = ({
     editInput({ message, id })
     setEdit(false)
   }
+  console.log(msg.message)
   return (
     <ContextMenu>
       <ContextMenuTrigger className="flex gap-4">
-        <div className="">{getUserImage(msg.userId)} </div>
+        <div className="">{getUserImage(msg.userId)}</div>
         <div className="flex flex-col">
           <div className="flex gap-2 items-center">
             <p>{getUser(msg.userId)}</p>
@@ -101,7 +102,14 @@ const PostDisplay = ({
               {format(msg.createdAt, "yyyy-MM-dd HH:mm:ss")}
             </p>
           </div>
-          {!edit ? (
+          {msg.isGif ? (
+            <Image
+              src={msg.message}
+              height={200}
+              width={200}
+              alt="msg gif"
+            />
+          ) : !edit ? (
             <div className="flex">
               <p>{msg.message}</p>
               <p className="text-muted-foreground text-xs my-auto pl-1">

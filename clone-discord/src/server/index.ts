@@ -40,6 +40,7 @@ import joinMemberToChannel from "./procedures/channel/joinMemberToChannel"
 import getMemberByUser from "./procedures/member/getMemberByUser"
 import getChannelUsers from "./procedures/channel/getChannelUsers"
 import editImage from "./procedures/user/editImage"
+import addGifInputChannel from "./procedures/inputChannel/addGifInputChannel"
 
 export const appRouter = createTRPCRouter({
   getUser,
@@ -83,6 +84,7 @@ export const appRouter = createTRPCRouter({
   getMemberByUser,
   getChannelUsers,
   editImage,
+  addGifInputChannel,
 })
 
 export type AppRouter = typeof appRouter

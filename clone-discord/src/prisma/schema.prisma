@@ -191,6 +191,7 @@ model InputChannel{
   id String @id @default(uuid())
   message String
   isEdit Boolean? @default(false)
+  isGif Boolean? @default(false)
 
   channelId String
   channel Channel @relation(fields:[channelId], references:[id], onDelete: Cascade)
