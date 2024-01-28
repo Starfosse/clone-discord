@@ -23,7 +23,7 @@ const getInputChannel = publicProcedure
       take: limit + 1,
       where: { channelId: input.channelId },
       cursor: cursor ? { id: cursor } : undefined,
-      orderBy: { createdAt: "asc" }, //createdAt
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }], //createdAt
     })
     let nextCursor: typeof cursor | undefined = undefined
     if (items.length > limit) {
