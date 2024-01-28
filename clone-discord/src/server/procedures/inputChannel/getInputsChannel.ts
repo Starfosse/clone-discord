@@ -4,34 +4,31 @@ import { currentUser } from "@clerk/nextjs"
 import { z } from "zod"
 //@ts-ignore
 
-const ChannelId = z.object({
-  id: z.string(),
-})
+// const ChannelId = z.object({
+//   id: z.string(),
+// })
 
 const getInputChannel = publicProcedure
   .input(
     z.object({
-      limit: z.number().min(1).max(100).nullish(),
-      cursor: z.number().nullish(),
-      id: z.string(),
+      channelId: z.string(),
+      cursor: z.string().nullish(),
     })
   )
   .query(async ({ input }) => {
-    const user = currentUser()
-    const limit = input.limit ?? 50
-    const cursor = input.cursor
+    const limit = 4
+    const { cursor } = input
+    console.log(cursor)
     const items = await prisma.inputChannel.findMany({
       take: limit + 1,
-      where: { channelId: input.id },
-      //@ts-ignore
-      cursor: cursor ? { myCursor: cursor } : undefined,
-      orderBy: { createdAt: "asc" },
+      where: { channelId: input.channelId },
+      cursor: cursor ? { id: cursor } : undefined,
+      orderBy: { createdAt: "asc" }, //createdAt
     })
     let nextCursor: typeof cursor | undefined = undefined
     if (items.length > limit) {
       const nextItem = items.pop()
-      //@ts-ignore
-      nextCursor = nextItem!.myCursor
+      nextCursor = nextItem!.id
     }
     return {
       items,
