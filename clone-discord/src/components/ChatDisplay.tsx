@@ -4,18 +4,28 @@ import { trpc } from "@/app/_trpc/client"
 import { Channel, User } from "@prisma/client"
 import { useEffect, useState } from "react"
 import PostDisplay from "./PostDisplay"
+import { useInfiniteQuery } from "react-query"
 
 const ChatDisplay = (cDProps: Channel) => {
   const utils = trpc.useUtils()
   const query = trpc.getInputChannel.useInfiniteQuery(
     {
-      limit: 5,
+      limit: 10,
       id: cDProps.id,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   )
+
+  // const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
+  //   'id: cDProps.id',
+  //   ({ pageParam = 0 }) => trpc.getInputChannel.useQuery([cDProps.id, 5, pageParam] ),
+  //   {
+  //     getNextPageParam: (lastPage) => lastPage.nextCursor ?? false,
+  //   }
+  // );
+
   const handleScroll = (event: React.UIEvent) => {}
   const ServerId = { id: cDProps.serverId }
   const listUsersMembers =
@@ -26,6 +36,7 @@ const ChatDisplay = (cDProps: Channel) => {
     if (listUsersMembers.data)
       setCurrentListMembers(listUsersMembers.data)
   }, [listUsersMembers.data])
+  // console.log(query.fetchNextPage)
   return (
     <div
       className="text-white bg-primaryColor h-full flex relative overflow-auto"
@@ -45,6 +56,9 @@ const ChatDisplay = (cDProps: Channel) => {
               </div>
             ))
           )}
+        <button onClick={() => query.fetchNextPage()}>
+          Load More
+        </button>
       </div>
     </div>
   )
