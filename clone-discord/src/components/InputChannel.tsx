@@ -27,21 +27,21 @@ import {
 
 const InputChannel = (currentChannel: Channel) => {
   const utils = trpc.useUtils()
-  const [selectedGif, setSelectedGif] = useState<string>("")
-  const handleGifSelect = (url: string) => {
-    setSelectedGif(url)
-    const channelId = {
-      id: currentChannel.id,
-      gif: selectedGif,
-    }
-    addGif(channelId)
-    console.log(selectedGif)
-  }
+  // const [selectedGif, setSelectedGif] = useState<string>("")
+  // const handleGifSelect = (url: string) => {
+  //   setSelectedGif(url)
+  //   const channelId = {
+  //     id: currentChannel.id,
+  //     gif: selectedGif,
+  //   }
+  //   addGif(channelId)
+  //   console.log(selectedGif)
+  // }
 
-  const { mutate: addGif } =
-    trpc.addGifInputChannel.useMutation({
-      onSuccess: () => utils.getInputChannel.invalidate(),
-    })
+  // const { mutate: addGif } =
+  //   trpc.addGifInputChannel.useMutation({
+  //     onSuccess: () => utils.getInputChannel.invalidate(),
+  //   })
   const { mutate: addMessage } =
     trpc.addInputChannel.useMutation({
       onSuccess: () => utils.getInputChannel.invalidate(),
@@ -58,16 +58,16 @@ const InputChannel = (currentChannel: Channel) => {
     addMessage({ id, message })
     form.reset()
   }
-  const [isOpenGif, setIsOpenGif] = useState(false)
+  // const [isOpenGif, setIsOpenGif] = useState(false)
 
-  const handleClickOpenGif = () => {
-    setIsOpenGif(true)
-  }
+  // const handleClickOpenGif = () => {
+  //   setIsOpenGif(true)
+  // }
 
-  const closeOpenGif = () => {
-    setIsOpenGif(false)
-  }
-  console.log(isOpenGif)
+  // const closeOpenGif = () => {
+  //   setIsOpenGif(false)
+  // }
+  // console.log(isOpenGif)
   return (
     <div className="bg-primaryColor h-14 overflow-hidden">
       <div className=" w-[98%] mx-auto bg-secondaryColor rounded-md">
@@ -91,7 +91,7 @@ const InputChannel = (currentChannel: Channel) => {
           </form>
         </Form>
       </div>
-      <div className="flex w-[98%] relative flex-row gap-2">
+      {/* <div className="flex w-[98%] relative flex-row gap-2">
         <div className="text-xs text-black justify-end ml-auto relative bottom-[1.9rem]">
           <DropdownMenu
             open={isOpenGif}
@@ -126,7 +126,7 @@ const InputChannel = (currentChannel: Channel) => {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
