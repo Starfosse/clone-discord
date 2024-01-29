@@ -90,7 +90,7 @@ const PostDisplay = ({
     editInput({ message, id })
     setEdit(false)
   }
-  console.log(msg.message)
+  // console.log(msg.message)
   return (
     <ContextMenu>
       <ContextMenuTrigger className="flex gap-4">

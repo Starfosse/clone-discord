@@ -1,22 +1,13 @@
 "use client"
 
-import { Channel } from "@prisma/client"
-import { Input } from "./ui/input"
 import { trpc } from "@/app/_trpc/client"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-} from "./ui/form"
-import { Button } from "./ui/button"
 import {
   TInputContent,
   inputContent,
 } from "@/lib/validator/input-content-validator"
-import { useRef, useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Channel } from "@prisma/client"
+import { useForm } from "react-hook-form"
 import GiphySearch from "./GiphySearch"
 import {
   DropdownMenu,
@@ -24,6 +15,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+} from "./ui/form"
+import { Input } from "./ui/input"
 
 const InputChannel = (currentChannel: Channel) => {
   const utils = trpc.useUtils()
@@ -91,7 +89,7 @@ const InputChannel = (currentChannel: Channel) => {
           </form>
         </Form>
       </div>
-      {/* <div className="flex w-[98%] relative flex-row gap-2">
+      {/*<div className="flex w-[98%] relative flex-row gap-2">
         <div className="text-xs text-black justify-end ml-auto relative bottom-[1.9rem]">
           <DropdownMenu
             open={isOpenGif}
@@ -126,7 +124,7 @@ const InputChannel = (currentChannel: Channel) => {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </div> */}
+              </div>*/}
     </div>
   )
 }

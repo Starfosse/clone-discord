@@ -1,12 +1,6 @@
 import { prisma } from "@/lib/db"
 import { publicProcedure } from "@/server/trpc"
-import { currentUser } from "@clerk/nextjs"
 import { z } from "zod"
-//@ts-ignore
-
-// const ChannelId = z.object({
-//   id: z.string(),
-// })
 
 const getInputChannel = publicProcedure
   .input(
@@ -16,14 +10,13 @@ const getInputChannel = publicProcedure
     })
   )
   .query(async ({ input }) => {
-    const limit = 4
+    const limit = 15
     const { cursor } = input
-    console.log(cursor)
     const items = await prisma.inputChannel.findMany({
       take: limit + 1,
       where: { channelId: input.channelId },
       cursor: cursor ? { id: cursor } : undefined,
-      orderBy: [{ createdAt: "asc" }, { id: "asc" }], //createdAt
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
     })
     let nextCursor: typeof cursor | undefined = undefined
     if (items.length > limit) {

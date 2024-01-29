@@ -55,18 +55,15 @@ const TableDemo = () => {
     <div className="text-white">
       posts:
       {data?.pages.map((page, i) => (
-        <div key={i}></div>
+        <div className="text-white" key={i}>
+          {page.items.map((item) => item.message)}
+        </div>
       ))}
-      <button
+      {/* <button
         onClick={() => fetchNextPage()}
         disabled={!hasNextPage || isFetchingNextPage}>
         load more
-        {/* {isFetchingNextPage
-          ? "loading more..."
-          : (data?.pages.length ?? 0) < 3
-          ? "load more"
-          : "nothing more to load"} */}
-      </button>
+      </button> */}
     </div>
   )
 }
