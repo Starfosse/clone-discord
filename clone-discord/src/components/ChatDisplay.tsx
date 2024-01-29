@@ -2,19 +2,34 @@
 
 import { trpc } from "@/app/_trpc/client"
 import { Channel, User } from "@prisma/client"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import PostDisplay from "./PostDisplay"
 import { useInfiniteQuery } from "react-query"
+import { useIntersection } from "@mantine/hooks"
 
 const ChatDisplay = (cDProps: Channel) => {
-  const utils = trpc.useUtils()
-  const query = trpc.getInputChannel.useInfiniteQuery(
+  // const utils = trpc.useUtils()
+  // const query = trpc.getInputChannel.useInfiniteQuery(
+  //   {
+  //     limit: 10,
+  //     id: cDProps.id,
+  //   },
+  //   {
+  //     getNextPageParam: (lastPage) => lastPage.nextCursor,
+  //   }
+  // )
+  const {
+    data: query,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = trpc.getInputChannel.useInfiniteQuery(
     {
-      limit: 10,
-      id: cDProps.id,
+      channelId: cDProps.id,
     },
     {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      getNextPageParam: (lastPage, pages) =>
+        lastPage.nextCursor,
     }
   )
 
@@ -26,7 +41,7 @@ const ChatDisplay = (cDProps: Channel) => {
   //   }
   // );
 
-  const handleScroll = (event: React.UIEvent) => {}
+  // const handleScroll = (event: React.UIEvent) => {}
   const ServerId = { id: cDProps.serverId }
   const listUsersMembers =
     trpc.getUsersByMemberByServer.useQuery(ServerId)
@@ -36,29 +51,54 @@ const ChatDisplay = (cDProps: Channel) => {
     if (listUsersMembers.data)
       setCurrentListMembers(listUsersMembers.data)
   }, [listUsersMembers.data])
-  // console.log(query.fetchNextPage)
+
+  const lastPostRef = useRef<HTMLElement>(null)
+  const { ref, entry } = useIntersection({
+    root: lastPostRef.current,
+    threshold: 1,
+  })
+
+  useEffect(() => {
+    if (entry?.isIntersecting) fetchNextPage()
+  }, [entry])
+
+  const posts = query?.pages.flatMap((page) => page.items)
   return (
-    <div
-      className="text-white bg-primaryColor h-full flex relative overflow-auto"
-      onScroll={handleScroll}>
-      <div className="mt-auto pb-6 pl-4 flex flex-col gap-2 w-full">
-        {query.data &&
+    <div className="text-white bg-primaryColor h-full flex relative overflow-auto">
+      <div className="mt-auto pb-6 pl-4 flex flex-col gap-4 w-full">
+        {query &&
+          posts &&
           currentListMembers &&
-          query.data?.pages.map((input) =>
-            input.items.map((msg) => (
+          posts.map((post, i) => {
+            if (i === posts.length - 1) {
+              return (
+                <div
+                  key={post.id}
+                  className="hover:bg-secondaryColor"
+                  ref={ref}>
+                  <PostDisplay
+                    msg={post}
+                    currentListMembers={currentListMembers}
+                  />
+                </div>
+              )
+            }
+            return (
               <div
-                className="hover:bg-secondaryColor"
-                key={msg.id}>
+                key={post.id}
+                className="hover:bg-secondaryColor">
                 <PostDisplay
-                  msg={msg}
+                  msg={post}
                   currentListMembers={currentListMembers}
                 />
               </div>
-            ))
-          )}
-        <button onClick={() => query.fetchNextPage()}>
-          Load More
-        </button>
+            )
+          })}
+        {/* {query && (
+          <button onClick={() => fetchNextPage()}>
+            Load More
+          </button>
+        )} */}
       </div>
     </div>
   )
