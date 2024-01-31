@@ -29,10 +29,50 @@ model User {
   members Member[]
   InputChannel InputChannel[]
 
+  UserFriendInitatied UserFriend[] @relation("UserOne")
+  UserFriendReceived UserFriend[] @relation("UserTwo")
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
 
+model UserFriend{
+  id String @id @default(uuid())
+
+  userOneId String
+  userOne User @relation("UserOne", fields: [userOneId], references: [id], onDelete: Cascade)
+
+  userTwoId String
+  userTwo User @relation("UserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
+
+  pending Boolean @default(true)
+  lastMessage DateTime?
+  //showConv -> afficher ou non dans la liste des mp
+  discussion inputChat[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([userOneId])
+  @@index([userTwoId])
+  @@unique([userOneId, userTwoId])
+}
+
+model inputChat{
+  id String @id @default(uuid())
+  isEdit Boolean? @default(false)
+  isGif Boolean? @default(false)
+  message String
+  sentByUserOne Boolean @default(false)
+  sentByUserTwo Boolean @default(false)
+
+  userFriendId String
+  userFriend UserFriend @relation(fields: [userFriendId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([userFriendId])
+}
 model Server{
   id String @id @default(uuid())
   name String

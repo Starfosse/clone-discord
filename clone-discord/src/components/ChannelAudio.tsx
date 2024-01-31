@@ -23,8 +23,6 @@ interface ChannelAudioProps {
 }
 
 const ChannelAudio = (cAPRops: ChannelAudioProps) => {
-  // console.log(cAPRops.currentChannel.id)
-  // console.log(cAPRops.currentUser.id)
   // const ChannelId = { id: cAPRops.currentChannel.id }
   const [token, setToken] = useState("")
   useEffect(() => {

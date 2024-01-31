@@ -1,5 +1,5 @@
 import { authMiddleware, currentUser } from "@clerk/nextjs"
-import { createNewUser } from "./lib/createNewUser"
+import { createNewUser } from "./server/procedures/user/createNewUser"
 
 // This example protects all routes including api/trpc routes
 // Please edit this to allow other routes to be public as needed.

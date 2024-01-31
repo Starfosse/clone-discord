@@ -5,7 +5,6 @@ import { put } from "@vercel/blob"
 export const uploadFile = async (formData: FormData) => {
   const file = formData.get("file") as File
   const fileName = file.name
-
   const blob = await put(fileName, file, {
     access: "public",
     token:
@@ -13,4 +12,3 @@ export const uploadFile = async (formData: FormData) => {
   })
   return blob.url
 }
-//todo => récuperer le name du fichier pour remplacer uuidv4
