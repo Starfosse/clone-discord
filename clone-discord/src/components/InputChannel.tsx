@@ -8,13 +8,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Channel } from "@prisma/client"
 import { useForm } from "react-hook-form"
-import GiphySearch from "./GiphySearch"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
 import {
   Form,
   FormControl,
@@ -33,7 +26,6 @@ const InputChannel = (currentChannel: Channel) => {
   //     gif: selectedGif,
   //   }
   //   addGif(channelId)
-  //   console.log(selectedGif)
   // }
 
   // const { mutate: addGif } =
@@ -52,20 +44,12 @@ const InputChannel = (currentChannel: Channel) => {
     },
   })
   const onSubmit = ({ message }: TInputContent) => {
+    if (message === "") return
     const id = currentChannel.id
     addMessage({ id, message })
     form.reset()
   }
   // const [isOpenGif, setIsOpenGif] = useState(false)
-
-  // const handleClickOpenGif = () => {
-  //   setIsOpenGif(true)
-  // }
-
-  // const closeOpenGif = () => {
-  //   setIsOpenGif(false)
-  // }
-  // console.log(isOpenGif)
   return (
     <div className="bg-primaryColor h-14 overflow-hidden">
       <div className=" w-[98%] mx-auto bg-secondaryColor rounded-md">

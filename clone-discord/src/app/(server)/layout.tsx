@@ -15,6 +15,7 @@ export default function ServerLayout({
   children: React.ReactNode
 }) {
   const serverId = useParams<{ serverId: string }>()
+
   const serverData = trpc.getServer.useQuery(serverId)
   const [currentServer, setCurrentServer] = useState<
     Server | undefined
