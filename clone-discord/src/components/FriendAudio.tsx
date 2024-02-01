@@ -1,34 +1,37 @@
 "use client"
 
-import "@livekit/components-styles"
-import {
-  LiveKitRoom,
-  VideoConference,
-  GridLayout,
-  ParticipantTile,
-  useTracks,
-  RoomAudioRenderer,
-  ControlBar,
-} from "@livekit/components-react"
-import { useEffect, useState } from "react"
-import { Track } from "livekit-client"
-import { Channel, Member, User } from "@prisma/client"
-import { Hash, Headphones } from "lucide-react"
 import { trpc } from "@/app/_trpc/client"
-import { useDisconnectButton } from "@livekit/components-react"
+import {
+  ControlBar,
+  GridLayout,
+  LiveKitRoom,
+  ParticipantTile,
+  RoomAudioRenderer,
+  useParticipantInfo,
+  useTracks,
+} from "@livekit/components-react"
+import { DisconnectButton } from "@livekit/components-react"
+import "@livekit/components-styles"
+import { User } from "@prisma/client"
+import { Track } from "livekit-client"
+import { useEffect, useState } from "react"
 
-interface ChannelAudioProps {
-  currentChannel: Channel
-  currentUser: User
+interface FriendAudioProps {
+  discussionId: string
 }
 
-const ChannelAudio = (cAPRops: ChannelAudioProps) => {
+const FriendAudio = (fAProps: FriendAudioProps) => {
+  const userData = trpc.getUser.useQuery()
+  const [user, setUser] = useState<User | undefined>()
+  useEffect(() => {
+    if (userData.data) setUser(userData.data)
+  }, [userData.data])
   const [token, setToken] = useState("")
   useEffect(() => {
     ;(async () => {
       try {
         const resp = await fetch(
-          `/api/get-participant-token?room=${cAPRops.currentChannel.name}&username=${cAPRops.currentUser.pseudo}`
+          `/api/get-participant-token?room=${fAProps.discussionId}&username=${user?.pseudo}`
         )
         const data = await resp.json()
         setToken(data.token)
@@ -41,6 +44,7 @@ const ChannelAudio = (cAPRops: ChannelAudioProps) => {
   if (token === "") {
     return <div>Getting token...</div>
   }
+
   return (
     <>
       <LiveKitRoom
@@ -84,4 +88,4 @@ function MyVideoConference() {
   )
 }
 
-export default ChannelAudio
+export default FriendAudio

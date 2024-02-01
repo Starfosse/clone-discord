@@ -44,9 +44,12 @@ model UserFriend{
   userTwoId String
   userTwo User @relation("UserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
 
+  // isCalling Boolean? @default(false)
+  // isRecording Boolean? @default(false)
   pending Boolean @default(true)
   lastMessage DateTime?
-  //showConv -> afficher ou non dans la liste des mp
+  showConv Boolean? @default(false)
+  
   discussion inputChat[]
 
   createdAt DateTime @default(now())

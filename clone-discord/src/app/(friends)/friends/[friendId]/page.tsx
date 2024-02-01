@@ -2,6 +2,7 @@
 
 import { trpc } from "@/app/_trpc/client"
 import DiscussionInputChat from "@/components/DiscussionInputChat"
+import FriendAudio from "@/components/FriendAudio"
 import FriendHeader from "@/components/FriendHeader"
 import InputChatDiscussion from "@/components/InputDiscussion"
 import { User } from "@prisma/client"
@@ -20,23 +21,24 @@ const FriendPage = () => {
     if (friend.data) setCurrentFriend(friend.data)
   }, [friend.data])
   return (
-    <div className="text-white flex flex-col bg-primaryColor h-full">
-      {currentFriend && <FriendHeader {...currentFriend} />}
-      test
+    <div className="h-full">
       {currentFriend && (
-        <DiscussionInputChat
-          discussionId={userFriend.friendId}
-          currentFriend={currentFriend}
-        />
-      )}
-      <div className="mt-auto sticky">
-        {currentFriend && (
-          <InputChatDiscussion
+        <div className="text-white flex flex-col bg-primaryColor h-full">
+          <FriendHeader currentFriend={currentFriend} />
+
+          <DiscussionInputChat
             discussionId={userFriend.friendId}
-            friend={currentFriend?.pseudo}
+            currentFriend={currentFriend}
           />
-        )}
-      </div>
+
+          <div className="mt-auto sticky">
+            <InputChatDiscussion
+              discussionId={userFriend.friendId}
+              friend={currentFriend?.pseudo}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
