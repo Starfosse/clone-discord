@@ -50,7 +50,7 @@ const PostInputChat = ({
         <Image
           src={currentUsers?.userOne.imageUrl}
           alt="user picture"
-          className="rounded-full"
+          className="rounded-full aspect-square"
           width={30}
           height={30}
         />
@@ -60,7 +60,7 @@ const PostInputChat = ({
         <Image
           src={currentUsers.userTwo.imageUrl}
           alt="user picture"
-          className="rounded-full"
+          className="rounded-full aspect-square"
           width={30}
           height={30}
         />

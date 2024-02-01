@@ -29,7 +29,7 @@ const ListDiscussion = () => {
               key={friend.id}
               className="relative w-48 justify-center items-center border border-tertiaryColor rounded-md hover:bg-slate-800 mx-auto py-2 ">
               <Link
-                className="flex"
+                className="flex items-center"
                 href={`/friends/${currentListDiscussion.userFriendList[index].id}`}>
                 <Image
                   className="rounded-full ml-1 aspect-square my-1"

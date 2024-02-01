@@ -50,7 +50,6 @@ const FriendsAllList = () => {
                 className="rounded-full bg-tertiaryColor border-[0.5rem] border-tertiaryColor ">
                 <MessageCircle />
               </Link>
-              <Button className="rounded-full">⁝</Button>
             </div>
           </div>
         ))}

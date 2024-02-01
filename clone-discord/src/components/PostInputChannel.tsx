@@ -44,7 +44,7 @@ const PostInputChannel = ({
         <Image
           src={user.imageUrl}
           alt="user picture"
-          className="rounded-full"
+          className="rounded-full aspect-square"
           width={30}
           height={30}
         />
@@ -92,7 +92,7 @@ const PostInputChannel = ({
   }
   return (
     <ContextMenu>
-      <ContextMenuTrigger className="flex gap-4">
+      <ContextMenuTrigger className="flex gap-4 items-center ">
         <div className="">{getUserImage(msg.userId)}</div>
         <div className="flex flex-col">
           <div className="flex gap-2 items-center">
