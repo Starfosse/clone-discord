@@ -27,22 +27,23 @@ const ListDiscussion = () => {
           (friend, index) => (
             <div
               key={friend.id}
-              className="w-48 justify-center items-center border border-tertiaryColor rounded-md hover:bg-slate-800 mx-auto py-4">
+              className="relative w-48 justify-center items-center border border-tertiaryColor rounded-md hover:bg-slate-800 mx-auto py-2 ">
               <Link
                 className="flex"
                 href={`/friends/${currentListDiscussion.userFriendList[index].id}`}>
                 <Image
-                  className="rounded-sm"
+                  className="rounded-full ml-1 aspect-square my-1"
                   alt="friend-image"
                   src={friend.imageUrl}
-                  width={20}
-                  height={20}
+                  width={24}
+                  height={24}
                 />
                 <Image
                   alt="friend-image"
-                  src={`/${friend.state}.PNG`}
-                  width={6}
-                  height={6}
+                  className="rounded-full absolute top-7 left-[1.15rem] border-2 border-tertiaryColor"
+                  src={`/${friend.state}.png`}
+                  width={10}
+                  height={10}
                 />
                 <div className="pl-4">{friend.pseudo}</div>
               </Link>

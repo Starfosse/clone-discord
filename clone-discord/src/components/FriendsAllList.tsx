@@ -20,27 +20,26 @@ const FriendsAllList = () => {
   useEffect(() => {
     if (data.data) setFriends(data.data)
   }, [data.data])
-
   return (
     <div className="flex flex-col text-white p-5 gap-3">
       {friends &&
         friends.friendsList.map((friend, index) => (
           <div
             key={friend?.id}
-            className="w-80 h-14  bg-secondaryColor rounded-lg flex items-center">
+            className="w-80 h-14  bg-secondaryColor rounded-lg flex items-center relative">
             <Image
-              className="rounded-full ml-2"
-              src={friend?.imageUrl ?? ""}
+              className="rounded-full ml-2 aspect-square"
+              src={friend.imageUrl}
               width={28}
               height={28}
               alt="ok"
             />
             <div className="relative">
               <Image
-                className="absolute right-0 z-10 rounded-full border-[8px] border-tertiaryColor"
+                className="relative top-[0.67rem] right-[0.67rem] rounded-full border-2 border-tertiaryColor"
                 src={`/${friend.state.toLocaleLowerCase()}.png`}
-                width={16}
-                height={16}
+                width={14}
+                height={14}
                 alt="ok"
               />
             </div>

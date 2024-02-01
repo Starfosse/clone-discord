@@ -42,21 +42,21 @@ const FriendsOnlineList = () => {
         friendsOnline.onlineFriendsList.map(
           (friendOnline, index) => (
             <div
-              key={friendOnline.id}
-              className="w-80 h-14  bg-secondaryColor rounded-lg flex items-center">
+              key={friendOnline?.id}
+              className="w-80 h-14  bg-secondaryColor rounded-lg flex items-center relative">
               <Image
-                className="rounded-full ml-2"
-                src={friendOnline.imageUrl ?? ""}
+                className="rounded-full ml-2 aspect-square"
+                src={friendOnline.imageUrl}
                 width={28}
                 height={28}
                 alt="ok"
               />
               <div className="relative">
                 <Image
-                  className="absolute right-0 z-10 rounded-full border-[8px] border-tertiaryColor"
-                  src={`/${friendOnline?.state.toLocaleLowerCase()}.png`}
-                  width={16}
-                  height={16}
+                  className="relative top-[0.67rem] right-[0.67rem] rounded-full border-2 border-tertiaryColor"
+                  src={`/${friendOnline.state.toLocaleLowerCase()}.png`}
+                  width={14}
+                  height={14}
                   alt="ok"
                 />
               </div>
