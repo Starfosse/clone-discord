@@ -1,13 +1,13 @@
 "use client"
 
-import { useParams } from "next/navigation"
 import { trpc } from "@/app/_trpc/client"
-import { useContext, useEffect, useState } from "react"
-import { Server } from "@prisma/client"
 import ServerLeftHeader from "@/components/ServerLeftHeader"
+import ServerLeftListChannel from "@/components/ServerLeftListChannel"
+import ServerRightListMember from "@/components/ServerRightListMember"
 import { Separator } from "@/components/ui/separator"
-import ServerListChannel from "@/components/ServerListChannel"
-import ServerListMember from "@/components/ServerListMember"
+import { Server } from "@prisma/client"
+import { useParams } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export default function ServerLayout({
   children,
@@ -15,6 +15,7 @@ export default function ServerLayout({
   children: React.ReactNode
 }) {
   const serverId = useParams<{ serverId: string }>()
+
   const serverData = trpc.getServer.useQuery(serverId)
   const [currentServer, setCurrentServer] = useState<
     Server | undefined
@@ -37,7 +38,7 @@ export default function ServerLayout({
           )}
           <Separator className=" w-4/5 mb-4 justify-center mx-auto" />
           {currentServer && (
-            <ServerListChannel
+            <ServerLeftListChannel
               {...currentServer}
               refetch={serverData.refetch}
             />
@@ -46,7 +47,7 @@ export default function ServerLayout({
         <div className="flex-grow flex-1">{children}</div>
         <div className="ml-auto w-52 bg-secondaryColor sticky z-50 h-full flex flex-col">
           {currentServer && (
-            <ServerListMember {...currentServer} />
+            <ServerRightListMember {...currentServer} />
           )}
         </div>
       </main>

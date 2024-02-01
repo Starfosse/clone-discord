@@ -15,7 +15,7 @@ import {
   AvatarImage,
 } from "./ui/avatar"
 
-interface ServerListMemberProps {
+interface ServerRightListMember {
   id: string
   name: string
   imageUrl: string
@@ -81,8 +81,8 @@ const getDataDisplay = (id: string): DataDisplay[] => {
   return DataDisplay
 }
 
-const ServerListMember = (
-  currentServer: ServerListMemberProps
+const ServerRightListMember = (
+  currentServer: ServerRightListMember
 ) => {
   const dataDisplay: DataDisplay[] = getDataDisplay(
     currentServer.id
@@ -172,4 +172,4 @@ const AvatarMember = (member: Member) => {
   )
 }
 
-export default ServerListMember
+export default ServerRightListMember

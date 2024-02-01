@@ -1,15 +1,15 @@
 "use client"
 
-import { useParams } from "next/navigation"
-import ServerLeftHeader from "./ServerLeftHeader"
 import { trpc } from "@/app/_trpc/client"
-import { Separator } from "./ui/separator"
-import ServerListChannel from "./ServerListChannel"
-import { useContext, useEffect, useState } from "react"
 import { Server } from "@prisma/client"
-import ServerListMember from "./ServerListMember"
+import { useParams } from "next/navigation"
+import { useEffect, useState } from "react"
+import ServerLeftHeader from "./ServerLeftHeader"
+import ServerListMember from "./ServerRightListMember"
+import { Separator } from "./ui/separator"
+import ServerLeftListChannel from "./ServerLeftListChannel"
 
-const ServerSideBar = () => {
+const ServerLeftSideBar = () => {
   const serverId = useParams<{ serverId: string }>()
   const serverData = trpc.getServer.useQuery(serverId)
   const [currentServer, setCurrentServer] = useState<
@@ -32,7 +32,7 @@ const ServerSideBar = () => {
         )}
         <Separator className=" w-4/5 mb-4 justify-center mx-auto" />
         {currentServer && (
-          <ServerListChannel
+          <ServerLeftListChannel
             {...currentServer}
             refetch={serverData.refetch}
           />
@@ -47,4 +47,4 @@ const ServerSideBar = () => {
   )
 }
 
-export default ServerSideBar
+export default ServerLeftSideBar

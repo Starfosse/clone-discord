@@ -21,14 +21,14 @@ import { InputChannel } from "@prisma/client"
 import { useForm } from "react-hook-form"
 import { Input } from "./ui/input"
 
-interface PostDisplayProps {
+interface PostInputChannelProps {
   msg: InputChannel
   currentListMembers: User[]
 }
-const PostDisplay = ({
+const PostInputChannel = ({
   msg,
   currentListMembers,
-}: PostDisplayProps) => {
+}: PostInputChannelProps) => {
   const getUser = (id: string) => {
     const user = currentListMembers.find(
       (user) => user.id === id
@@ -44,7 +44,7 @@ const PostDisplay = ({
         <Image
           src={user.imageUrl}
           alt="user picture"
-          className="rounded-full"
+          className="rounded-full aspect-square"
           width={30}
           height={30}
         />
@@ -90,10 +90,9 @@ const PostDisplay = ({
     editInput({ message, id })
     setEdit(false)
   }
-  // console.log(msg.message)
   return (
     <ContextMenu>
-      <ContextMenuTrigger className="flex gap-4">
+      <ContextMenuTrigger className="flex gap-4 items-center ">
         <div className="">{getUserImage(msg.userId)}</div>
         <div className="flex flex-col">
           <div className="flex gap-2 items-center">
@@ -146,4 +145,4 @@ const PostDisplay = ({
   )
 }
 
-export default PostDisplay
+export default PostInputChannel

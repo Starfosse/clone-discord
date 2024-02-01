@@ -25,7 +25,6 @@ const GiphySearch: React.FC<GiphySearchProps> = ({
   const handleSearch = async (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    console.log("hello")
     if (event.key !== "Enter") return
     try {
       const apiKey = "MxtyAa8HjqsZu9PmRD0xOULVWLPbejKe"
@@ -37,7 +36,6 @@ const GiphySearch: React.FC<GiphySearchProps> = ({
       console.error("Error fetching Giphy data:", error)
     }
   }
-  // console.log("hello")
 
   return (
     <div className="">

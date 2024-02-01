@@ -50,7 +50,6 @@ const TableDemo = () => {
         lastPage.nextCursor,
     }
   )
-  console.log(data)
   return (
     <div className="text-white">
       posts:

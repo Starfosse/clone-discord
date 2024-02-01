@@ -3,11 +3,12 @@
 import { trpc } from "@/app/_trpc/client"
 import { Channel, User } from "@prisma/client"
 import { useEffect, useRef, useState } from "react"
-import PostDisplay from "./PostDisplay"
+import PostDisplay from "./PostInputChannel"
 import { useInfiniteQuery } from "react-query"
 import { useIntersection } from "@mantine/hooks"
+import PostInputChannel from "./PostInputChannel"
 
-const ChatDisplay = (cDProps: Channel) => {
+const ChatInputChannel = (cDProps: Channel) => {
   // const utils = trpc.useUtils()
   // const query = trpc.getInputChannel.useInfiniteQuery(
   //   {
@@ -76,7 +77,7 @@ const ChatDisplay = (cDProps: Channel) => {
                   key={post.id}
                   className="hover:bg-secondaryColor"
                   ref={ref}>
-                  <PostDisplay
+                  <PostInputChannel
                     msg={post}
                     currentListMembers={currentListMembers}
                   />
@@ -87,7 +88,7 @@ const ChatDisplay = (cDProps: Channel) => {
               <div
                 key={post.id}
                 className="hover:bg-secondaryColor">
-                <PostDisplay
+                <PostInputChannel
                   msg={post}
                   currentListMembers={currentListMembers}
                 />
@@ -108,4 +109,4 @@ const ChatDisplay = (cDProps: Channel) => {
 // gérer le scrolling+ queryinfinite
 //ne pas render l'image ou pseudo si même user que le msg précédennt
 // gérer le modifier le message qui ne modifie que l'input concerné
-export default ChatDisplay
+export default ChatInputChannel

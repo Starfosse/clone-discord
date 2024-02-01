@@ -10,8 +10,6 @@ const channelId = z.object({
 const addGifInputChannel = publicProcedure
   .input(channelId)
   .mutation(async ({ input }) => {
-    console.log(input.gif)
-    console.log(input.id)
     const user = await currentUser()
     const userId = await prisma.user.findFirst({
       where: { userId: user?.id },
