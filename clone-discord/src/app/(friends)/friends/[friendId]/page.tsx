@@ -1,18 +1,10 @@
 "use client"
 
 import { trpc } from "@/app/_trpc/client"
-import ChatDiscussion from "@/components/ChatDiscussion"
+import DiscussionInputChat from "@/components/DiscussionInputChat"
 import FriendHeader from "@/components/FriendHeader"
-import InputDiscussion from "@/components/InputDiscussion"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import InputChatDiscussion from "@/components/InputDiscussion"
 import { User } from "@prisma/client"
-import Image from "next/image"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -32,14 +24,14 @@ const FriendPage = () => {
       {currentFriend && <FriendHeader {...currentFriend} />}
       test
       {currentFriend && (
-        <ChatDiscussion
+        <DiscussionInputChat
           discussionId={userFriend.friendId}
           currentFriend={currentFriend}
         />
       )}
       <div className="mt-auto sticky">
         {currentFriend && (
-          <InputDiscussion
+          <InputChatDiscussion
             discussionId={userFriend.friendId}
             friend={currentFriend?.pseudo}
           />

@@ -3,9 +3,9 @@ import { Button } from "./ui/button"
 import Link from "next/link"
 import ListDiscussion from "./ListDiscussion"
 
-const FriendsListSideBar = () => {
+const FriendsLeftSideBar = () => {
   return (
-    <div className="text-white flex flex-col px-3">
+    <div className="text-white flex flex-col">
       <div className="my-2 ">
         <Link
           href={"/friends/friends-management"}
@@ -30,4 +30,4 @@ const FriendsListSideBar = () => {
   )
 }
 
-export default FriendsListSideBar
+export default FriendsLeftSideBar

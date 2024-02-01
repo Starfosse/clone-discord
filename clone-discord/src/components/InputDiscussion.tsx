@@ -13,15 +13,15 @@ import {
 } from "./ui/form"
 import { Input } from "./ui/input"
 
-interface discussionIdProps {
+interface InputChatDiscussion {
   discussionId: string
   friend: string
 }
 
-const InputDiscussion = ({
+const InputChatDiscussion = ({
   discussionId,
   friend,
-}: discussionIdProps) => {
+}: InputChatDiscussion) => {
   const utils = trpc.useUtils()
   const { mutate: addMessage } =
     trpc.addInputDiscussion.useMutation({
@@ -66,4 +66,4 @@ const InputDiscussion = ({
   )
 }
 
-export default InputDiscussion
+export default InputChatDiscussion
