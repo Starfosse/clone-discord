@@ -101,8 +101,8 @@ const Profile = () => {
     setOpen(false)
     if (currentFormaData)
       imageUrl = await uploadFile(currentFormaData)
-    form.reset()
     mutate({ imageUrl, pseudo, state })
+    form.reset()
   }
 
   const stateUser =

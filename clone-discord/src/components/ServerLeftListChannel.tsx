@@ -16,7 +16,7 @@ interface Server {
   refetch: () => Promise<any>
 }
 
-const ServerListChannel = (currentServer: Server) => {
+const ServerLeftListChannel = (currentServer: Server) => {
   const serverId = { serverId: currentServer.id }
   const channelsData = trpc.getChannels.useQuery(serverId)
   const ChannelsGroupsData =
@@ -90,4 +90,4 @@ const ServerListChannel = (currentServer: Server) => {
 }
 
 //Todo trier par date de création, et prendre en comtpe si c'est une catégorie ou non
-export default ServerListChannel
+export default ServerLeftListChannel

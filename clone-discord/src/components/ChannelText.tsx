@@ -2,8 +2,9 @@
 
 import { Channel } from "@prisma/client"
 import { Hash } from "lucide-react"
-import ChatDisplay from "./ChatDisplay"
+import ChatDisplay from "./ChatInputChannel"
 import InputChannel from "./InputChannel"
+import ChatInputChannel from "./ChatInputChannel"
 
 const ChannelText = (currentChannel: Channel) => {
   return (
@@ -13,7 +14,7 @@ const ChannelText = (currentChannel: Channel) => {
           <Hash width={20} />
           &nbsp;{currentChannel?.name}
         </div>
-        <ChatDisplay {...currentChannel} />
+        <ChatInputChannel {...currentChannel} />
         <div className="mt-auto sticky">
           <InputChannel {...currentChannel} />
         </div>

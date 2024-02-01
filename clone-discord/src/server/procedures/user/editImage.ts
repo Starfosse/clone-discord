@@ -10,9 +10,6 @@ const userId = z.object({
 const editImage = publicProcedure
   .input(userId)
   .mutation(async ({ input }) => {
-    console.log(input.id)
-    console.log(input.imageUrl)
-
     return await prisma.user.update({
       where: { id: input.id },
       data: {

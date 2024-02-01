@@ -8,14 +8,15 @@ import { trpc } from "@/app/_trpc/client"
 import Link from "next/link"
 import { Server } from "@prisma/client"
 import { useEffect, useState } from "react"
+import { createNewUser } from "@/server/procedures/user/createNewUser"
 
-// createNewUser()
 const SideLeftBar = () => {
   const userListServData = trpc.getUserListServ.useQuery()
   const [userListServ, setUserListServ] = useState<
     Server[] | undefined
   >()
-
+  const { mutate: createNewUser } =
+    trpc.createNewUser.useMutation({})
   useEffect(() => {
     if (userListServData.data)
       setUserListServ(userListServData.data)
@@ -29,13 +30,15 @@ const SideLeftBar = () => {
           <div className="hidden group-hover:inline relative">
             <div className="absolute top-3 right-1 rounded w-10 h-4 bg-white"></div>
           </div>
-          <Image
-            src="/logo-discord.png"
-            alt="logo discord"
-            width={40}
-            height={40}
-            className="rounded-full group-hover:rounded-xl object-cover object-center"
-          />
+          <Link href={"/friends/friends-management"}>
+            <Image
+              src="/logo-discord.png"
+              alt="logo discord"
+              width={40}
+              height={40}
+              className="rounded-full group-hover:rounded-xl object-cover object-center"
+            />
+          </Link>
         </div>
         <Separator className="w-3/5" />
         {userListServ &&
