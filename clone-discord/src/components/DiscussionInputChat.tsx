@@ -3,18 +3,19 @@
 import { trpc } from "@/app/_trpc/client"
 import { useIntersection } from "@mantine/hooks"
 import { useEffect, useRef } from "react"
-import PostDiscussionDisplay from "./PostDiscussionDisplay"
+import PostDiscussionDisplay from "./PostInputChat"
 import { User } from "@prisma/client"
+import PostInputChat from "./PostInputChat"
 
-interface ChatDiscussionProps {
+interface DiscussionInputChatProps {
   discussionId: string
   currentFriend: User
 }
 
-const ChatDiscussion = ({
+const DiscussionInputChat = ({
   discussionId,
   currentFriend,
-}: ChatDiscussionProps) => {
+}: DiscussionInputChatProps) => {
   const {
     data: query,
     fetchNextPage,
@@ -52,7 +53,10 @@ const ChatDiscussion = ({
                   key={post.id}
                   className="hover:bg-secondaryColor"
                   ref={ref}>
-                  <PostDiscussionDisplay {...post} />
+                  <PostInputChat
+                    msg={post}
+                    currentFriend={currentFriend}
+                  />
                 </div>
               )
             }
@@ -60,7 +64,10 @@ const ChatDiscussion = ({
               <div
                 key={post.id}
                 className="hover:bg-secondaryColor">
-                <PostDiscussionDisplay {...post} />
+                <PostInputChat
+                  msg={post}
+                  currentFriend={currentFriend}
+                />
               </div>
             )
           })}
@@ -74,4 +81,4 @@ const ChatDiscussion = ({
   )
 }
 
-export default ChatDiscussion
+export default DiscussionInputChat

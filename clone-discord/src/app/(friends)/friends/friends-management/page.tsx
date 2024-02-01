@@ -1,7 +1,8 @@
 "use client"
 
 import AddFriend from "@/components/AddFriend"
-import FriendsList from "@/components/FriendsList"
+import FriendsAllList from "@/components/FriendsAllList"
+import FriendsList from "@/components/FriendsAllList"
 import FriendsOnlineList from "@/components/FriendsOnlineList"
 import PendingFriends from "@/components/PendingFriends"
 import { Button } from "@/components/ui/button"
@@ -67,7 +68,7 @@ const FriendsManagement = () => {
           Ajouter
         </Button>
       </div>
-      {seeAllFriends && <FriendsList />}
+      {seeAllFriends && <FriendsAllList />}
       {seeOnlineFriends && <FriendsOnlineList />}
       {addFriend && <AddFriend />}
       {seePendingFriends && <PendingFriends />}

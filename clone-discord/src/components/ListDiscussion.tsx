@@ -21,17 +21,18 @@ const ListDiscussion = () => {
       setCurrentListDiscussion(listDiscussionData.data)
   }, [listDiscussionData.data])
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 w-full">
       {currentListDiscussion &&
         currentListDiscussion.listFriends.map(
           (friend, index) => (
             <div
               key={friend.id}
-              className="border border-tertiaryColor rounded-md hover:bg-slate-800">
+              className="w-48 justify-center items-center border border-tertiaryColor rounded-md hover:bg-slate-800 mx-auto py-4">
               <Link
                 className="flex"
                 href={`/friends/${currentListDiscussion.userFriendList[index].id}`}>
                 <Image
+                  className="rounded-sm"
                   alt="friend-image"
                   src={friend.imageUrl}
                   width={20}

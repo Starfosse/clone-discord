@@ -12,7 +12,7 @@ interface friendsData {
   userFriendListId: string[]
 }
 
-const FriendsList = () => {
+const FriendsAllList = () => {
   const data = trpc.getAllFriends.useQuery()
   const [friends, setFriends] = useState<
     friendsData | undefined
@@ -59,4 +59,4 @@ const FriendsList = () => {
   )
 }
 
-export default FriendsList
+export default FriendsAllList

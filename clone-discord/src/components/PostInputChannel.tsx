@@ -21,14 +21,14 @@ import { InputChannel } from "@prisma/client"
 import { useForm } from "react-hook-form"
 import { Input } from "./ui/input"
 
-interface PostDisplayProps {
+interface PostInputChannelProps {
   msg: InputChannel
   currentListMembers: User[]
 }
-const PostDisplay = ({
+const PostInputChannel = ({
   msg,
   currentListMembers,
-}: PostDisplayProps) => {
+}: PostInputChannelProps) => {
   const getUser = (id: string) => {
     const user = currentListMembers.find(
       (user) => user.id === id
@@ -145,4 +145,4 @@ const PostDisplay = ({
   )
 }
 
-export default PostDisplay
+export default PostInputChannel
