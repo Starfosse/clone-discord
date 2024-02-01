@@ -2,7 +2,7 @@
 
 import { trpc } from "@/app/_trpc/client"
 import ServerLeftHeader from "@/components/ServerLeftHeader"
-import ServerListChannel from "@/components/ServerLeftListChannel"
+import ServerLeftListChannel from "@/components/ServerLeftListChannel"
 import ServerRightListMember from "@/components/ServerRightListMember"
 import { Separator } from "@/components/ui/separator"
 import { Server } from "@prisma/client"
@@ -38,7 +38,7 @@ export default function ServerLayout({
           )}
           <Separator className=" w-4/5 mb-4 justify-center mx-auto" />
           {currentServer && (
-            <ServerListChannel
+            <ServerLeftListChannel
               {...currentServer}
               refetch={serverData.refetch}
             />
