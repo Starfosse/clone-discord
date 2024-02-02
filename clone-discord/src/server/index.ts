@@ -24,6 +24,7 @@ import getListDiscussion from "./procedures/friend/get-list-discussion"
 import getUsersDiscussion from "./procedures/friend/get-users-discussion"
 import addInputDiscussion from "./procedures/friend/input-discussion"
 import pendingInvitationFriend from "./procedures/friend/pending-invitation-friend"
+import unshowDiscussion from "./procedures/friend/unshow-discussion"
 import validFriendDemand from "./procedures/friend/valid-friend-demand"
 import addGifInputChannel from "./procedures/inputChannel/addGifInputChannel"
 import addInputChannel from "./procedures/inputChannel/addInputChannel"
@@ -113,6 +114,7 @@ export const appRouter = createTRPCRouter({
   editInputChat,
   getListDiscussion,
   getListRoleByMember,
+  unshowDiscussion,
 })
 
 export type AppRouter = typeof appRouter

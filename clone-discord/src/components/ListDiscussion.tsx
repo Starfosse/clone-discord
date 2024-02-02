@@ -8,7 +8,7 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 
 interface ListDiscussion {
-  userFriendList: UserFriend[]
+  userFriendListShowable: UserFriend[]
   listFriends: User[]
 }
 
@@ -21,6 +21,13 @@ const ListDiscussion = () => {
     if (listDiscussionData.data)
       setCurrentListDiscussion(listDiscussionData.data)
   }, [listDiscussionData.data])
+  const { mutate: unshowDiscussion } =
+    trpc.unshowDiscussion.useMutation()
+  const handleDelete = (id: string) => {
+    const discussionId = { id: id }
+    console.log("good")
+    unshowDiscussion(discussionId)
+  }
   return (
     <div className="flex flex-col gap-2 w-full">
       {currentListDiscussion &&
@@ -29,7 +36,7 @@ const ListDiscussion = () => {
             <div>
               <Link
                 className="group flex relative w-48 justify-between items-center group-hover:border group-hover:border-tertiaryColor rounded-md hover:bg-slate-800 mx-auto py-2 "
-                href={`/friends/${currentListDiscussion.userFriendList[index].id}`}>
+                href={`/friends/${currentListDiscussion.userFriendListShowable[index].id}`}>
                 <Image
                   className="rounded-full ml-1 aspect-square "
                   alt="friend-image"
@@ -45,7 +52,14 @@ const ListDiscussion = () => {
                   height={10}
                 />
                 <div className="pr-8">{friend.pseudo}</div>
-                <button className="invisible group-hover:visible pr-2">
+                <button
+                  className="invisible group-hover:visible pr-2"
+                  onClick={() =>
+                    handleDelete(
+                      currentListDiscussion
+                        .userFriendListShowable[index].id
+                    )
+                  }>
                   <X />
                 </button>
               </Link>

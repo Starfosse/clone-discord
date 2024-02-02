@@ -22,7 +22,11 @@ const addInputDiscussion = publicProcedure
     if (!userFriend) return
     const update = await prisma.userFriend.update({
       where: { id: input.discussionId },
-      data: { lastMessage: new Date() },
+      data: {
+        lastMessage: new Date(),
+        showConvUserOne: true,
+        showConvUserTwo: true,
+      },
     })
     if (userId?.id === userFriend?.userOneId) {
       return await prisma.inputChat.create({

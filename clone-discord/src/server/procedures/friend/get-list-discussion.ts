@@ -24,26 +24,40 @@ const getListDiscussion = publicProcedure.query(
         include: { discussion: true },
       }
     )
-    userFriendList.filter(
+    const userFriendListNotNull = userFriendList.filter(
       (userFriend) => userFriend.discussion
     )
-    if (!userFriendList) return
-    const listDiscussion = []
+    const userFriendListShowable =
+      userFriendListNotNull.filter(
+        (userFriend) =>
+          (userFriend.userOneId === user.id &&
+            userFriend.showConvUserOne) ||
+          (userFriend.userTwoId === user.id &&
+            userFriend.showConvUserTwo)
+      )
     const listFriends = []
-    for (let i = 0; i < userFriendList.length; i++) {
+    for (
+      let i = 0;
+      i < userFriendListShowable.length;
+      i++
+    ) {
       const friend =
-        user.id === userFriendList[i].userOneId
+        user.id === userFriendListShowable[i].userOneId
           ? await prisma.user.findFirst({
-              where: { id: userFriendList[i].userTwoId },
+              where: {
+                id: userFriendListShowable[i].userTwoId,
+              },
             })
           : await prisma.user.findFirst({
-              where: { id: userFriendList[i].userOneId },
+              where: {
+                id: userFriendListShowable[i].userOneId,
+              },
             })
       if (!friend) return
       listFriends.push(friend)
     }
     if (!listFriends) return
-    return { userFriendList, listFriends }
+    return { userFriendListShowable, listFriends }
   }
 )
 
