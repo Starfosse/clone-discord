@@ -38,34 +38,31 @@ const GiphySearch: React.FC<GiphySearchProps> = ({
   }
 
   return (
-    <div className="">
-      <div className="">
+    <div className="h-full">
+      <div className="h-full">
         <Input
-          className="text-white fixed w-4/5 bg-tertiaryColor border-0 focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
+          className="relative top-1 text-white w-11/12 mx-auto bg-tertiaryColor border-0 focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
           type="text"
           value={searchTerm}
-          placeholder="Gif"
-          // onChange={(e: ChangeEvent<HTMLInputElement>) =>
-          //   setSearchTerm(e.target.value)
-          // }
+          placeholder="Rechercher un GIF"
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setSearchTerm(e.target.value)
+          }
           onKeyDown={handleSearch}
         />
-        {/* <button onClick={handleSearch} className="sticky">
-          Search
-        </button> */}
-      </div>
-      <div className="mt-8 flex flex-col gap-3 border-0 bg-transparent">
-        {gifs.map((gif) => (
-          <img
-            className="border-0 bg-transparent"
-            key={gif.id}
-            src={gif.images.fixed_height.url}
-            alt={gif.title}
-            onClick={() =>
-              onGifSelect(gif.images.fixed_height.url)
-            }
-          />
-        ))}
+        <div className="h-full mt-4 flex flex-col gap-3 border-0 bg-transparent overflow-scroll overflow-x-hidden">
+          {gifs.map((gif) => (
+            <img
+              className="border-0 bg-transparent"
+              key={gif.id}
+              src={gif.images.fixed_height.url}
+              alt={gif.title}
+              onClick={() =>
+                onGifSelect(gif.images.fixed_height.url)
+              }
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
