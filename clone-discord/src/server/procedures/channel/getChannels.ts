@@ -13,6 +13,7 @@ const getChannels = publicProcedure
       where: {
         serverId: input.serverId,
       },
+      orderBy: { createdAt: "asc" },
     })
   })
 

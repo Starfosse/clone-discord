@@ -104,9 +104,4 @@ const ChatInputChannel = (cDProps: Channel) => {
     </div>
   )
 }
-
-//todo : personnaliser la barre de scroll
-// gérer le scrolling+ queryinfinite
-//ne pas render l'image ou pseudo si même user que le msg précédennt
-// gérer le modifier le message qui ne modifie que l'input concerné
 export default ChatInputChannel

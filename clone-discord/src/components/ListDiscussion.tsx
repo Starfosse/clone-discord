@@ -2,6 +2,7 @@
 
 import { trpc } from "@/app/_trpc/client"
 import { User, UserFriend, inputChat } from "@prisma/client"
+import { X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -25,14 +26,12 @@ const ListDiscussion = () => {
       {currentListDiscussion &&
         currentListDiscussion.listFriends.map(
           (friend, index) => (
-            <div
-              key={friend.id}
-              className="relative w-48 justify-center items-center border border-tertiaryColor rounded-md hover:bg-slate-800 mx-auto py-2 ">
+            <div>
               <Link
-                className="flex items-center"
+                className="group flex relative w-48 justify-between items-center group-hover:border group-hover:border-tertiaryColor rounded-md hover:bg-slate-800 mx-auto py-2 "
                 href={`/friends/${currentListDiscussion.userFriendList[index].id}`}>
                 <Image
-                  className="rounded-full ml-1 aspect-square my-1"
+                  className="rounded-full ml-1 aspect-square "
                   alt="friend-image"
                   src={friend.imageUrl}
                   width={24}
@@ -40,12 +39,15 @@ const ListDiscussion = () => {
                 />
                 <Image
                   alt="friend-image"
-                  className="rounded-full absolute top-7 left-[1.15rem] border-2 border-tertiaryColor"
+                  className="rounded-full absolute top-6 left-[1.15rem] border-2 border-tertiaryColor"
                   src={`/${friend.state}.png`}
                   width={10}
                   height={10}
                 />
-                <div className="pl-4">{friend.pseudo}</div>
+                <div className="pr-8">{friend.pseudo}</div>
+                <button className="invisible group-hover:visible pr-2">
+                  <X />
+                </button>
               </Link>
             </div>
           )
@@ -53,5 +55,4 @@ const ListDiscussion = () => {
     </div>
   )
 }
-
 export default ListDiscussion

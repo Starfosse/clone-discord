@@ -150,5 +150,4 @@ const EditServer = (currentServer: Server) => {
     </Dialog>
   )
 }
-// TODO gerer les erreurs form et validator
 export default EditServer

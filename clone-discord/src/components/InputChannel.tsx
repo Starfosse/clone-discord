@@ -114,5 +114,3 @@ const InputChannel = (currentChannel: Channel) => {
 }
 
 export default InputChannel
-//todo retirer la couleur en bg au profit de celle pour le chat, retirer ler border blanc quand focus
-//gérer l'envoie du gif dans le formulaire pour l'intégrer dans les input

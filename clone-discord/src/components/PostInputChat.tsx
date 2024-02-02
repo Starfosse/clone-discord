@@ -114,6 +114,7 @@ const PostInputChat = ({
       id: msg.id,
     },
   })
+
   const id = msg.id
   const onSubmit = ({
     messsageEdited,

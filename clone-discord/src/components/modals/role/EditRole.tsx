@@ -238,5 +238,4 @@ const EditRole = (currentServer: Server) => {
     </Dialog>
   )
 }
-//TODO: supprimer role
 export default EditRole

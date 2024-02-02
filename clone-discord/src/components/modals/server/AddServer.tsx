@@ -40,6 +40,7 @@ const AddServer = (AddServerProps: AddServerProps) => {
     register,
     handleSubmit,
     formState: { errors },
+    resetField,
   } = useForm<TServerValidator>({
     resolver: zodResolver(ServerValidator),
     defaultValues: {
@@ -54,6 +55,8 @@ const AddServer = (AddServerProps: AddServerProps) => {
   }: TServerValidator) => {
     setOpen(false)
     mutate({ name, imageUrl })
+    resetField("name")
+    resetField("imageUrl")
   }
   return (
     <Dialog onOpenChange={setOpen} open={open}>

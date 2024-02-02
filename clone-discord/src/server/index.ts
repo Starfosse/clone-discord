@@ -38,6 +38,7 @@ import deleteRole from "./procedures/role/DeleteRole"
 import EditMemberRole from "./procedures/role/EditMemberRole"
 import EditOrderMemberRole from "./procedures/role/EditOrderMemberRole"
 import createRole from "./procedures/role/createRole"
+import getListRoleByMember from "./procedures/role/getListRoleByMember"
 import getRoleById from "./procedures/role/getRoleById"
 import getRoleServer from "./procedures/role/getRoleServer"
 import createServer from "./procedures/server/createServer"
@@ -111,6 +112,7 @@ export const appRouter = createTRPCRouter({
   deleteInputChat,
   editInputChat,
   getListDiscussion,
+  getListRoleByMember,
 })
 
 export type AppRouter = typeof appRouter

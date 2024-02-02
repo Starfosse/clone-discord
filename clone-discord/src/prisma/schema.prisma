@@ -48,8 +48,9 @@ model UserFriend{
   // isRecording Boolean? @default(false)
   pending Boolean @default(true)
   lastMessage DateTime?
-  showConv Boolean? @default(false)
-  
+  showConvUserOne Boolean? @default(false)
+  showConvUserTwo Boolean? @default(false)
+
   discussion inputChat[]
 
   createdAt DateTime @default(now())
