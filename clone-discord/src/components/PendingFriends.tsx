@@ -50,6 +50,4 @@ const PendingFriends = () => {
   )
 }
 
-//todo : ajouter une notif sur le en attente si une demande est faite
-
 export default PendingFriends

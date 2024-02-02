@@ -40,12 +40,6 @@ const ServerLeftListChannel = (currentServer: Server) => {
       setChannelsGroups(ChannelsGroupsData.data)
     }
   }, [ChannelsGroupsData.data])
-  // const textChannels = channels?.filter(
-  //   (channel) => channel.type === "TEXT"
-  // )
-  // const audioChannels = channels?.filter(
-  //   (channel) => channel.type === "AUDIO"
-  // )
   return (
     <>
       <div className="flex flex-col items-start text-white w-full overflow-auto">
@@ -89,5 +83,4 @@ const ServerLeftListChannel = (currentServer: Server) => {
   )
 }
 
-//Todo trier par date de création, et prendre en comtpe si c'est une catégorie ou non
 export default ServerLeftListChannel

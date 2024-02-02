@@ -13,5 +13,3 @@ const deleteInputChannel = publicProcedure
   })
 
 export default deleteInputChannel
-
-//todo: supprimer si on a le droit ou si on est l'auteur du message

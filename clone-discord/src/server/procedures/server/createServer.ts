@@ -15,7 +15,15 @@ const createServer = publicProcedure
         status: 401,
       })
     }
-    const { imageUrl, name } = input
+    const { name } = input
+    const { imageUrl } =
+      input.imageUrl !== ""
+        ? input
+        : {
+            imageUrl:
+              "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png",
+          }
+    console.log(imageUrl)
     const userOwner = await prisma.user.findFirst({
       where: {
         userId: user?.id,

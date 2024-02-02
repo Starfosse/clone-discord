@@ -316,5 +316,4 @@ const Profile = () => {
   )
 }
 
-//TODO : supprimer l'image de preview
 export default Profile

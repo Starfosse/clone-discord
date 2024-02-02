@@ -1,4 +1,6 @@
 "use client"
+
+import { format } from "date-fns"
 import { trpc } from "@/app/_trpc/client"
 import {
   Member,
@@ -14,6 +16,21 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "./ui/avatar"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
+import { Separator } from "./ui/separator"
 
 interface ServerRightListMember {
   id: string
@@ -50,7 +67,7 @@ const getDataDisplay = (id: string): DataDisplay[] => {
     ? ServerListMemberData.data!.members
     : undefined
   const DataDisplay: DataDisplay[] = []
-  if (ServerListMemberData.data && members && roles) {
+  if (currentListMember && members && roles) {
     for (let i = 0; i < roles.length; i++) {
       const role: Role = roles[i]
       const memberList: Member[] = []
@@ -100,7 +117,10 @@ const ServerRightListMember = (
             <div>
               {data.member.map((m) => (
                 <div className="">
-                  <AvatarMember {...m} />{" "}
+                  <AvatarMember
+                    member={m}
+                    currentServer={currentServer}
+                  />{" "}
                 </div>
               ))}
             </div>
@@ -110,16 +130,30 @@ const ServerRightListMember = (
   )
 }
 
-const AvatarMember = (member: Member) => {
-  const MemberId = { id: member.userId }
+interface AvatarMemberProps {
+  member: Member
+  currentServer: ServerRightListMember
+}
+const AvatarMember = (
+  AvatarMemberProps: AvatarMemberProps
+) => {
+  const MemberId = { id: AvatarMemberProps.member.userId }
   const memberData = trpc.getUserByMember.useQuery(MemberId)
   const [currentMember, setCurrentMember] = useState<
     User | undefined
   >()
-
+  const [currentListRoles, setCurrentListRoles] = useState<
+    Role[] | undefined
+  >()
+  const memberId = { id: AvatarMemberProps.member.id }
+  const listRoleData =
+    trpc.getListRoleByMember.useQuery(memberId)
   useEffect(() => {
     if (memberData.data) setCurrentMember(memberData.data)
-  }, [memberData.data])
+    if (listRoleData.data)
+      setCurrentListRoles(listRoleData.data)
+  }, [memberData.data, listRoleData.data])
+
   const stateUser = currentMember?.state.toLocaleLowerCase()
   const [open, setOpen] = useState(false)
   const setOpenTrue = () => {
@@ -128,10 +162,11 @@ const AvatarMember = (member: Member) => {
   const setOpenFalse = () => {
     setOpen(false)
   }
+  console.log(currentListRoles)
   return (
     <div
-      onClick={setOpenTrue}
-      className="flex relative items-center p-1 hover:cursor-pointer hover:bg-neutral-700 hover:rounded-sm">
+      onClick={() => setOpen(!open)}
+      className="flex relative items-center p-1 hover:cursor-pointer hover:bg-neutral-700 hover:rounded-sm h-full w-full">
       {currentMember && (
         <Image
           className="absolute top-8 left-8 z-10 rounded-full border-[3px] border-tertiaryColor"
@@ -152,24 +187,105 @@ const AvatarMember = (member: Member) => {
       {currentMember && (
         <div className="pl-2">{currentMember?.pseudo}</div>
       )}
-      {/* <Dialog open={open} onOpenChange={setOpenFalse}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save
-              when you're done.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4"></div>
-            <div className="grid grid-cols-4 items-center gap-4"></div>
-          </div>
-          <DialogFooter></DialogFooter>
-        </DialogContent>
-      </Dialog> */}
+      {currentMember && currentListRoles && (
+        <div
+          className="relative rounded-md"
+          onClick={() => setOpen(!open)}>
+          <DropdownMenu
+            open={open}
+            onOpenChange={() => setOpenFalse()}>
+            <DropdownMenuTrigger className="invisible"></DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-72 bg-secondaryColor border-none text-white z-50 h-full relative right-48 top-6 p-2"
+              side="left">
+              <div className="relative pl-2  mb-4">
+                <Image
+                  className="absolute top-12 left-12  z-10 rounded-full border-[3px] border-tertiaryColor"
+                  src={`/${stateUser}.png`}
+                  width={18}
+                  height={18}
+                  alt="ok"
+                />
+                <Image
+                  src={currentMember?.imageUrl}
+                  height={64}
+                  width={64}
+                  alt="member picture"
+                  className="rounded-full aspect-square border-[3px] border-tertiaryColor"
+                />
+              </div>
+              <div className="bg-zinc-900 rounded-md p-2">
+                <p className="text-gray-200 text-2xl">
+                  {currentMember.pseudo}
+                </p>
+                <Separator className="w-11/12 mx-auto my-2  " />
+                <p className="text-gray-200 font-bold text-xs py-2">
+                  MEMBRE DEPUIS
+                </p>
+                <div className="flex mt-[-1rem]">
+                  <div className="flex gap-2 items-center">
+                    <Image
+                      src={"/logo-discord.png"}
+                      width={14}
+                      height={14}
+                      alt="logo-discord"
+                      className="aspect-square rounded-full m-1 object-contain"
+                    />
+                    <p className="relative right-1">
+                      {format(
+                        currentMember.createdAt,
+                        "dd-MM-yyyy"
+                      )}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <Image
+                      src={
+                        AvatarMemberProps.currentServer
+                          .imageUrl
+                      }
+                      width={14}
+                      height={14}
+                      alt="logo-serv"
+                      className="aspect-square rounded-full m-1 object-contain"
+                    />
+                    <p className="relative right-1">
+                      {format(
+                        AvatarMemberProps.member.createdAt,
+                        "dd-MM-yyyy"
+                      )}
+                    </p>
+                  </div>
+                </div>
+                {currentListRoles &&
+                currentListRoles.length === 1 ? (
+                  <p className="font-bold">Rôle</p>
+                ) : (
+                  <p className="font-bold">Rôles</p>
+                )}
+                {currentListRoles && (
+                  <div className="flex pt-1">
+                    {currentListRoles.map((role) => (
+                      <div
+                        key={role.id}
+                        className="bg-secondaryColor text-sm rounded-md px-1 flex-shrink-0">
+                        {role.role}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
     </div>
   )
 }
 
 export default ServerRightListMember
+{
+  /*DropdownMenuContent en absolute ?
+  /* open={open} onOpenChange={setOpenFalse} */
+  //trigger sans aschild qui permet la visibilité
+}

@@ -46,4 +46,3 @@ const FriendHeader = (fHP: friendHeaderProps) => {
 }
 
 export default FriendHeader
-//todo: aligner les icones
