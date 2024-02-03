@@ -51,7 +51,9 @@ const ListDiscussion = () => {
                   width={10}
                   height={10}
                 />
-                <div className="pr-8">{friend.pseudo}</div>
+                <div className="pr-8 overflow-ellipsis overflow-hidden whitespace-nowrap">
+                  {friend.pseudo}
+                </div>
                 <button
                   className="invisible group-hover:visible pr-2"
                   onClick={() =>

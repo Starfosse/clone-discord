@@ -14,6 +14,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form"
 import { Switch } from "@/components/ui/switch"
 import {
@@ -65,7 +66,16 @@ const EditRolePermission = (
 
   const { mutate } = trpc.EditMemberRole.useMutation({
     onSuccess: () => {
-      EditRolePermissionProps.refetch()
+      {
+        EditRolePermissionProps.refetch(),
+          toast.success(
+            <div className="flex items-center">
+              <Check />
+              &nbsp;Le rôle a bien été créé
+            </div>,
+            { duration: 3000 }
+          )
+      }
     },
   })
 
@@ -98,6 +108,7 @@ const EditRolePermission = (
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage className="col-span-4 text-right" />
                   </FormItem>
                 )}
               />
@@ -140,19 +151,7 @@ const EditRolePermission = (
                 ))}
               </div>
               <div className="text-center mt-4">
-                <Button
-                  type="submit"
-                  onClick={() =>
-                    toast.success(
-                      <div className="flex items-center">
-                        <Check />
-                        &nbsp;Le rôle a bien été créé
-                      </div>,
-                      { duration: 3000 }
-                    )
-                  }>
-                  Modifier
-                </Button>
+                <Button type="submit">Modifier</Button>
               </div>
             </div>
           </form>

@@ -1,6 +1,7 @@
 "use client"
 
 import { trpc } from "@/app/_trpc/client"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogContent,
@@ -9,18 +10,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Switch } from "@/components/ui/switch"
 import {
   ChannelValidator,
   TChannelValidator,
 } from "@/lib/validator/channel-validator"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { ChannelType } from "@prisma/client"
 import {
   Check,
   Hash,
   Headphones,
   Video,
 } from "lucide-react"
-import Image from "next/image"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { Button } from "../../ui/button"
@@ -42,11 +45,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select"
-import { Separator } from "../../ui/separator"
-import { ChannelType, MemberRole } from "@prisma/client"
-import { Switch } from "@/components/ui/switch"
-import { useEffect, useState } from "react"
-import { Checkbox } from "@/components/ui/checkbox"
 
 interface Server {
   id: string
@@ -70,7 +68,16 @@ const AddChannel = (currentServer: Server) => {
   const utils = trpc.useUtils()
   const serverId = { serverId: currentServer.id }
   const { mutate } = trpc.createChannel.useMutation({
-    onSuccess: () => utils.getChannels.invalidate(serverId),
+    onSuccess: () => {
+      utils.getChannels.invalidate(serverId)
+      toast.success(
+        <div className="flex items-center">
+          <Check />
+          &nbsp;Le channel a bien été ajouté
+        </div>,
+        { duration: 3000 }
+      )
+    },
   })
   const listRoleServer =
     trpc.getRoleServer.useQuery(serverId)
@@ -272,19 +279,7 @@ const AddChannel = (currentServer: Server) => {
                 ))}
             </div>
             <DialogFooter>
-              <Button
-                type="submit"
-                onClick={() =>
-                  toast.success(
-                    <div className="flex items-center">
-                      <Check />
-                      &nbsp;Le channel a bien été ajouté
-                    </div>,
-                    { duration: 3000 }
-                  )
-                }>
-                Enregistrer
-              </Button>
+              <Button type="submit">Enregistrer</Button>
             </DialogFooter>
           </form>
         </Form>

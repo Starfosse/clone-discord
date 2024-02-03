@@ -1,5 +1,6 @@
 "use client"
 
+import { trpc } from "@/app/_trpc/client"
 import {
   Dialog,
   DialogContent,
@@ -7,40 +8,19 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "../../ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Button } from "../../ui/button"
-import { Check } from "lucide-react"
-import { toast } from "sonner"
-import Image from "next/image"
-import { Separator } from "../../ui/separator"
-import { trpc } from "@/app/_trpc/client"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { cn } from "@/lib/utils"
 import {
   ServerValidatorId,
   TServerValidatorId,
 } from "@/lib/validator/server-validator-id"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Check } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { Button } from "../../ui/button"
+import { Input } from "../../ui/input"
 import { Label } from "../../ui/label"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
 
 interface Server {
   id: string
@@ -56,31 +36,29 @@ interface Server {
 }
 
 const EditServer = (currentServer: Server) => {
-  // const form = useForm<TServerValidatorId>({
-  //   resolver: zodResolver(ServerValidatorId),
-  //   defaultValues: {
-  //     imageUrl: currentServer.imageUrl,
-  //     name: currentServer.name,
-  //     id: currentServer.id,
-  //   },
-  // })
-
-  const router = useRouter()
-  const { handleSubmit, register } =
-    useForm<TServerValidatorId>({
-      resolver: zodResolver(ServerValidatorId),
-      defaultValues: {
-        imageUrl: currentServer.imageUrl,
-        name: currentServer.name,
-        id: currentServer.id,
-      },
-    })
-  const id = currentServer.id
-  const utils = trpc.useUtils()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<TServerValidatorId>({
+    resolver: zodResolver(ServerValidatorId),
+    defaultValues: {
+      imageUrl: currentServer.imageUrl,
+      name: currentServer.name,
+      id: currentServer.id,
+    },
+  })
 
   const { mutate } = trpc.editServer.useMutation({
     onSuccess: () => {
       currentServer.refetch()
+      toast.success(
+        <div className="flex items-center">
+          <Check />
+          &nbsp;Vos modifications ont été enregristrées
+        </div>,
+        { duration: 3000 }
+      )
     },
   })
   const onSubmit = ({
@@ -116,31 +94,27 @@ const EditServer = (currentServer: Server) => {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">
+              <Label
+                className={cn("text-right", {
+                  "text-red-500": errors.name,
+                })}>
                 Nom du serveur
               </Label>
               <Input
                 {...register("name")}
                 className="col-span-3"
               />
+              {errors.name && (
+                <p
+                  className="col-span-4 text-red-500 text-right"
+                  role="alert">
+                  {errors.name.message}{" "}
+                </p>
+              )}
             </div>
           </div>
-
           <DialogFooter>
-            <Button
-              type="submit"
-              onClick={() =>
-                toast.success(
-                  <div className="flex items-center">
-                    <Check />
-                    &nbsp;Vos modifications ont été
-                    enregristrées
-                  </div>,
-                  { duration: 3000 }
-                )
-              }>
-              Sauvegarder
-            </Button>
+            <Button type="submit">Sauvegarder</Button>
           </DialogFooter>
         </form>
       </DialogContent>

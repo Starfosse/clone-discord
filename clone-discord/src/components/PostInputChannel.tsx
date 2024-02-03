@@ -92,7 +92,7 @@ const PostInputChannel = ({
   }
   return (
     <ContextMenu>
-      <ContextMenuTrigger className="flex gap-4 items-center ">
+      <ContextMenuTrigger className="flex gap-4 items-center pr-2">
         <div className="">{getUserImage(msg.userId)}</div>
         <div className="flex flex-col">
           <div className="flex gap-2 items-center">
@@ -109,8 +109,10 @@ const PostInputChannel = ({
               alt="msg gif"
             />
           ) : !edit ? (
-            <div className="flex">
-              <p>{msg.message}</p>
+            <div className="flex overflow-hidden whitespace-pre-wrap break-all">
+              <p className="overflow-hidden">
+                {msg.message}
+              </p>
               {msg.isEdit && (
                 <p className="text-muted-foreground text-xs my-auto pl-1">
                   (modifié)

@@ -65,9 +65,15 @@ const AddChannelByGroupId = (cHGroup: cHGroup) => {
       onSuccess: () => {
         cHGroup.refetchCategory()
         cHGroup.refetchListChannels()
+        toast.success(
+          <div className="flex items-center">
+            <Check />
+            &nbsp;Le channel a bien été ajouté
+          </div>,
+          { duration: 3000 }
+        )
       },
     })
-  // ------------
 
   const serverId = {
     serverId: cHGroup.channelsGroup.serverId,
@@ -281,19 +287,7 @@ const AddChannelByGroupId = (cHGroup: cHGroup) => {
                 ))}
             </div>
             <DialogFooter>
-              <Button
-                type="submit"
-                onClick={() =>
-                  toast.success(
-                    <div className="flex items-center">
-                      <Check />
-                      &nbsp;Le channel a bien été ajouté
-                    </div>,
-                    { duration: 3000 }
-                  )
-                }>
-                Enregistrer
-              </Button>
+              <Button type="submit">Enregistrer</Button>
             </DialogFooter>
           </form>
         </Form>

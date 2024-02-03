@@ -112,7 +112,10 @@ const ServerRightListMember = (
         dataDisplay.map((data) => (
           <div key={data.role.id}>
             <div className="text-muted-foreground pl-2 pb-2">
-              {data.role.role} - {data.member.length}
+              <p className="overflow-ellipsis overflow-hidden whitespace-nowrap">
+                {" "}
+                {data.role.role} - {data.member.length}
+              </p>
             </div>
             <div>
               {data.member.map((m) => (
@@ -162,7 +165,6 @@ const AvatarMember = (
   const setOpenFalse = () => {
     setOpen(false)
   }
-  console.log(currentListRoles)
   return (
     <div
       onClick={() => setOpen(!open)}
@@ -185,7 +187,9 @@ const AvatarMember = (
         </Avatar>
       )}
       {currentMember && (
-        <div className="pl-2">{currentMember?.pseudo}</div>
+        <div className="pl-2 overflow-ellipsis overflow-hidden whitespace-nowrap">
+          {currentMember?.pseudo}
+        </div>
       )}
       {currentMember && currentListRoles && (
         <div
@@ -215,11 +219,11 @@ const AvatarMember = (
                 />
               </div>
               <div className="bg-zinc-900 rounded-md p-2">
-                <p className="text-gray-200 text-2xl">
+                <p className="text-gray-200 text-2xl overflow-ellipsis overflow-hidden whitespace-nowrap">
                   {currentMember.pseudo}
                 </p>
                 <Separator className="w-11/12 mx-auto my-2  " />
-                <p className="text-gray-200 font-bold text-xs py-2">
+                <p className="text-gray-200 font-bold text-xs py-2 ">
                   MEMBRE DEPUIS
                 </p>
                 <div className="flex mt-[-1rem]">
@@ -231,7 +235,7 @@ const AvatarMember = (
                       alt="logo-discord"
                       className="aspect-square rounded-full m-1 object-contain"
                     />
-                    <p className="relative right-1">
+                    <p className="relative right-1 py-2">
                       {format(
                         currentMember.createdAt,
                         "dd-MM-yyyy"
@@ -264,11 +268,11 @@ const AvatarMember = (
                   <p className="font-bold">Rôles</p>
                 )}
                 {currentListRoles && (
-                  <div className="flex pt-1">
+                  <div className="flex gap-1 pt-1">
                     {currentListRoles.map((role) => (
                       <div
                         key={role.id}
-                        className="bg-secondaryColor text-sm rounded-md px-1 flex-shrink-0">
+                        className="bg-secondaryColor text-sm rounded-md px-1 flex-shrink-0 overflow-ellipsis overflow-hidden whitespace-nowrap">
                         {role.role}
                       </div>
                     ))}

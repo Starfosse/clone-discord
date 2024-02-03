@@ -35,7 +35,9 @@ const PendingFriends = () => {
               height={28}
               alt="ok"
             />
-            <p className="ml-4">{friend?.pseudo}</p>
+            <p className="ml-4 overflow-ellipsis overflow-hidden whitespace-nowrap">
+              {friend?.pseudo}
+            </p>
             <Button
               className="ml-auto hover:bg-green-500"
               onClick={() => handleClickValid(friend!.id)}>

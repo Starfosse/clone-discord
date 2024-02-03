@@ -68,14 +68,16 @@ const ChannelsGroup = (cGProps: channnelsGroupProps) => {
             <ArrowBigDown
               onClick={() => setIsOpen(!isOpen)}
               className={cn(
-                "h-4 w-4 transition-all text-muted-foreground",
+                "h-6 w-6 transition-all text-muted-foreground flex-shrink-0",
                 {
                   "-rotate-90": !isOpen,
                 }
               )}
             />
           }{" "}
-          <div>{cGProps.channelsGroup.name}</div>{" "}
+          <div className="overflow-ellipsis overflow-hidden whitespace-nowrap px-1">
+            {cGProps.channelsGroup.name}
+          </div>{" "}
           <div className="justify-end ml-auto text-muted-foreground pr-2">
             <button
               onClick={handleClickAddChannel}

@@ -43,7 +43,9 @@ const FriendsAllList = () => {
                 alt="ok"
               />
             </div>
-            <p className="ml-4">{friend?.pseudo}</p>
+            <p className="ml-4 overflow-ellipsis overflow-hidden whitespace-nowrap">
+              {friend?.pseudo}
+            </p>
             <div className="ml-auto flex gap-2 mr-2 items-center">
               <Link
                 href={`/friends/${friends.userFriendListId[index]}`}
