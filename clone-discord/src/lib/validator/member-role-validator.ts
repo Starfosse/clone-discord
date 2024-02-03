@@ -2,7 +2,11 @@ import { z } from "zod"
 
 const MemberRoleId = z.object({
   id: z.string(),
-  role: z.string(),
+  role: z
+    .string()
+    .min(1, {
+      message: "Doit contenir au moins 1 caractère",
+    }),
   orderServ: z.number().optional(),
   serverId: z.string().optional(),
   invite_Member: z.boolean(),

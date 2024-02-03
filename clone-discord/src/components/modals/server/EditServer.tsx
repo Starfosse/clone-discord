@@ -80,7 +80,6 @@ const EditServer = (currentServer: Server) => {
 
   const { mutate } = trpc.editServer.useMutation({
     onSuccess: () => {
-      // utils.getChannels.invalidate()
       currentServer.refetch()
     },
   })
@@ -91,13 +90,11 @@ const EditServer = (currentServer: Server) => {
   }: TServerValidatorId) => {
     currentServer.onClickEditServer()
     mutate({ name, imageUrl, id })
-    // currentServer.()
-    // router.refresh()
-    // router.push("/")
-    // router.push(`/server/${currentServer.id}`)
   }
   return (
-    <Dialog open={currentServer.showModalEditServer}>
+    <Dialog
+      open={currentServer.showModalEditServer}
+      onOpenChange={currentServer.onClickEditServer}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
