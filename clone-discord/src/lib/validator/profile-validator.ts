@@ -3,16 +3,11 @@ import { z } from "zod"
 
 export const ProfileValidator = z.object({
   imageUrl: z.any(),
-  // .string()
-  // .url({ message: "url invalide" })
-  // .optional()
-  // .or(z.literal("")),
   pseudo: z
     .string()
-    // .min(8, {
-    //   message:
-    //     "Votre pseudo doit contenir au moins 8 caractères",
-    // })
+    .min(1, {
+      message: "Doit contenir au moins 1 caractère",
+    })
     .optional(),
   state: z.nativeEnum(stateList).optional(),
 })

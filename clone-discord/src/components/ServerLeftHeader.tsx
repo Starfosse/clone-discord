@@ -9,6 +9,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 interface Server {
   id: string
   name: string
@@ -22,6 +34,7 @@ interface Server {
 
 import {
   ArrowBigDown,
+  ArrowLeft,
   FileDiff,
   LogOut,
   MessageCirclePlus,
@@ -39,6 +52,8 @@ import CreateRole from "./modals/role/CreateRole"
 import EditRole from "./modals/role/EditRole"
 import EditServer from "./modals/server/EditServer"
 import AddMemberRole from "./modals/member/AddMemberRole"
+import { Button } from "./ui/button"
+import { cn } from "@/lib/utils"
 
 const ServerLeftHeader = (currentServer: Server) => {
   const serverId = { id: currentServer.id }
@@ -134,17 +149,23 @@ const ServerLeftHeader = (currentServer: Server) => {
     setShowModalAddMemberRole(false)
   }
 
+  const [showModal, setShowModal] = useState(false)
+  console.log(showModal)
   return (
     <>
-      {/* <div className="flex w-full items-center text-white cursor-pointer hover:bg-gray-600 px-2 py-2 pb-4">
-        <p>{currentServer.name}</p>
-        <ArrowBigDown className="justify-end ml-auto" />
-      </div> */}
-      <DropdownMenu>
+      <DropdownMenu
+        open={showModal}
+        onOpenChange={() => setShowModal(false)}>
         <DropdownMenuTrigger>
-          <div className="flex w-full items-center text-white cursor-pointer hover:bg-gray-600 px-2 py-2 pb-4">
+          <div
+            onClick={() => setShowModal(true)}
+            className="flex w-full items-center text-white cursor-pointer hover:bg-gray-600 px-2 py-2 pb-4">
             <p>{currentServer.name}</p>
-            <ArrowBigDown className="justify-end ml-auto" />
+            <ArrowLeft
+              className={cn("justify-end ml-auto ", {
+                "-rotate-90": showModal,
+              })}
+            />
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 text-muted-foreground bg-tertiaryColor">
@@ -194,18 +215,73 @@ const ServerLeftHeader = (currentServer: Server) => {
               <MessageCirclePlus className="size-5" />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={onSelectDeleteServer}>
-            Supprimer le serveur
-            <DropdownMenuShortcut>
-              <Trash2 className="size-5" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={onSelectQuitServer}>
-            Quitter le serveur
-            <DropdownMenuShortcut>
-              <LogOut className="size-5" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className=" hover:bg-slate-50 relative flex justify-between w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                <p>Supprimer le serveur</p>{" "}
+                <Trash2 className="size-5" />
+              </button>
+            </AlertDialogTrigger>
+            {/* Supprimer le serveur */}
+            <DropdownMenuShortcut></DropdownMenuShortcut>
+            {/* </DropdownMenuItem> */}
+            {/* </AlertDialogTrigger> */}
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  En êtes vous sûr ?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Cette action est irréversible, cela
+                  supprimera le serveur ainsi que les
+                  données liées au serveur.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>
+                  Annuler
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={onSelectDeleteServer}>
+                  Continuer
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className=" hover:bg-slate-50 relative flex justify-between w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                <p>Quitter le serveur</p>{" "}
+                <LogOut className="size-5" />
+              </button>
+            </AlertDialogTrigger>
+            {/* Supprimer le serveur */}
+            <DropdownMenuShortcut></DropdownMenuShortcut>
+            {/* </DropdownMenuItem> */}
+            {/* </AlertDialogTrigger> */}
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  En êtes vous sûr ?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Cette action est irréversible, cela
+                  supprimera le serveur ainsi que les
+                  données liées au serveur.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>
+                  Annuler
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={onSelectQuitServer}>
+                  Continuer
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </DropdownMenuContent>
       </DropdownMenu>
       {showModalCreateCategory && (
