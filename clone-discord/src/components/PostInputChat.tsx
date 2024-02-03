@@ -148,7 +148,9 @@ const PostInputChat = ({
                 />
               ) : !edit ? (
                 <div className="flex">
-                  <p>{msg.message}</p>
+                  <p className="whitespace-pre-wrap break-all">
+                    {msg.message}
+                  </p>
                   {msg.isEdit && (
                     <p className="text-muted-foreground text-xs my-auto pl-1">
                       (modifié)

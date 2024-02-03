@@ -22,6 +22,7 @@ import { Input } from "../../ui/input"
 import { Label } from "../../ui/label"
 import { Check } from "lucide-react"
 import { toast } from "sonner"
+import { cn } from "@/lib/utils"
 
 interface AddServerProps {
   refetch: () => Promise<any>
@@ -33,6 +34,13 @@ const AddServer = (AddServerProps: AddServerProps) => {
     onSuccess: () => {
       AddServerProps.refetch()
       utils.getUserListServ.invalidate()
+      toast.success(
+        <div className="flex items-center">
+          <Check />
+          &nbsp;Votre server a bien été enregistré
+        </div>,
+        { duration: 3000 }
+      )
     },
   })
 
@@ -63,7 +71,6 @@ const AddServer = (AddServerProps: AddServerProps) => {
       <DialogTrigger asChild>
         <button className="text-green-600 hover:text-white bg-secondaryColor rounded-full w-10 h-10 hover:rounded-xl hover:bg-green-600">
           <p className=" text-3xl relative bottom-1">+</p>{" "}
-          {/* creer serv -> dialog : nom + image(facultatif)*/}
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -76,7 +83,9 @@ const AddServer = (AddServerProps: AddServerProps) => {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
+              <Label
+                htmlFor="imageUrl"
+                className="text-right">
                 Image du serveur (optionnel)
               </Label>
               <Input
@@ -85,29 +94,27 @@ const AddServer = (AddServerProps: AddServerProps) => {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">
+              <Label
+                className={cn("text-right", {
+                  "text-red-500": errors.name,
+                })}>
                 Nom du serveur
               </Label>
               <Input
                 {...register("name")}
                 className="col-span-3"
               />
+              {errors.name && (
+                <p
+                  className="col-span-4 text-red-500 text-right"
+                  role="alert">
+                  {errors.name.message}{" "}
+                </p>
+              )}
             </div>
           </div>
           <DialogFooter>
-            <Button
-              type="submit"
-              onClick={() =>
-                toast.success(
-                  <div className="flex items-center">
-                    <Check />
-                    &nbsp;Votre server a bien été enregistré
-                  </div>,
-                  { duration: 3000 }
-                )
-              }>
-              Enregistrer
-            </Button>
+            <Button type="submit">Enregistrer</Button>
           </DialogFooter>
         </form>
       </DialogContent>

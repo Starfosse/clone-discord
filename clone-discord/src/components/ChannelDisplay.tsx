@@ -59,7 +59,10 @@ const ChannelDisplay = (channelProps: channelProps) => {
             ) : (
               <Video width={14} />
             )}
-            &nbsp;{channelProps.channel.name}
+            <p className="overflow-ellipsis overflow-hidden whitespace-nowrap">
+              {" "}
+              &nbsp;{channelProps.channel.name}
+            </p>
           </ContextMenuTrigger>
           <ContextMenuContent className="text-white bg-tertiaryColor">
             <ContextMenuItem

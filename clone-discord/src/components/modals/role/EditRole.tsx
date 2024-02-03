@@ -49,12 +49,30 @@ const EditRole = (currentServer: Server) => {
 
   const { mutate: mutateOrder } =
     trpc.EditOrderMemberRole.useMutation({
-      onSuccess: () => listRoleServerData.refetch(),
+      onSuccess: () => {
+        listRoleServerData.refetch(),
+          toast.success(
+            <div className="flex items-center">
+              <Check />
+              &nbsp;L'ordre des rôles a bien été enregistré
+            </div>,
+            { duration: 3000 }
+          )
+      },
     })
 
   const { mutate: deleteRole } =
     trpc.deleteRole.useMutation({
-      onSuccess: () => listRoleServerData.refetch(),
+      onSuccess: () => {
+        listRoleServerData.refetch()
+        toast.success(
+          <div className="flex items-center">
+            <Check />
+            &nbsp;Le rôle a bien été supprimé
+          </div>,
+          { duration: 3000 }
+        )
+      },
     })
   const [MemberRole, setMemberRole] = useState<Role>()
 
@@ -169,14 +187,14 @@ const EditRole = (currentServer: Server) => {
     <Dialog
       open={currentServer.showModalEditRole}
       onOpenChange={currentServer.onClickEditRole}>
-      <DialogContent className="sm:max-w-[475px] max-h-[90%] overflow-auto">
-        <Table className="mt-6">
+      <DialogContent className="max-w-[475px] max-h-[90%] ">
+        <Table className="mt-6 ">
           <TableBody className="">
             {listRoleServer &&
               listRoleServer.map((role) => (
                 <TableRow
                   key={role.id}
-                  className=" flex items-center text-lg">
+                  className=" flex items-center text-lg ">
                   <div
                     data-id={role.id}
                     key={role.id}
@@ -186,15 +204,15 @@ const EditRole = (currentServer: Server) => {
                     }
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
-                    className="py-2 px-4 hover:cursor-pointer">
+                    className="py-2 px-2 hover:cursor-pointer">
                     ⋮⋮
                   </div>
-                  <TableCell className="font-medium">
-                    {role.role}
+                  <TableCell className="font-medium  ">
+                    <p className="truncate w-[185px]">
+                      {" "}
+                      {role.role}
+                    </p>
                   </TableCell>
-                  {/* <TableCell>
-                    Nombre de membre de ce role
-                  </TableCell> */}
                   <TableCell className="font-medium justify-end ml-auto flex flex-row gap-4">
                     <Button
                       onClick={() => handleClick(role.id)}>
@@ -212,14 +230,6 @@ const EditRole = (currentServer: Server) => {
         <Button
           onClick={() => {
             handleClickValidate()
-            toast.success(
-              <div className="flex items-center">
-                <Check />
-                &nbsp;L'ordre des rôles a bien été
-                enregistré
-              </div>,
-              { duration: 3000 }
-            )
           }}>
           Valider l'ordre
         </Button>

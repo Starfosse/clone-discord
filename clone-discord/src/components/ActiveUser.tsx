@@ -31,7 +31,9 @@ const ActiveUser = (currentChannel: Channel) => {
                 height={20}
                 width={20}
               />{" "}
-              <p>{user.pseudo}</p>
+              <p className=" whitespace-pre-wrap break-all">
+                {user.pseudo}
+              </p>
             </div>
           ))}
       </div>

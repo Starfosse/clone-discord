@@ -64,13 +64,14 @@ const EditChannel = (
   const utils = trpc.useUtils()
   const form = useForm<TChannelValidator>({
     resolver: zodResolver(ChannelValidator),
-    defaultValues: {
-      id: editChannelProps.channel.id,
-      name: editChannelProps.channel.name,
-      type: editChannelProps.channel.type,
-      isPrivate: editChannelProps.channel.isPrivate,
-      rolesRequired: [],
-    },
+    // defaultValues: {
+    //   id: editChannelProps.channel.id,
+    //   name: editChannelProps.channel.name,
+    //   type: editChannelProps.channel.type,
+    //   isPrivate: editChannelProps.channel.isPrivate,
+    //   rolesRequired: [],
+    //   serverId: editChannelProps.channel.serverId,
+    // },
   })
 
   const ChannelId = { id: editChannelProps.channel.id }
@@ -108,26 +109,30 @@ const EditChannel = (
         utils.getChannelsGroups.invalidate()
         utils.getChannels.invalidate()
         utils.getChannelsByGroupId.invalidate()
+        toast.success(
+          <div className="flex items-center">
+            <Check />
+            &nbsp;Le channel a bien été modifié
+          </div>,
+          { duration: 3000 }
+        )
       },
     })
-  const onSubmit = ({
-    name,
-    id,
-    type,
-    rolesRequired,
-    isPrivate,
-  }: TChannelValidator) => {
-    rolesRequired =
-      currentListRoleServer
-        ?.filter((role) => role.value === true)
-        ?.map((role) => role.id) ?? []
-    editChannel({
-      name,
-      id,
-      type,
-      rolesRequired,
-      isPrivate,
-    })
+  const onSubmit = () => {
+    console.log("test")
+    // rolesRequired =
+    //   currentListRoleServer
+    //     ?.filter((role) => role.value === true)
+    //     ?.map((role) => role.id) ?? []
+    // console.log("test")
+    // editChannel({
+    //   name,
+    //   id,
+    //   type,
+    //   rolesRequired,
+    //   isPrivate,
+    // })
+    console.log("test")
     editChannelProps.unShowModal()
   }
   const [isPrivate, setIsPrivate] = useState(false)
@@ -159,7 +164,7 @@ const EditChannel = (
       onOpenChange={editChannelProps.unShowModal}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Ajouter</DialogTitle>
+          <DialogTitle>Modifier</DialogTitle>
           <DialogDescription>
             Vous pourrez toujours modifier ces informations
             plus tard
@@ -185,7 +190,7 @@ const EditChannel = (
                         className="col-span-3"
                       />
                     </FormControl>
-                    <FormMessage className="col-span-4 text-right" />
+                    {/* <FormMessage className="col-span-4 text-right" /> */}
                   </FormItem>
                 )}
               />
@@ -282,8 +287,8 @@ const EditChannel = (
                       return (
                         <FormItem
                           key={item.id}
-                          className="flex flex-row items-center justify-between rounded-lg border p-2 m-2 gap-1 ml-6 relative left-2">
-                          <FormLabel className="font-normal">
+                          className="max-w-[350px] flex flex-row items-center justify-between rounded-lg border p-2 m-2 gap-1 ml-6 relative left-2">
+                          <FormLabel className="font-normal truncate">
                             {item.label}
                           </FormLabel>
                           <FormControl>
@@ -292,10 +297,6 @@ const EditChannel = (
                                 currentListRoleServer[index]
                                   .value
                               }
-                              // defaultChecked={
-                              //   currentListRoleServer[index]
-                              //     .value
-                              // }
                               onCheckedChange={() => {
                                 updateMemberRoleValue(
                                   item.id
@@ -312,14 +313,8 @@ const EditChannel = (
             <DialogFooter>
               <Button
                 type="submit"
-                onClick={() =>
-                  toast.success(
-                    <div className="flex items-center">
-                      <Check />
-                      &nbsp;Le channel a bien été modifié
-                    </div>,
-                    { duration: 3000 }
-                  )
+                onSubmit={() =>
+                  form.handleSubmit(onSubmit)
                 }>
                 Enregistrer
               </Button>

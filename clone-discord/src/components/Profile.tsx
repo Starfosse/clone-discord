@@ -260,10 +260,6 @@ const Profile = () => {
                                   />
                                   &nbsp;&nbsp;Occupé
                                 </p>
-                                {/* <p className="text-[0.6rem] text-muted-foreground text-right">
-                                Tu ne recevras aucune
-                                notification
-                              </p> */}
                               </SelectItem>
                               <SelectItem
                                 value={stateList.OFFLINE}
@@ -278,10 +274,6 @@ const Profile = () => {
                                   />
                                   &nbsp;&nbsp;Deconnecté
                                 </p>
-                                {/* <p className="text-[0.6rem] text-muted-foreground">
-                                Tu n'apparaîtras pas
-                                connecté
-                              </p> */}
                               </SelectItem>
                             </SelectGroup>
                           </SelectContent>

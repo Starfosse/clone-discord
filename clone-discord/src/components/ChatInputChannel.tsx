@@ -65,7 +65,7 @@ const ChatInputChannel = (cDProps: Channel) => {
 
   const posts = query?.pages.flatMap((page) => page.items)
   return (
-    <div className="text-white bg-primaryColor h-full flex relative overflow-auto">
+    <div className="text-white bg-primaryColor h-full flex relative">
       <div className="mt-auto pb-6 pl-4 flex flex-col gap-4 w-full">
         {query &&
           posts &&

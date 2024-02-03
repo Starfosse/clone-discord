@@ -61,7 +61,16 @@ const CreateRole = (currentServer: Server) => {
     },
   })
 
-  const { mutate } = trpc.createRole.useMutation()
+  const { mutate } = trpc.createRole.useMutation({
+    onSuccess: () =>
+      toast.success(
+        <div className="flex items-center">
+          <Check />
+          &nbsp;Le rôle a bien été créé
+        </div>,
+        { duration: 3000 }
+      ),
+  })
 
   const onSubmit = (data: TAddRoleValidator) => {
     mutate(data)
@@ -129,19 +138,7 @@ const CreateRole = (currentServer: Server) => {
                 ))}
               </div>
               <div className="text-center mt-4">
-                <Button
-                  type="submit"
-                  onClick={() =>
-                    toast.success(
-                      <div className="flex items-center">
-                        <Check />
-                        &nbsp;Le rôle a bien été créé
-                      </div>,
-                      { duration: 3000 }
-                    )
-                  }>
-                  Ajouter
-                </Button>
+                <Button type="submit">Ajouter</Button>
               </div>
             </div>
           </form>

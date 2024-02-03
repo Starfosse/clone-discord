@@ -35,6 +35,7 @@ interface Server {
 import {
   ArrowBigDown,
   ArrowLeft,
+  ChevronDown,
   FileDiff,
   LogOut,
   MessageCirclePlus,
@@ -43,6 +44,7 @@ import {
   Settings,
   Trash2,
   UserPlus,
+  X,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -150,7 +152,6 @@ const ServerLeftHeader = (currentServer: Server) => {
   }
 
   const [showModal, setShowModal] = useState(false)
-  console.log(showModal)
   return (
     <>
       <DropdownMenu
@@ -159,11 +160,18 @@ const ServerLeftHeader = (currentServer: Server) => {
         <DropdownMenuTrigger>
           <div
             onClick={() => setShowModal(true)}
-            className="flex w-full items-center text-white cursor-pointer hover:bg-gray-600 px-2 py-2 pb-4">
-            <p>{currentServer.name}</p>
-            <ArrowLeft
-              className={cn("justify-end ml-auto ", {
-                "-rotate-90": showModal,
+            className="transition-all flex w-full items-center text-white cursor-pointer hover:bg-gray-600 px-2 py-2 pb-4">
+            <p className="overflow-ellipsis overflow-hidden whitespace-nowrap px-1">
+              {currentServer.name}
+            </p>
+            <ChevronDown
+              className={cn(" ml-auto flex-shrink-0", {
+                hidden: showModal,
+              })}
+            />
+            <X
+              className={cn(" hidden  ml-auto ", {
+                inline: showModal,
               })}
             />
           </div>
