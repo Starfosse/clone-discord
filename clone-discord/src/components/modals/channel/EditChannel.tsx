@@ -172,7 +172,7 @@ const EditChannel = (
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid py-4">
+            <div className="grid py-2">
               <FormField
                 control={form.control}
                 name="name"
