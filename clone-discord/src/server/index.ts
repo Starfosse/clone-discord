@@ -14,13 +14,18 @@ import getRolesByChannel from "./procedures/channel/getRolesByChannel"
 import isPrivate from "./procedures/channel/isPrivate"
 import joinMemberToChannel from "./procedures/channel/joinMemberToChannel"
 import addFriend from "./procedures/friend/add-friend"
+import addGifDiscussion from "./procedures/friend/add-gif-discussion"
+import deleteFriend from "./procedures/friend/delete-friend"
 import deleteInputChat from "./procedures/friend/delete-input-chat"
 import editInputChat from "./procedures/friend/edit-input-chat"
+import editMessageShown from "./procedures/friend/edit-message-shown"
+import editMessageShownBypage from "./procedures/friend/edit-message-shown-by-page"
 import getAllFriends from "./procedures/friend/get-all-friends"
 import getFriendDiscussion from "./procedures/friend/get-friend-discussion"
 import getFriendsOnline from "./procedures/friend/get-friends-online"
 import getInputChat from "./procedures/friend/get-input-chat"
 import getListDiscussion from "./procedures/friend/get-list-discussion"
+import getListUnseenDiscussion from "./procedures/friend/get-list-unseen-discussion"
 import getUsersDiscussion from "./procedures/friend/get-users-discussion"
 import addInputDiscussion from "./procedures/friend/input-discussion"
 import pendingInvitationFriend from "./procedures/friend/pending-invitation-friend"
@@ -115,6 +120,11 @@ export const appRouter = createTRPCRouter({
   getListDiscussion,
   getListRoleByMember,
   unshowDiscussion,
+  deleteFriend,
+  getListUnseenDiscussion,
+  editMessageShown,
+  editMessageShownBypage,
+  addGifDiscussion,
 })
 
 export type AppRouter = typeof appRouter

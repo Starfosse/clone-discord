@@ -6,12 +6,28 @@ import Profile from "./Profile"
 import AddServer from "./modals/server/AddServer"
 import { trpc } from "@/app/_trpc/client"
 import Link from "next/link"
-import { Server } from "@prisma/client"
+import {
+  Server,
+  User,
+  UserFriend,
+  inputChat,
+} from "@prisma/client"
 import { useEffect, useState } from "react"
 import { createNewUser } from "@/server/procedures/user/createNewUser"
+import ListUnSeenConv from "./ListUnSeenConv"
+
+interface unSeenConv {
+  listUnSeenConv: inputChat[][]
+  listFriendData: User[]
+  userFriendList: UserFriend[]
+}
 
 const SideLeftBar = () => {
   const userListServData = trpc.getUserListServ.useQuery()
+  const listUnSeenConvData =
+    trpc.getListUnseenDiscussion.useQuery()
+  const [currentListUnSeenConv, setCurrentListUnSeenConv] =
+    useState<unSeenConv | undefined>()
   const [userListServ, setUserListServ] = useState<
     Server[] | undefined
   >()
@@ -20,7 +36,10 @@ const SideLeftBar = () => {
   useEffect(() => {
     if (userListServData.data)
       setUserListServ(userListServData.data)
-  }, [userListServData.data])
+    if (listUnSeenConvData.data)
+      setCurrentListUnSeenConv(listUnSeenConvData.data)
+  }, [userListServData.data, listUnSeenConvData.data])
+
   return (
     <>
       <div className="flex flex-col sticky z-50 bg-tertiaryColor min-h-screen w-14 items-center gap-2 pt-2">
@@ -40,6 +59,11 @@ const SideLeftBar = () => {
             />
           </Link>
         </div>
+        {currentListUnSeenConv && (
+          <ListUnSeenConv
+            currentListUnSeenConv={currentListUnSeenConv}
+          />
+        )}
         <Separator className="w-3/5" />
         {userListServ &&
           userListServ.map((server) => (

@@ -24,8 +24,10 @@ const pendingInvitationFriend = publicProcedure.query(
       const userFind = await prisma.user.findFirst({
         where: { id: pendingList[i].userOneId },
       })
+      if (!userFind) return
       userOneList.push(userFind)
     }
+    if (!userOneList) return
     return userOneList
   }
 )

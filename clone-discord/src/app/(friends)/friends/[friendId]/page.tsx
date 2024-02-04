@@ -20,8 +20,15 @@ const FriendPage = () => {
   useEffect(() => {
     if (friend.data) setCurrentFriend(friend.data)
   }, [friend.data])
+  const { mutate: shownMessage } =
+    trpc.editMessageShownBypage.useMutation()
+  const handleClickShownMessage = () => {
+    shownMessage(userFriendId)
+  }
   return (
-    <div className="h-full">
+    <div
+      className="h-full"
+      onClick={handleClickShownMessage}>
       {currentFriend && (
         <div className="text-white flex flex-col bg-primaryColor h-full">
           <FriendHeader currentFriend={currentFriend} />

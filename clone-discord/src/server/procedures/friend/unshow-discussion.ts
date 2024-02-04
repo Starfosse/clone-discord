@@ -18,8 +18,6 @@ const unshowDiscussion = publicProcedure
       where: { id: input.id },
     })
     if (!userFriend) return
-    console.log(input.id)
-    console.log(userFriend.id)
     if (userFriend.userOneId === user.id)
       return await prisma.userFriend.update({
         where: { id: input.id },

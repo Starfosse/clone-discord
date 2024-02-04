@@ -24,7 +24,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
 import GiphySearch from "./GiphySearch"
-import EmojipediaSearch from "./EmojipediaSearch"
 
 const InputChannel = (currentChannel: Channel) => {
   const utils = trpc.useUtils()
@@ -36,6 +35,7 @@ const InputChannel = (currentChannel: Channel) => {
       gif: selectedGif,
     }
     addGif(channelId)
+    setIsOpenGif(false)
   }
 
   const { mutate: addGif } =
