@@ -9,6 +9,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
 import {
@@ -164,6 +165,7 @@ const EditChannel = (
       onOpenChange={editChannelProps.unShowModal}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
+          <DialogTrigger></DialogTrigger>
           <DialogTitle>Modifier</DialogTitle>
           <DialogDescription>
             Vous pourrez toujours modifier ces informations
@@ -269,7 +271,6 @@ const EditChannel = (
                         onClick={setPrivate}
                         onChange={setPrivate}
                         checked={isPrivate}
-                        // checked={action.value}
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
