@@ -65,14 +65,14 @@ const EditChannel = (
   const utils = trpc.useUtils()
   const form = useForm<TChannelValidator>({
     resolver: zodResolver(ChannelValidator),
-    // defaultValues: {
-    //   id: editChannelProps.channel.id,
-    //   name: editChannelProps.channel.name,
-    //   type: editChannelProps.channel.type,
-    //   isPrivate: editChannelProps.channel.isPrivate,
-    //   rolesRequired: [],
-    //   serverId: editChannelProps.channel.serverId,
-    // },
+    defaultValues: {
+      id: editChannelProps.channel.id,
+      name: editChannelProps.channel.name,
+      type: editChannelProps.channel.type,
+      isPrivate: editChannelProps.channel.isPrivate,
+      rolesRequired: [],
+      serverId: editChannelProps.channel.serverId,
+    },
   })
 
   const ChannelId = { id: editChannelProps.channel.id }
@@ -86,10 +86,13 @@ const EditChannel = (
   const [currentListRoleServer, setCurrentListRoleServer] =
     useState<memberRoleIdLabel[] | undefined>()
   useEffect(() => {
+    console.log(listRoleServer.data)
+    console.log(currentRequiredRoleData.data)
     if (
       listRoleServer.data &&
       currentRequiredRoleData.data
     ) {
+      console.log("test")
       const items = listRoleServer.data.map(
         (memberRole) => ({
           id: memberRole.id,
@@ -100,10 +103,13 @@ const EditChannel = (
           ),
         })
       )
+      console.log(items)
       setCurrentListRoleServer(items)
+      console.log(items)
+      console.log(currentListRoleServer) // currentlistROleServer non attribué
     }
   }, [listRoleServer.data, currentRequiredRoleData.data])
-
+  console.log(currentListRoleServer)
   const { mutate: editChannel } =
     trpc.editChannel.useMutation({
       onSuccess: () => {
@@ -119,20 +125,27 @@ const EditChannel = (
         )
       },
     })
-  const onSubmit = () => {
+
+  const onSubmit = ({
+    name,
+    id,
+    type,
+    rolesRequired,
+    isPrivate,
+  }: TChannelValidator) => {
     console.log("test")
-    // rolesRequired =
-    //   currentListRoleServer
-    //     ?.filter((role) => role.value === true)
-    //     ?.map((role) => role.id) ?? []
-    // console.log("test")
-    // editChannel({
-    //   name,
-    //   id,
-    //   type,
-    //   rolesRequired,
-    //   isPrivate,
-    // })
+    rolesRequired =
+      currentListRoleServer
+        ?.filter((role) => role.value === true)
+        ?.map((role) => role.id) ?? []
+    console.log("test")
+    editChannel({
+      name,
+      id,
+      type,
+      rolesRequired,
+      isPrivate,
+    })
     console.log("test")
     editChannelProps.unShowModal()
   }
@@ -158,14 +171,15 @@ const EditChannel = (
           : role
     )
     setCurrentListRoleServer(updatedRoles)
+    console.log(currentListRoleServer)
+    console.log(updatedRoles)
   }
   return (
     <Dialog
-      open={editChannelProps.showModalEditChannel}
+      open={true}
       onOpenChange={editChannelProps.unShowModal}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTrigger></DialogTrigger>
           <DialogTitle>Modifier</DialogTitle>
           <DialogDescription>
             Vous pourrez toujours modifier ces informations
@@ -192,7 +206,7 @@ const EditChannel = (
                         className="col-span-3"
                       />
                     </FormControl>
-                    {/* <FormMessage className="col-span-4 text-right" /> */}
+                    <FormMessage className="col-span-4 text-right" />
                   </FormItem>
                 )}
               />
@@ -312,13 +326,7 @@ const EditChannel = (
                 ))}
             </div>
             <DialogFooter>
-              <Button
-                type="submit"
-                onSubmit={() =>
-                  form.handleSubmit(onSubmit)
-                }>
-                Enregistrer
-              </Button>
+              <Button type="submit">Enregistrer</Button>
             </DialogFooter>
           </form>
         </Form>
