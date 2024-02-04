@@ -34,10 +34,6 @@ const ChannelIdPage = () => {
         memberId: whoData.data.id,
         channelId: channelData.data.id,
       }
-      // if (
-      //   currentChannel?.type === "AUDIO" ||
-      //   currentChannel?.type === "VIDEO"
-      // )
       joinChannel(MemberIdChannelId)
     }
   }, [channelData.data, userData.data, whoData.data])

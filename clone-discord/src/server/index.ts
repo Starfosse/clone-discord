@@ -36,6 +36,7 @@ import addInputChannel from "./procedures/inputChannel/addInputChannel"
 import deleteInputChannel from "./procedures/inputChannel/deleteInputChannel"
 import editInputChannel from "./procedures/inputChannel/editInputChannel"
 import getInputChannel from "./procedures/inputChannel/getInputsChannel"
+import expelMember from "./procedures/member/expelMember"
 import getMemberByRole from "./procedures/member/getMemberByRole"
 import getMemberByUser from "./procedures/member/getMemberByUser"
 import getRolesOfMember from "./procedures/member/getRolesOfMember"
@@ -50,6 +51,7 @@ import getRoleServer from "./procedures/role/getRoleServer"
 import createServer from "./procedures/server/createServer"
 import deleteServer from "./procedures/server/deleteServer"
 import editServer from "./procedures/server/editServer"
+import findFirstPublicChannel from "./procedures/server/findFirstPublicChannel"
 import getServer from "./procedures/server/getServ"
 import getUserListServ from "./procedures/server/getUserListServ"
 import quitServer from "./procedures/server/quitServer"
@@ -125,6 +127,8 @@ export const appRouter = createTRPCRouter({
   editMessageShown,
   editMessageShownBypage,
   addGifDiscussion,
+  findFirstPublicChannel,
+  expelMember,
 })
 
 export type AppRouter = typeof appRouter

@@ -246,8 +246,8 @@ const AddChannel = (currentServer: Server) => {
                       return (
                         <FormItem
                           key={item.id}
-                          className="flex flex-row items-center justify-between rounded-lg border p-2 m-2 gap-1 ml-6 relative left-2">
-                          <FormLabel className="font-normal">
+                          className=" max-w-[350px] flex flex-row items-center justify-between rounded-lg border p-2 m-2 gap-1 ml-6 relative left-2">
+                          <FormLabel className="truncate font-normal">
                             {item.label}
                           </FormLabel>
                           <FormControl>

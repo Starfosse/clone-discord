@@ -1,4 +1,19 @@
 "use client"
+import {
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu"
 
 import { format } from "date-fns"
 import { trpc } from "@/app/_trpc/client"
@@ -165,30 +180,53 @@ const AvatarMember = (
   const setOpenFalse = () => {
     setOpen(false)
   }
+
+  const { mutate: expelMember } =
+    trpc.expelMember.useMutation()
+
+  const handleDeleteMember = (id: string) => {
+    const MemberId = { id: id }
+    expelMember(MemberId)
+  }
   return (
     <div
       onClick={() => setOpen(!open)}
       className="flex relative items-center p-1 hover:cursor-pointer hover:bg-neutral-700 hover:rounded-sm h-full w-full">
       {currentMember && (
-        <Image
-          className="absolute top-8 left-8 z-10 rounded-full border-[3px] border-tertiaryColor"
-          src={`/${stateUser}.png`}
-          width={16}
-          height={16}
-          alt="ok"
-        />
-      )}
-      {currentMember && (
-        <Avatar className="">
-          <AvatarImage src={currentMember?.imageUrl} />
-          <AvatarFallback className="text-xs">
-            {currentMember?.pseudo}
-          </AvatarFallback>
-        </Avatar>
-      )}
-      {currentMember && (
-        <div className="pl-2 overflow-ellipsis overflow-hidden whitespace-nowrap">
-          {currentMember?.pseudo}
+        <div className="w-full">
+          <ContextMenu>
+            <ContextMenuTrigger className="w-full">
+              <div className="flex relative items-center w-full">
+                <Image
+                  className="absolute top-7 left-7 z-10 rounded-full border-[3px] border-tertiaryColor"
+                  src={`/${stateUser}.png`}
+                  width={16}
+                  height={16}
+                  alt="ok"
+                />
+                <Avatar className="">
+                  <AvatarImage
+                    src={currentMember?.imageUrl}
+                  />
+                  <AvatarFallback className="text-xs">
+                    {currentMember?.pseudo}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="pl-2 overflow-ellipsis overflow-hidden whitespace-nowrap">
+                  {currentMember?.pseudo}
+                </div>
+              </div>
+            </ContextMenuTrigger>
+            <ContextMenuContent className="w-64">
+              <ContextMenuItem
+                onClick={() =>
+                  handleDeleteMember(currentMember.id)
+                }
+                className="text-red-600 hover:text-red-600 ">
+                Expulser le membre
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
         </div>
       )}
       {currentMember && currentListRoles && (
