@@ -5,10 +5,10 @@ import { z } from "zod"
 
 const discussionProps = z.object({
   discussionId: z.string(),
-  message: z.string(),
+  gif: z.string(),
 })
 
-const addInputDiscussion = publicProcedure
+const addGifDiscussion = publicProcedure
   .input(discussionProps)
   .mutation(async ({ input }) => {
     const user = await currentUser()
@@ -31,7 +31,8 @@ const addInputDiscussion = publicProcedure
     if (userId?.id === userFriend?.userOneId) {
       return await prisma.inputChat.create({
         data: {
-          message: input.message,
+          message: input.gif,
+          isGif: true,
           sentByUserOne: true,
           unSeenByUseTwo: true,
           unSeenByUserOne: false,
@@ -41,7 +42,8 @@ const addInputDiscussion = publicProcedure
     } else {
       return await prisma.inputChat.create({
         data: {
-          message: input.message,
+          message: input.gif,
+          isGif: true,
           sentByUserTwo: true,
           unSeenByUseTwo: false,
           unSeenByUserOne: true,
@@ -51,4 +53,4 @@ const addInputDiscussion = publicProcedure
     }
   })
 
-export default addInputDiscussion
+export default addGifDiscussion

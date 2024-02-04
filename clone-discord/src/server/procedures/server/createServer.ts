@@ -23,7 +23,6 @@ const createServer = publicProcedure
             imageUrl:
               "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png",
           }
-    console.log(imageUrl)
     const userOwner = await prisma.user.findFirst({
       where: {
         userId: user?.id,

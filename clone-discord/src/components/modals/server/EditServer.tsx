@@ -21,6 +21,9 @@ import { toast } from "sonner"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import { Label } from "../../ui/label"
+import { uploadFile } from "@/lib/upload.action"
+import { useState } from "react"
+import Image from "next/image"
 
 interface Server {
   id: string
@@ -61,6 +64,25 @@ const EditServer = (currentServer: Server) => {
       )
     },
   })
+
+  const [tmpImgUser, setTmpImgUser] = useState<
+    string | undefined
+  >(currentServer.imageUrl ?? undefined)
+  const [currentFormaData, setCurrentFormaData] =
+    useState<FormData | null>()
+  const getBlobUrl = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const formData = new FormData()
+    if (e.target.files) {
+      const file = e.target.files[0]
+      formData.append("file", file)
+      setCurrentFormaData(formData)
+      // if(tmpImgUser !== currentProfile?.imageUrl) // supprime l'image de preview précédente
+      const url = await uploadFile(formData)
+      setTmpImgUser(url)
+    }
+  }
   const onSubmit = ({
     name,
     imageUrl,
@@ -85,10 +107,21 @@ const EditServer = (currentServer: Server) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
+              {tmpImgUser && (
+                <Image
+                  className=" col-span-4 mt-2 relative mx-auto z-10 mb-8 rounded-full border-[1px] border-tertiaryColor object-cover object-center"
+                  src={tmpImgUser}
+                  width={60}
+                  height={60}
+                  alt="ok"
+                />
+              )}
               <Label htmlFor="name" className="text-right">
                 Image du serveur (optionnel)
               </Label>
               <Input
+                type="file"
+                onChange={getBlobUrl}
                 {...register("imageUrl")}
                 className="col-span-3"
               />

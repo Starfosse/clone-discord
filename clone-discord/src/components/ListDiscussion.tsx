@@ -25,7 +25,6 @@ const ListDiscussion = () => {
     trpc.unshowDiscussion.useMutation()
   const handleDelete = (id: string) => {
     const discussionId = { id: id }
-    console.log("good")
     unshowDiscussion(discussionId)
   }
   return (

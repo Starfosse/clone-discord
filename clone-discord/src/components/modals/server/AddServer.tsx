@@ -23,6 +23,8 @@ import { Label } from "../../ui/label"
 import { Check } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+import { uploadFile } from "@/lib/upload.action"
+import Image from "next/image"
 
 interface AddServerProps {
   refetch: () => Promise<any>
@@ -43,6 +45,24 @@ const AddServer = (AddServerProps: AddServerProps) => {
       )
     },
   })
+  const [tmpImgUser, setTmpImgUser] = useState<
+    string | undefined
+  >()
+  const [currentFormaData, setCurrentFormaData] =
+    useState<FormData | null>()
+  const getBlobUrl = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const formData = new FormData()
+    if (e.target.files) {
+      const file = e.target.files[0]
+      formData.append("file", file)
+      setCurrentFormaData(formData)
+      const url = await uploadFile(formData)
+      console.log(url)
+      setTmpImgUser(url)
+    }
+  }
 
   const {
     register,
@@ -57,11 +77,13 @@ const AddServer = (AddServerProps: AddServerProps) => {
     },
   })
 
-  const onSubmit = ({
+  const onSubmit = async ({
     name,
     imageUrl,
   }: TServerValidator) => {
     setOpen(false)
+    if (currentFormaData)
+      imageUrl = await uploadFile(currentFormaData)
     mutate({ name, imageUrl })
     resetField("name")
     resetField("imageUrl")
@@ -83,14 +105,25 @@ const AddServer = (AddServerProps: AddServerProps) => {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
+              {tmpImgUser && (
+                <Image
+                  className=" col-span-4 mt-2 relative mx-auto z-10 mb-8 rounded-full aspect-square border-[1px] border-tertiaryColor object-cover object-center"
+                  src={tmpImgUser}
+                  width={60}
+                  height={60}
+                  alt="ok"
+                />
+              )}
               <Label
                 htmlFor="imageUrl"
                 className="text-right">
                 Image du serveur (optionnel)
               </Label>
               <Input
+                type="file"
                 {...register("imageUrl")}
-                className="col-span-3"
+                className="col-span-3 "
+                onChange={getBlobUrl}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">

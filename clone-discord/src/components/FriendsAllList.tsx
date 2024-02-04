@@ -1,7 +1,7 @@
 "use client"
 import { trpc } from "@/app/_trpc/client"
 import { User } from "@prisma/client"
-import { MessageCircle } from "lucide-react"
+import { MessageCircle, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -20,6 +20,14 @@ const FriendsAllList = () => {
   useEffect(() => {
     if (data.data) setFriends(data.data)
   }, [data.data])
+
+  const { mutate: deleteFriend } =
+    trpc.deleteFriend.useMutation()
+
+  const handleClickDelete = (id: string) => {
+    const userFriendId = { id: id }
+    deleteFriend(userFriendId)
+  }
   return (
     <div className="flex flex-col text-white p-5 gap-3">
       {friends &&
@@ -52,6 +60,16 @@ const FriendsAllList = () => {
                 className="rounded-full bg-tertiaryColor border-[0.5rem] border-tertiaryColor ">
                 <MessageCircle />
               </Link>
+              <div className="flex items-center rounded-full bg-tertiaryColor border-[0.5rem] border-tertiaryColor">
+                <button
+                  onClick={() =>
+                    handleClickDelete(
+                      friends.userFriendListId[index]
+                    )
+                  }>
+                  <X className="size-6" />
+                </button>
+              </div>
             </div>
           </div>
         ))}

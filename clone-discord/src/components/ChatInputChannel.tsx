@@ -9,16 +9,6 @@ import { useIntersection } from "@mantine/hooks"
 import PostInputChannel from "./PostInputChannel"
 
 const ChatInputChannel = (cDProps: Channel) => {
-  // const utils = trpc.useUtils()
-  // const query = trpc.getInputChannel.useInfiniteQuery(
-  //   {
-  //     limit: 10,
-  //     id: cDProps.id,
-  //   },
-  //   {
-  //     getNextPageParam: (lastPage) => lastPage.nextCursor,
-  //   }
-  // )
   const {
     data: query,
     fetchNextPage,
@@ -34,15 +24,11 @@ const ChatInputChannel = (cDProps: Channel) => {
     }
   )
 
-  // const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
-  //   'id: cDProps.id',
-  //   ({ pageParam = 0 }) => trpc.getInputChannel.useQuery([cDProps.id, 5, pageParam] ),
-  //   {
-  //     getNextPageParam: (lastPage) => lastPage.nextCursor ?? false,
-  //   }
-  // );
+  const whoData = trpc.getUser.useQuery()
+  const [currentWho, setCurrentWho] = useState<
+    User | undefined
+  >()
 
-  // const handleScroll = (event: React.UIEvent) => {}
   const ServerId = { id: cDProps.serverId }
   const listUsersMembers =
     trpc.getUsersByMemberByServer.useQuery(ServerId)
@@ -51,7 +37,8 @@ const ChatInputChannel = (cDProps: Channel) => {
   useEffect(() => {
     if (listUsersMembers.data)
       setCurrentListMembers(listUsersMembers.data)
-  }, [listUsersMembers.data])
+    if (whoData.data) setCurrentWho(whoData.data)
+  }, [listUsersMembers.data, whoData.data])
 
   const lastPostRef = useRef<HTMLElement>(null)
   const { ref, entry } = useIntersection({
@@ -69,6 +56,7 @@ const ChatInputChannel = (cDProps: Channel) => {
       <div className="mt-auto pb-6 pl-4 flex flex-col gap-4 w-full">
         {query &&
           posts &&
+          currentWho &&
           currentListMembers &&
           posts.map((post, i) => {
             if (i === posts.length - 1) {
@@ -80,6 +68,7 @@ const ChatInputChannel = (cDProps: Channel) => {
                   <PostInputChannel
                     msg={post}
                     currentListMembers={currentListMembers}
+                    currentWho={currentWho}
                   />
                 </div>
               )
@@ -91,6 +80,7 @@ const ChatInputChannel = (cDProps: Channel) => {
                 <PostInputChannel
                   msg={post}
                   currentListMembers={currentListMembers}
+                  currentWho={currentWho}
                 />
               </div>
             )

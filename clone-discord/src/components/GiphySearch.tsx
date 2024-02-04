@@ -50,10 +50,10 @@ const GiphySearch: React.FC<GiphySearchProps> = ({
           }
           onKeyDown={handleSearch}
         />
-        <div className="h-full mt-4 flex flex-col gap-3 border-0 bg-transparent overflow-scroll overflow-x-hidden">
+        <div className="h-full mt-4 flex flex-col gap-3 border-0 bg-transparent overflow-scroll overflow-x-hidden ">
           {gifs.map((gif) => (
             <img
-              className="border-0 bg-transparent"
+              className="border-0 bg-transparent hover:cursor-pointer"
               key={gif.id}
               src={gif.images.fixed_height.url}
               alt={gif.title}

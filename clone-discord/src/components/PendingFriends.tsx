@@ -5,10 +5,16 @@ import { Button } from "./ui/button"
 import { Ban } from "lucide-react"
 import { UserRoundCheck } from "lucide-react"
 import Image from "next/image"
+import { User } from "@prisma/client"
 
-const PendingFriends = () => {
+interface PendingFriendsProps {
+  currentPendingFriends: User[]
+}
+
+const PendingFriends = ({
+  currentPendingFriends,
+}: PendingFriendsProps) => {
   const utils = trpc.useUtils()
-  const data = trpc.pendingInvitationFriend.useQuery()
   const { mutate: validFriendDemand } =
     trpc.validFriendDemand.useMutation({
       onSuccess: () => {
@@ -20,11 +26,10 @@ const PendingFriends = () => {
     const userOneId = { id: idFriend }
     validFriendDemand(userOneId)
   }
-
   return (
     <div className="flex flex-col text-white p-5 gap-3">
-      {data.data &&
-        data.data.map((friend) => (
+      {currentPendingFriends.length > 0 ? (
+        currentPendingFriends.map((friend) => (
           <div
             key={friend?.id}
             className="w-80 h-14  bg-secondaryColor rounded-lg flex items-center">
@@ -47,7 +52,12 @@ const PendingFriends = () => {
               <Ban className="size-4" />
             </Button>
           </div>
-        ))}
+        ))
+      ) : (
+        <p className="text-white text-2xl flex mx-auto justify-center items-center border-red-500">
+          Aucune demande en attente
+        </p>
+      )}
     </div>
   )
 }
