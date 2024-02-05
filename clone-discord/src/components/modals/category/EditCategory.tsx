@@ -22,6 +22,7 @@ import {
 import { Check } from "lucide-react"
 import { toast } from "sonner"
 import { ChannelGroup } from "@prisma/client"
+import { cn } from "@/lib/utils"
 
 interface editCategoryProps {
   ChannelGroup: ChannelGroup
@@ -34,7 +35,16 @@ const EditCategory = (
 ) => {
   const utils = trpc.useUtils()
   const { mutate } = trpc.editCategory.useMutation({
-    onSuccess: () => utils.getChannelsGroups.invalidate(),
+    onSuccess: () => {
+      utils.getChannelsGroups.invalidate(),
+        toast.success(
+          <div className="flex items-center">
+            <Check />
+            &nbsp;Vos modifications ont été enregristrées
+          </div>,
+          { duration: 3000 }
+        )
+    },
   })
 
   const {
@@ -68,7 +78,11 @@ const EditCategory = (
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
+              <Label
+                htmlFor="name"
+                className={cn("text-right", {
+                  "text-red-500": errors.name,
+                })}>
                 Nom de la catégorie
               </Label>
               <Input
@@ -78,23 +92,17 @@ const EditCategory = (
                 }
                 className="col-span-3"
               />
+              {errors.name && (
+                <p
+                  className="col-span-4 text-red-500 text-right"
+                  role="alert">
+                  {errors.name.message}{" "}
+                </p>
+              )}
             </div>
           </div>
           <DialogFooter>
-            <Button
-              type="submit"
-              onClick={() =>
-                toast.success(
-                  <div className="flex items-center">
-                    <Check />
-                    &nbsp;Vos modifications ont été
-                    enregristrées
-                  </div>,
-                  { duration: 3000 }
-                )
-              }>
-              Enregistrer
-            </Button>
+            <Button type="submit">Enregistrer</Button>
           </DialogFooter>
         </form>
       </DialogContent>

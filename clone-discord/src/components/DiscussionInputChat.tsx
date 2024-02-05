@@ -41,6 +41,14 @@ const DiscussionInputChat = ({
   }, [entry])
 
   const posts = query?.pages.flatMap((page) => page.items)
+
+  const bottomRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (bottomRef.current)
+      bottomRef.current.scrollIntoView({
+        behavior: "smooth",
+      })
+  }, [])
   return (
     <div className="text-white bg-primaryColor h-full flex relative overflow-auto">
       <div className="mt-auto pb-6 pl-4 flex flex-col gap-4 w-full">
@@ -57,6 +65,7 @@ const DiscussionInputChat = ({
                     msg={post}
                     currentFriend={currentFriend}
                   />
+                  <div ref={bottomRef} />
                 </div>
               )
             }

@@ -1,15 +1,26 @@
 "use client"
 
+import { trpc } from "@/app/_trpc/client"
 import AddFriend from "@/components/AddFriend"
 import FriendsAllList from "@/components/FriendsAllList"
 import FriendsList from "@/components/FriendsAllList"
 import FriendsOnlineList from "@/components/FriendsOnlineList"
 import PendingFriends from "@/components/PendingFriends"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { User } from "@prisma/client"
 import { Users } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const FriendsManagement = () => {
+  const pendingFriendsData =
+    trpc.pendingInvitationFriend.useQuery()
+  const [currentPendingFriends, setCurrentPendingFriends] =
+    useState<User[] | undefined>()
+  useEffect(() => {
+    if (pendingFriendsData.data)
+      setCurrentPendingFriends(pendingFriendsData.data)
+  }, [pendingFriendsData.data])
   const [addFriend, setAddFriend] = useState(false)
   const [seePendingFriends, setSeePendingFriends] =
     useState(false)
@@ -58,20 +69,36 @@ const FriendsManagement = () => {
           Tous
         </Button>
         <Button
-          className="bg-transparent hover:bg-gray-950 rounded-md p-2"
+          className="bg-transparent hover:bg-gray-950 rounded-md p-2 relative"
           onClick={handleClickSeePendingsFriends}>
+          <div
+            className={cn(
+              "absolute left-16 bottom-6 bg-red-500 rounded-full aspect-square invisible",
+              {
+                "px-2, visible":
+                  currentPendingFriends &&
+                  currentPendingFriends?.length > 0,
+              }
+            )}>
+            {currentPendingFriends?.length}
+          </div>
           En Attente
         </Button>
         <Button
-          className="bg-transparent hover:bg-gray-950 rounded-md p-2"
+          className="bg-transparent hover:bg-gray-950 rounded-md p-2 "
           onClick={handleClickAddFriend}>
           Ajouter
+          {/* {currentPendingFriends?.length} */}
         </Button>
       </div>
       {seeAllFriends && <FriendsAllList />}
       {seeOnlineFriends && <FriendsOnlineList />}
       {addFriend && <AddFriend />}
-      {seePendingFriends && <PendingFriends />}
+      {seePendingFriends && currentPendingFriends && (
+        <PendingFriends
+          currentPendingFriends={currentPendingFriends}
+        />
+      )}
     </div>
   )
 }

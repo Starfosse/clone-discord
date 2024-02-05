@@ -33,6 +33,8 @@ model User {
   UserFriendReceived UserFriend[] @relation("UserTwo")
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model UserFriend{
@@ -48,8 +50,9 @@ model UserFriend{
   // isRecording Boolean? @default(false)
   pending Boolean @default(true)
   lastMessage DateTime?
-  showConv Boolean? @default(false)
-  
+  showConvUserOne Boolean? @default(true)
+  showConvUserTwo Boolean? @default(true)
+
   discussion inputChat[]
 
   createdAt DateTime @default(now())
@@ -67,6 +70,8 @@ model inputChat{
   message String
   sentByUserOne Boolean @default(false)
   sentByUserTwo Boolean @default(false)
+  unSeenByUserOne Boolean @default(false)
+  unSeenByUseTwo Boolean @default(false)
 
   userFriendId String
   userFriend UserFriend @relation(fields: [userFriendId], references: [id], onDelete: Cascade)
@@ -186,7 +191,9 @@ model Role{
   speak_Channel Boolean @default(false)
   video_Channel Boolean @default(false)
   download_Channel Boolean @default(false)
-  
+  //catégorie create edit supp
+  //server supp
+  //input channel supp
   @@index([serverId])
 }
 

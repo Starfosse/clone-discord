@@ -9,6 +9,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
 import {
@@ -70,6 +71,7 @@ const EditChannel = (
       type: editChannelProps.channel.type,
       isPrivate: editChannelProps.channel.isPrivate,
       rolesRequired: [],
+      serverId: editChannelProps.channel.serverId,
     },
   })
 
@@ -84,10 +86,13 @@ const EditChannel = (
   const [currentListRoleServer, setCurrentListRoleServer] =
     useState<memberRoleIdLabel[] | undefined>()
   useEffect(() => {
+    console.log(listRoleServer.data)
+    console.log(currentRequiredRoleData.data)
     if (
       listRoleServer.data &&
       currentRequiredRoleData.data
     ) {
+      console.log("test")
       const items = listRoleServer.data.map(
         (memberRole) => ({
           id: memberRole.id,
@@ -98,18 +103,29 @@ const EditChannel = (
           ),
         })
       )
+      console.log(items)
       setCurrentListRoleServer(items)
+      console.log(items)
+      console.log(currentListRoleServer) // currentlistROleServer non attribué
     }
   }, [listRoleServer.data, currentRequiredRoleData.data])
-
+  console.log(currentListRoleServer)
   const { mutate: editChannel } =
     trpc.editChannel.useMutation({
       onSuccess: () => {
         utils.getChannelsGroups.invalidate()
         utils.getChannels.invalidate()
         utils.getChannelsByGroupId.invalidate()
+        toast.success(
+          <div className="flex items-center">
+            <Check />
+            &nbsp;Le channel a bien été modifié
+          </div>,
+          { duration: 3000 }
+        )
       },
     })
+
   const onSubmit = ({
     name,
     id,
@@ -117,10 +133,12 @@ const EditChannel = (
     rolesRequired,
     isPrivate,
   }: TChannelValidator) => {
+    console.log("test")
     rolesRequired =
       currentListRoleServer
         ?.filter((role) => role.value === true)
         ?.map((role) => role.id) ?? []
+    console.log("test")
     editChannel({
       name,
       id,
@@ -128,6 +146,7 @@ const EditChannel = (
       rolesRequired,
       isPrivate,
     })
+    console.log("test")
     editChannelProps.unShowModal()
   }
   const [isPrivate, setIsPrivate] = useState(false)
@@ -152,14 +171,16 @@ const EditChannel = (
           : role
     )
     setCurrentListRoleServer(updatedRoles)
+    console.log(currentListRoleServer)
+    console.log(updatedRoles)
   }
   return (
     <Dialog
-      open={editChannelProps.showModalEditChannel}
+      open={true}
       onOpenChange={editChannelProps.unShowModal}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Ajouter</DialogTitle>
+          <DialogTitle>Modifier</DialogTitle>
           <DialogDescription>
             Vous pourrez toujours modifier ces informations
             plus tard
@@ -167,7 +188,7 @@ const EditChannel = (
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid py-4">
+            <div className="grid py-2">
               <FormField
                 control={form.control}
                 name="name"
@@ -264,7 +285,6 @@ const EditChannel = (
                         onClick={setPrivate}
                         onChange={setPrivate}
                         checked={isPrivate}
-                        // checked={action.value}
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
@@ -282,8 +302,8 @@ const EditChannel = (
                       return (
                         <FormItem
                           key={item.id}
-                          className="flex flex-row items-center justify-between rounded-lg border p-2 m-2 gap-1 ml-6 relative left-2">
-                          <FormLabel className="font-normal">
+                          className="max-w-[350px] flex flex-row items-center justify-between rounded-lg border p-2 m-2 gap-1 ml-6 relative left-2">
+                          <FormLabel className="font-normal truncate">
                             {item.label}
                           </FormLabel>
                           <FormControl>
@@ -292,10 +312,6 @@ const EditChannel = (
                                 currentListRoleServer[index]
                                   .value
                               }
-                              // defaultChecked={
-                              //   currentListRoleServer[index]
-                              //     .value
-                              // }
                               onCheckedChange={() => {
                                 updateMemberRoleValue(
                                   item.id
@@ -309,21 +325,9 @@ const EditChannel = (
                   />
                 ))}
             </div>
-            <DialogFooter>
-              <Button
-                type="submit"
-                onClick={() =>
-                  toast.success(
-                    <div className="flex items-center">
-                      <Check />
-                      &nbsp;Le channel a bien été modifié
-                    </div>,
-                    { duration: 3000 }
-                  )
-                }>
-                Enregistrer
-              </Button>
-            </DialogFooter>
+            {/* <DialogFooter>
+              <Button type="submit">Enregistrer</Button>
+            </DialogFooter> */}
           </form>
         </Form>
       </DialogContent>
