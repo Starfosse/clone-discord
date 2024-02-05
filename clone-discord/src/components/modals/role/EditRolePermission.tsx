@@ -71,7 +71,7 @@ const EditRolePermission = (
           toast.success(
             <div className="flex items-center">
               <Check />
-              &nbsp;Le rôle a bien été créé
+              &nbsp;Le rôle a bien été modifié
             </div>,
             { duration: 3000 }
           )

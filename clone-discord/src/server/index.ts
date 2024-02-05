@@ -40,6 +40,7 @@ import expelMember from "./procedures/member/expelMember"
 import getMemberByRole from "./procedures/member/getMemberByRole"
 import getMemberByUser from "./procedures/member/getMemberByUser"
 import getRolesOfMember from "./procedures/member/getRolesOfMember"
+import getListPermissions from "./procedures/member/getlistPermissions"
 import giveMemberRoles from "./procedures/member/giveMemberRoles"
 import deleteRole from "./procedures/role/DeleteRole"
 import EditMemberRole from "./procedures/role/EditMemberRole"
@@ -129,6 +130,7 @@ export const appRouter = createTRPCRouter({
   addGifDiscussion,
   findFirstPublicChannel,
   expelMember,
+  getListPermissions,
 })
 
 export type AppRouter = typeof appRouter

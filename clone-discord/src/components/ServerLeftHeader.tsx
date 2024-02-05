@@ -30,6 +30,7 @@ interface Server {
   createdAt: Date
   updatedAt: Date
   refetch: () => Promise<any>
+  listPermissions: permissions
 }
 
 import {
@@ -56,6 +57,7 @@ import EditServer from "./modals/server/EditServer"
 import AddMemberRole from "./modals/member/AddMemberRole"
 import { Button } from "./ui/button"
 import { cn } from "@/lib/utils"
+import permissions from "@/lib/interface/permissions"
 
 const ServerLeftHeader = (currentServer: Server) => {
   const serverId = { id: currentServer.id }
@@ -177,38 +179,52 @@ const ServerLeftHeader = (currentServer: Server) => {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 text-muted-foreground bg-tertiaryColor">
-          <DropdownMenuItem>
-            Inviter des gens (WIP)
-            <DropdownMenuShortcut>
-              <UserPlus className="size-5" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onSelect={onSelectShowEditServer}>
-            Modifier le profil du serveur{" "}
-            <DropdownMenuShortcut>
-              <Settings className="size-5" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={onSelectCreateRole}>
-            Créér des rôles
-            <DropdownMenuShortcut>
-              <PlusCircle className="size-5" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={onSelectEditRole}>
-            Modifier des rôles
-            <DropdownMenuShortcut>
-              <PlusCircle className="size-5" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onSelect={onSelectAddMemberRole}>
-            Attribuer des rôles
-            <DropdownMenuShortcut>
-              <Pencil className="size-5" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {currentServer.listPermissions.invite_Member && (
+            <DropdownMenuItem>
+              Inviter des gens (WIP)
+              <DropdownMenuShortcut>
+                <UserPlus className="size-5" />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
+          {currentServer.listPermissions.edit_Server && (
+            <DropdownMenuItem
+              onSelect={onSelectShowEditServer}>
+              Modifier le profil du serveur{" "}
+              <DropdownMenuShortcut>
+                <Settings className="size-5" />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
+          {currentServer.listPermissions
+            .role_Management && (
+            <DropdownMenuItem onSelect={onSelectCreateRole}>
+              Créér des rôles
+              <DropdownMenuShortcut>
+                <PlusCircle className="size-5" />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
+          {currentServer.listPermissions
+            .role_Management && (
+            <DropdownMenuItem onSelect={onSelectEditRole}>
+              Modifier des rôles
+              <DropdownMenuShortcut>
+                <PlusCircle className="size-5" />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
+          {currentServer.listPermissions
+            .role_Management && (
+            <DropdownMenuItem
+              onSelect={onSelectAddMemberRole}>
+              Attribuer des rôles
+              <DropdownMenuShortcut>
+                <Pencil className="size-5" />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
+
           <DropdownMenuItem
             onSelect={onSelectCreateCategory}>
             Créér une catégorie
@@ -216,46 +232,48 @@ const ServerLeftHeader = (currentServer: Server) => {
               <FileDiff className="size-5" />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onSelect={onSelectCreateChannel}>
-            Créér un channel
-            <DropdownMenuShortcut>
-              <MessageCirclePlus className="size-5" />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <button className=" hover:bg-slate-50 relative flex justify-between w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-                <p>Supprimer le serveur</p>{" "}
-                <Trash2 className="size-5" />
-              </button>
-            </AlertDialogTrigger>
-            {/* Supprimer le serveur */}
-            <DropdownMenuShortcut></DropdownMenuShortcut>
-            {/* </DropdownMenuItem> */}
-            {/* </AlertDialogTrigger> */}
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  En êtes vous sûr ?
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Cette action est irréversible, cela
-                  supprimera le serveur ainsi que les
-                  données liées au serveur.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>
-                  Annuler
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={onSelectDeleteServer}>
-                  Continuer
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          {currentServer.listPermissions
+            .create_Remove_Channel && (
+            <DropdownMenuItem
+              onSelect={onSelectCreateChannel}>
+              Créér un channel
+              <DropdownMenuShortcut>
+                <MessageCirclePlus className="size-5" />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          )}
+          {currentServer.listPermissions.edit_Server && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button className=" hover:bg-slate-50 relative flex justify-between w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                  <p>Supprimer le serveur</p>{" "}
+                  <Trash2 className="size-5" />
+                </button>
+              </AlertDialogTrigger>
+              <DropdownMenuShortcut></DropdownMenuShortcut>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    En êtes vous sûr ?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Cette action est irréversible, cela
+                    supprimera le serveur ainsi que les
+                    données liées au serveur.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>
+                    Annuler
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={onSelectDeleteServer}>
+                    Continuer
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
