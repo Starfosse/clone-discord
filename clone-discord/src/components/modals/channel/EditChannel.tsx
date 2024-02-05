@@ -325,9 +325,9 @@ const EditChannel = (
                   />
                 ))}
             </div>
-            <DialogFooter>
+            {/* <DialogFooter>
               <Button type="submit">Enregistrer</Button>
-            </DialogFooter>
+            </DialogFooter> */}
           </form>
         </Form>
       </DialogContent>

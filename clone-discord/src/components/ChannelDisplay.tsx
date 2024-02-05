@@ -73,7 +73,7 @@ const ChannelDisplay = (channelProps: channelProps) => {
                 <ContextMenuItem
                   onClick={showModal}
                   className="hover:cursor-pointer">
-                  Modifier le salon
+                  Modifier le salon (WIP)
                 </ContextMenuItem>
                 <ContextMenuItem
                   onClick={handleClickDeleteChannel}
