@@ -1,5 +1,6 @@
 "use client"
 
+import { trpc } from "@/app/_trpc/client"
 import {
   Dialog,
   DialogContent,
@@ -7,40 +8,22 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "../../ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Button } from "../../ui/button"
-import { Check } from "lucide-react"
-import { toast } from "sonner"
-import Image from "next/image"
-import { Separator } from "../../ui/separator"
-import { trpc } from "@/app/_trpc/client"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { cn } from "@/lib/utils"
 import {
   ServerValidatorId,
   TServerValidatorId,
 } from "@/lib/validator/server-validator-id"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Check } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { Button } from "../../ui/button"
+import { Input } from "../../ui/input"
 import { Label } from "../../ui/label"
-import { useRouter } from "next/navigation"
+import { uploadFile } from "@/lib/upload.action"
 import { useState } from "react"
+import Image from "next/image"
 
 interface Server {
   id: string
@@ -56,34 +39,50 @@ interface Server {
 }
 
 const EditServer = (currentServer: Server) => {
-  // const form = useForm<TServerValidatorId>({
-  //   resolver: zodResolver(ServerValidatorId),
-  //   defaultValues: {
-  //     imageUrl: currentServer.imageUrl,
-  //     name: currentServer.name,
-  //     id: currentServer.id,
-  //   },
-  // })
-
-  const router = useRouter()
-  const { handleSubmit, register } =
-    useForm<TServerValidatorId>({
-      resolver: zodResolver(ServerValidatorId),
-      defaultValues: {
-        imageUrl: currentServer.imageUrl,
-        name: currentServer.name,
-        id: currentServer.id,
-      },
-    })
-  const id = currentServer.id
-  const utils = trpc.useUtils()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<TServerValidatorId>({
+    resolver: zodResolver(ServerValidatorId),
+    defaultValues: {
+      imageUrl: currentServer.imageUrl,
+      name: currentServer.name,
+      id: currentServer.id,
+    },
+  })
 
   const { mutate } = trpc.editServer.useMutation({
     onSuccess: () => {
-      // utils.getChannels.invalidate()
       currentServer.refetch()
+      toast.success(
+        <div className="flex items-center">
+          <Check />
+          &nbsp;Vos modifications ont été enregristrées
+        </div>,
+        { duration: 3000 }
+      )
     },
   })
+
+  const [tmpImgUser, setTmpImgUser] = useState<
+    string | undefined
+  >(currentServer.imageUrl ?? undefined)
+  const [currentFormaData, setCurrentFormaData] =
+    useState<FormData | null>()
+  const getBlobUrl = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const formData = new FormData()
+    if (e.target.files) {
+      const file = e.target.files[0]
+      formData.append("file", file)
+      setCurrentFormaData(formData)
+      // if(tmpImgUser !== currentProfile?.imageUrl) // supprime l'image de preview précédente
+      const url = await uploadFile(formData)
+      setTmpImgUser(url)
+    }
+  }
   const onSubmit = ({
     name,
     imageUrl,
@@ -91,13 +90,11 @@ const EditServer = (currentServer: Server) => {
   }: TServerValidatorId) => {
     currentServer.onClickEditServer()
     mutate({ name, imageUrl, id })
-    // currentServer.()
-    // router.refresh()
-    // router.push("/")
-    // router.push(`/server/${currentServer.id}`)
   }
   return (
-    <Dialog open={currentServer.showModalEditServer}>
+    <Dialog
+      open={currentServer.showModalEditServer}
+      onOpenChange={currentServer.onClickEditServer}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
@@ -110,45 +107,51 @@ const EditServer = (currentServer: Server) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
+              {tmpImgUser && (
+                <Image
+                  className=" col-span-4 mt-2 relative mx-auto z-10 mb-8 rounded-full border-[1px] border-tertiaryColor object-cover object-center"
+                  src={tmpImgUser}
+                  width={60}
+                  height={60}
+                  alt="ok"
+                />
+              )}
               <Label htmlFor="name" className="text-right">
                 Image du serveur (optionnel)
               </Label>
               <Input
+                type="file"
+                onChange={getBlobUrl}
                 {...register("imageUrl")}
                 className="col-span-3"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">
+              <Label
+                className={cn("text-right", {
+                  "text-red-500": errors.name,
+                })}>
                 Nom du serveur
               </Label>
               <Input
                 {...register("name")}
                 className="col-span-3"
               />
+              {errors.name && (
+                <p
+                  className="col-span-4 text-red-500 text-right"
+                  role="alert">
+                  {errors.name.message}{" "}
+                </p>
+              )}
             </div>
           </div>
-
           <DialogFooter>
-            <Button
-              type="submit"
-              onClick={() =>
-                toast.success(
-                  <div className="flex items-center">
-                    <Check />
-                    &nbsp;Vos modifications ont été
-                    enregristrées
-                  </div>,
-                  { duration: 3000 }
-                )
-              }>
-              Sauvegarder
-            </Button>
+            <Button type="submit">Sauvegarder</Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
   )
 }
-// TODO gerer les erreurs form et validator
 export default EditServer

@@ -4,6 +4,7 @@ import { Channel, ChannelGroup } from "@prisma/client"
 import { useEffect, useState } from "react"
 import ChannelsGroup from "./ChannelsGroup"
 import ChannelDisplay from "./ChannelDisplay"
+import permissions from "@/lib/interface/permissions"
 
 interface Server {
   id: string
@@ -14,13 +15,14 @@ interface Server {
   createdAt: Date
   updatedAt: Date
   refetch: () => Promise<any>
+  listPermissions: permissions
 }
 
 const ServerLeftListChannel = (currentServer: Server) => {
   const serverId = { serverId: currentServer.id }
-  const channelsData = trpc.getChannels.useQuery(serverId)
+  const channelsData = trpc.getChannels.useQuery(serverId) //
   const ChannelsGroupsData =
-    trpc.getChannelsGroups.useQuery(serverId)
+    trpc.getChannelsGroups.useQuery(serverId) //
 
   const [channelsGroups, setChannelsGroups] = useState<
     ChannelGroup[] | undefined
@@ -40,20 +42,18 @@ const ServerLeftListChannel = (currentServer: Server) => {
       setChannelsGroups(ChannelsGroupsData.data)
     }
   }, [ChannelsGroupsData.data])
-  // const textChannels = channels?.filter(
-  //   (channel) => channel.type === "TEXT"
-  // )
-  // const audioChannels = channels?.filter(
-  //   (channel) => channel.type === "AUDIO"
-  // )
   return (
     <>
       <div className="flex flex-col items-start text-white w-full overflow-auto">
         <div className="w-full">
           {channelsGroups &&
+            currentServer.listPermissions &&
             channelsGroups.map((channelsGroup) => (
               <div key={channelsGroup.id}>
                 <ChannelsGroup
+                  listPermissions={
+                    currentServer.listPermissions
+                  }
                   refetchChannels={channelsData.refetch}
                   refetchChannelsGroups={
                     ChannelsGroupsData.refetch
@@ -66,11 +66,15 @@ const ServerLeftListChannel = (currentServer: Server) => {
         </div>
         <div className="pt-4 w-full">
           {channels &&
+            currentServer.listPermissions &&
             channels.map(
               (channel) =>
                 !channel.channelGroupId && (
                   <div key={channel.id}>
                     <ChannelDisplay
+                      listPermissions={
+                        currentServer.listPermissions
+                      }
                       refetchChannels={
                         ChannelsGroupsData.refetch
                       }
@@ -89,5 +93,4 @@ const ServerLeftListChannel = (currentServer: Server) => {
   )
 }
 
-//Todo trier par date de création, et prendre en comtpe si c'est une catégorie ou non
 export default ServerLeftListChannel

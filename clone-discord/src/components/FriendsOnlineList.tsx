@@ -3,7 +3,7 @@
 import { trpc } from "@/app/_trpc/client"
 import Image from "next/image"
 import { Button } from "./ui/button"
-import { MessageCircle } from "lucide-react"
+import { MessageCircle, X } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { User, stateList } from "@prisma/client"
@@ -23,6 +23,13 @@ import { User, stateList } from "@prisma/client"
 //   userFriendListId: string[]
 // }
 
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu"
+
 interface friendsData {
   onlineFriendsList: User[]
   userFriendListId: string[]
@@ -36,6 +43,14 @@ const FriendsOnlineList = () => {
   useEffect(() => {
     if (data.data) setFriendsOnline(data.data)
   }, [data.data])
+
+  const { mutate: deleteFriend } =
+    trpc.deleteFriend.useMutation()
+
+  const handleClickDelete = (id: string) => {
+    const userFriendId = { id: id }
+    deleteFriend(userFriendId)
+  }
   return (
     <div className="flex flex-col text-white p-5 gap-3">
       {friendsOnline &&
@@ -60,13 +75,27 @@ const FriendsOnlineList = () => {
                   alt="ok"
                 />
               </div>
-              <p className="ml-4">{friendOnline?.pseudo}</p>
+              <p className="ml-4 overflow-ellipsis overflow-hidden whitespace-nowrap">
+                {friendOnline?.pseudo}
+              </p>
               <div className="ml-auto flex gap-2 mr-2 items-center">
                 <Link
                   href={`/friends/${friendsOnline.userFriendListId[index]}`}
                   className="rounded-full bg-tertiaryColor border-[0.5rem] border-tertiaryColor ">
                   <MessageCircle />
                 </Link>
+                <div className="flex items-center rounded-full bg-tertiaryColor border-[0.5rem] border-tertiaryColor">
+                  <button
+                    onClick={() =>
+                      handleClickDelete(
+                        friendsOnline.userFriendListId[
+                          index
+                        ]
+                      )
+                    }>
+                    <X className="size-6" />
+                  </button>
+                </div>
               </div>
             </div>
           )

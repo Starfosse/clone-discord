@@ -13,12 +13,14 @@ import { ArrowBigDown } from "lucide-react"
 import AddChannelByGroupId from "./modals/category/AddChannelByGroupId"
 import EditCategory from "./modals/category/EditCategory"
 import { cn } from "@/lib/utils"
+import permissions from "@/lib/interface/permissions"
 
 interface channnelsGroupProps {
   channelsGroup: ChannelGroup
   refetchChannels: () => Promise<any>
   refetchChannelsGroups: () => Promise<any>
   refetchServer: () => Promise<any>
+  listPermissions: permissions
 }
 
 const ChannelsGroup = (cGProps: channnelsGroupProps) => {
@@ -62,44 +64,65 @@ const ChannelsGroup = (cGProps: channnelsGroupProps) => {
   }
   return (
     <div className="mt-4 pl-2">
-      <ContextMenu>
-        <ContextMenuTrigger className="flex w-full items-center">
-          {
-            <ArrowBigDown
-              onClick={() => setIsOpen(!isOpen)}
-              className={cn(
-                "h-4 w-4 transition-all text-muted-foreground",
-                {
-                  "-rotate-90": !isOpen,
-                }
-              )}
-            />
-          }{" "}
-          <div>{cGProps.channelsGroup.name}</div>{" "}
-          <div className="justify-end ml-auto text-muted-foreground pr-2">
-            <button
-              onClick={handleClickAddChannel}
-              className="text-xl">
-              +
-            </button>{" "}
+      {cGProps.listPermissions.create_Remove_Channel ? (
+        <div>
+          <ContextMenu>
+            <ContextMenuTrigger className="flex w-full items-center">
+              <ArrowBigDown
+                onClick={() => setIsOpen(!isOpen)}
+                className={cn(
+                  "h-6 w-6 transition-all text-muted-foreground flex-shrink-0",
+                  {
+                    "-rotate-90": !isOpen,
+                  }
+                )}
+              />
+              <div className="overflow-ellipsis overflow-hidden whitespace-nowrap px-1">
+                {cGProps.channelsGroup.name}
+              </div>
+              <div className="justify-end ml-auto text-muted-foreground pr-2">
+                <button
+                  onClick={handleClickAddChannel}
+                  className="text-xl">
+                  +
+                </button>
+              </div>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem onClick={showModal}>
+                Modifier la catégorie
+              </ContextMenuItem>
+              <ContextMenuItem
+                onClick={handleClickDeleteCategory}>
+                Supprimer la catégorie
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
+        </div>
+      ) : (
+        <div className="flex w-full items-center">
+          <ArrowBigDown
+            onClick={() => setIsOpen(!isOpen)}
+            className={cn(
+              "h-6 w-6 transition-all text-muted-foreground flex-shrink-0",
+              {
+                "-rotate-90": !isOpen,
+              }
+            )}
+          />
+          <div className="overflow-ellipsis overflow-hidden whitespace-nowrap px-1">
+            {cGProps.channelsGroup.name}
           </div>
-        </ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuItem onClick={showModal}>
-            Modifier la catégorie
-          </ContextMenuItem>
-          <ContextMenuItem
-            onClick={handleClickDeleteCategory}>
-            Supprimer la catégorie
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
+        </div>
+      )}
 
       {isOpen &&
         currentChannels &&
+        cGProps.listPermissions &&
         currentChannels.map((channel) => (
           <div key={channel.id}>
             <ChannelDisplay
+              listPermissions={cGProps.listPermissions}
               channel={channel}
               refetchChannels={cGProps.refetchChannels}
               refetchChannelsGroups={
@@ -109,6 +132,7 @@ const ChannelsGroup = (cGProps: channnelsGroupProps) => {
             />
           </div>
         ))}
+
       {showModalAddChannel && (
         <AddChannelByGroupId
           channelsGroup={cGProps.channelsGroup}
@@ -121,6 +145,7 @@ const ChannelsGroup = (cGProps: channnelsGroupProps) => {
           // refetch
         />
       )}
+
       {showModalEditCategory && (
         <EditCategory
           ChannelGroup={cGProps.channelsGroup}

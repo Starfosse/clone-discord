@@ -24,10 +24,12 @@ import { Input } from "./ui/input"
 interface PostInputChannelProps {
   msg: InputChannel
   currentListMembers: User[]
+  currentWho: User
 }
 const PostInputChannel = ({
   msg,
   currentListMembers,
+  currentWho,
 }: PostInputChannelProps) => {
   const getUser = (id: string) => {
     const user = currentListMembers.find(
@@ -90,12 +92,17 @@ const PostInputChannel = ({
     editInput({ message, id })
     setEdit(false)
   }
-  return (
+  {
+    currentWho.id === msg.userId
+  }
+  return currentWho.id === msg.userId ? (
     <ContextMenu>
-      <ContextMenuTrigger className="flex gap-4 items-center ">
-        <div className="">{getUserImage(msg.userId)}</div>
+      <ContextMenuTrigger className="flex gap-4 items-center pr-2">
+        <div className="flex-shrink-0">
+          {getUserImage(msg.userId)}
+        </div>
         <div className="flex flex-col">
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center ">
             <p>{getUser(msg.userId)}</p>
             <p className="text-muted-foreground text-xs">
               {format(msg.createdAt, "yyyy-MM-dd HH:mm:ss")}
@@ -103,14 +110,17 @@ const PostInputChannel = ({
           </div>
           {msg.isGif ? (
             <Image
+              className=""
               src={msg.message}
               height={200}
               width={200}
               alt="msg gif"
             />
           ) : !edit ? (
-            <div className="flex">
-              <p>{msg.message}</p>
+            <div className="flex overflow-hidden whitespace-pre-wrap break-all">
+              <p className="overflow-hidden">
+                {msg.message}
+              </p>
               {msg.isEdit && (
                 <p className="text-muted-foreground text-xs my-auto pl-1">
                   (modifié)
@@ -139,6 +149,44 @@ const PostInputChannel = ({
         <ContextMenuItem
           onClick={() => handleClickDelete(msg.id)}>
           Supprimer le message
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
+  ) : (
+    <ContextMenu>
+      <ContextMenuTrigger className="flex gap-4 items-center pr-2">
+        <div className="">{getUserImage(msg.userId)}</div>
+        <div className="flex flex-col">
+          <div className="flex gap-2 items-center">
+            <p>{getUser(msg.userId)}</p>
+            <p className="text-muted-foreground text-xs">
+              {format(msg.createdAt, "yyyy-MM-dd HH:mm:ss")}
+            </p>
+          </div>
+          {msg.isGif ? (
+            <Image
+              src={msg.message}
+              height={200}
+              width={200}
+              alt="msg gif"
+            />
+          ) : (
+            <div className="flex overflow-hidden whitespace-pre-wrap break-all">
+              <p className="overflow-hidden">
+                {msg.message}
+              </p>
+              {msg.isEdit && (
+                <p className="text-muted-foreground text-xs my-auto pl-1">
+                  (modifié)
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </ContextMenuTrigger>
+      <ContextMenuContent>
+        <ContextMenuItem>
+          Ajouter une réaction
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

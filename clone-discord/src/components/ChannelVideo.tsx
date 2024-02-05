@@ -54,7 +54,10 @@ const ChannelVideo = (cVPRops: ChannelVideoProps) => {
       serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
       // Use the default LiveKit theme for nice styles.
       data-lk-theme="default"
-      style={{ height: "100dvh" }}>
+      style={{
+        maxHeight: "calc(100vh - 3.5rem)",
+        paddingBottom: "4.5rem",
+      }}>
       {/* Your custom component with basic video conferencing functionality. */}
       <MyVideoConference />
       {/* The RoomAudioRenderer takes care of room-wide audio for you. */}
@@ -66,8 +69,6 @@ const ChannelVideo = (cVPRops: ChannelVideoProps) => {
     // </div>
   )
 }
-
-//todo :gérer la talle de l'affichage avec l'en-tête
 
 function MyVideoConference() {
   // `useTracks` returns all camera and screen share tracks. If a user
