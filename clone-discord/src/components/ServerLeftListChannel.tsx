@@ -20,9 +20,9 @@ interface Server {
 
 const ServerLeftListChannel = (currentServer: Server) => {
   const serverId = { serverId: currentServer.id }
-  const channelsData = trpc.getChannels.useQuery(serverId)
+  const channelsData = trpc.getChannels.useQuery(serverId) //
   const ChannelsGroupsData =
-    trpc.getChannelsGroups.useQuery(serverId)
+    trpc.getChannelsGroups.useQuery(serverId) //
 
   const [channelsGroups, setChannelsGroups] = useState<
     ChannelGroup[] | undefined

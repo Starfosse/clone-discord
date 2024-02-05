@@ -193,6 +193,7 @@ model Role{
   download_Channel Boolean @default(false)
   //catégorie create edit supp
   //server supp
+  //input channel supp
   @@index([serverId])
 }
 
