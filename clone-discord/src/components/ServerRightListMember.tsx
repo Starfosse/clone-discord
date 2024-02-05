@@ -46,6 +46,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
 import { Separator } from "./ui/separator"
+import permissions from "@/lib/interface/permissions"
 
 interface ServerRightListMember {
   id: string
@@ -55,6 +56,7 @@ interface ServerRightListMember {
   userId: string
   createdAt: Date
   updatedAt: Date
+  listPermissions: permissions
 }
 
 interface DataDisplay {
@@ -138,6 +140,9 @@ const ServerRightListMember = (
                   <AvatarMember
                     member={m}
                     currentServer={currentServer}
+                    listPermissions={
+                      currentServer.listPermissions
+                    }
                   />{" "}
                 </div>
               ))}
@@ -151,6 +156,7 @@ const ServerRightListMember = (
 interface AvatarMemberProps {
   member: Member
   currentServer: ServerRightListMember
+  listPermissions: permissions
 }
 const AvatarMember = (
   AvatarMemberProps: AvatarMemberProps
@@ -192,7 +198,8 @@ const AvatarMember = (
     <div
       onClick={() => setOpen(!open)}
       className="flex relative items-center p-1 hover:cursor-pointer hover:bg-neutral-700 hover:rounded-sm h-full w-full">
-      {currentMember && (
+      {currentMember &&
+      AvatarMemberProps.listPermissions.expulsate_Member ? (
         <div className="w-full">
           <ContextMenu>
             <ContextMenuTrigger className="w-full">
@@ -227,6 +234,27 @@ const AvatarMember = (
               </ContextMenuItem>
             </ContextMenuContent>
           </ContextMenu>
+        </div>
+      ) : (
+        <div className="w-full">
+          <div className="flex relative items-center w-full">
+            <Image
+              className="absolute top-7 left-7 z-10 rounded-full border-[3px] border-tertiaryColor"
+              src={`/${stateUser}.png`}
+              width={16}
+              height={16}
+              alt="ok"
+            />
+            <Avatar className="">
+              <AvatarImage src={currentMember?.imageUrl} />
+              <AvatarFallback className="text-xs">
+                {currentMember?.pseudo}
+              </AvatarFallback>
+            </Avatar>
+            <div className="pl-2 overflow-ellipsis overflow-hidden whitespace-nowrap">
+              {currentMember?.pseudo}
+            </div>
+          </div>
         </div>
       )}
       {currentMember && currentListRoles && (

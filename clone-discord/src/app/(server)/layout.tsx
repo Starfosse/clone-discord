@@ -47,17 +47,21 @@ export default function ServerLayout({
             />
           )}
           <Separator className=" w-4/5 mb-4 justify-center mx-auto" />
-          {currentServer && (
+          {currentServer && currentListPermissions && (
             <ServerLeftListChannel
               {...currentServer}
               refetch={serverData.refetch}
+              listPermissions={currentListPermissions}
             />
           )}
         </div>
         <div className="flex-grow flex-1">{children}</div>
         <div className="ml-auto w-52 bg-secondaryColor  z-50 h-full flex flex-col">
-          {currentServer && (
-            <ServerRightListMember {...currentServer} />
+          {currentServer && currentListPermissions && (
+            <ServerRightListMember
+              {...currentServer}
+              listPermissions={currentListPermissions}
+            />
           )}
         </div>
       </main>
