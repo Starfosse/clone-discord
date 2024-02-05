@@ -191,7 +191,7 @@ model Role{
   speak_Channel Boolean @default(false)
   video_Channel Boolean @default(false)
   download_Channel Boolean @default(false)
-  //catégorie create
+  //catégorie create edit supp
   //server supp
   @@index([serverId])
 }
