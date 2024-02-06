@@ -60,6 +60,7 @@ import createNewUser from "./procedures/user/createNewUser"
 import editImage from "./procedures/user/editImage"
 import getUser from "./procedures/user/getUser"
 import getUserByMember from "./procedures/user/getUserByMember"
+import getUserId from "./procedures/user/getUserId"
 import getUsersByMemberByServer from "./procedures/user/getUsersByMemberByServer"
 import hello from "./procedures/user/hello"
 import updateUser from "./procedures/user/updateUser"
@@ -131,6 +132,7 @@ export const appRouter = createTRPCRouter({
   findFirstPublicChannel,
   expelMember,
   getListPermissions,
+  getUserId,
 })
 
 export type AppRouter = typeof appRouter
