@@ -7,12 +7,8 @@ const inputChatId = z.object({ id: z.string() })
 const getUsersDiscussion = publicProcedure
   .input(inputChatId)
   .query(async ({ input }) => {
-    const inputChat = await prisma.inputChat.findFirst({
-      where: { id: input.id },
-    })
-    if (!inputChat) return
     const userFriend = await prisma.userFriend.findFirst({
-      where: { id: inputChat.userFriendId },
+      where: { id: input.id },
     })
     if (!userFriend) return
     const userOne = await prisma.user.findFirst({

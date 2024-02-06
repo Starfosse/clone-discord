@@ -3,7 +3,6 @@
 import { trpc } from "@/app/_trpc/client"
 import AddFriend from "@/components/AddFriend"
 import FriendsAllList from "@/components/FriendsAllList"
-import FriendsList from "@/components/FriendsAllList"
 import FriendsOnlineList from "@/components/FriendsOnlineList"
 import PendingFriends from "@/components/PendingFriends"
 import { Button } from "@/components/ui/button"
@@ -97,7 +96,6 @@ const FriendsManagement = () => {
           className="bg-transparent hover:bg-gray-950 rounded-md p-2 "
           onClick={handleClickAddFriend}>
           Ajouter
-          {/* {currentPendingFriends?.length} */}
         </Button>
       </div>
       {seeAllFriends && currentWho && (
