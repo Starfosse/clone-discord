@@ -31,15 +31,32 @@ const InputChatDiscussion = ({
   discussionId,
   friend,
 }: InputChatDiscussion) => {
+  const [isOpenGif, setIsOpenGif] = useState(false)
+  const [selectedGif, setSelectedGif] = useState<string>("")
   const utils = trpc.useUtils()
+  const form = useForm<TDiscussionProps>({
+    resolver: zodResolver(discussionProps),
+    defaultValues: {
+      message: "",
+    },
+  })
+
   const { mutate: addMessage } =
     trpc.addInputDiscussion.useMutation({
       onSuccess: () => utils.getInputChat.invalidate(),
     })
-
   const { mutate: addGif } =
-    trpc.addGifDiscussion.useMutation({})
-  const [selectedGif, setSelectedGif] = useState<string>("")
+    trpc.addGifDiscussion.useMutation({
+      onSuccess: () => utils.getInputChat.invalidate(),
+    })
+
+  const onSubmit = ({ message }: TDiscussionProps) => {
+    form.reset()
+    if (message === "") return
+    addMessage({ discussionId, message })
+    form.reset()
+  }
+
   const handleGifSelect = (url: string) => {
     setSelectedGif(url)
     const discussionProps = {
@@ -49,20 +66,7 @@ const InputChatDiscussion = ({
     addGif(discussionProps)
     setIsOpenGif(false)
   }
-  const form = useForm<TDiscussionProps>({
-    resolver: zodResolver(discussionProps),
-    defaultValues: {
-      message: "",
-    },
-  })
-  const onSubmit = ({ message }: TDiscussionProps) => {
-    form.reset()
-    if (message === "") return
-    addMessage({ discussionId, message })
-    form.reset()
-  }
 
-  const [isOpenGif, setIsOpenGif] = useState(false)
   return (
     <div className="bg-primaryColor h-14 overflow-hidden">
       <div className=" w-[98%] mx-auto bg-secondaryColor rounded-md">
