@@ -9,8 +9,9 @@ import { trpc } from "@/app/_trpc/client"
 import { toast } from "sonner"
 import { Check } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { User } from "@prisma/client"
 
-const AddFriend = () => {
+const AddFriend = (who: User) => {
   const { mutate: addFriend } = trpc.addFriend.useMutation({
     onSuccess: () =>
       toast.success(
@@ -31,7 +32,8 @@ const AddFriend = () => {
   })
 
   const onSubmit = ({ pseudo }: TFriendValidator) => {
-    addFriend({ pseudo })
+    const input = { pseudo: pseudo, id: who.id }
+    addFriend(input)
   }
 
   return (

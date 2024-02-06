@@ -15,6 +15,7 @@ const PendingFriends = ({
   currentPendingFriends,
 }: PendingFriendsProps) => {
   const utils = trpc.useUtils()
+
   const { mutate: validFriendDemand } =
     trpc.validFriendDemand.useMutation({
       onSuccess: () => {
