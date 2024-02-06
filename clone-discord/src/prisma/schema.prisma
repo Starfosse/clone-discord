@@ -46,8 +46,8 @@ model UserFriend{
   userTwoId String
   userTwo User @relation("UserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
 
-  // isCalling Boolean? @default(false)
-  // isRecording Boolean? @default(false)
+  isCalling Boolean? @default(false)
+  isRecording Boolean? @default(false)
   pending Boolean @default(true)
   lastMessage DateTime?
   showConvUserOne Boolean? @default(true)
@@ -180,20 +180,20 @@ model Role{
   channelRole ChannelRole[]
 
   invite_Member Boolean @default(false)
-  expulsate_Member Boolean @default(false)
+  expel_Member Boolean @default(false)
   edit_Server Boolean @default(false)
+  delete_Server Boolean @default(false)
   role_Management Boolean @default(false)
   view_Logs Boolean @default(false)
-  create_Remove_Channel Boolean @default(false)
-  edit_Channel Boolean @default(false)
+  channel_Management Boolean @default(false)
   view_Channel Boolean @default(false)
   write_Channel Boolean @default(false)
   speak_Channel Boolean @default(false)
   video_Channel Boolean @default(false)
+  reaction_Channel Boolean @default(false)
   download_Channel Boolean @default(false)
-  //catégorie create edit supp
-  //server supp
-  //input channel supp
+  category_Management Boolean @default(false)
+  delete_Input_Channel Boolean @default(false)
   @@index([serverId])
 }
 

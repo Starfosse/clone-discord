@@ -10,7 +10,7 @@ const listActions = [
       {
         action: "Expulser",
         description: "Permet d'expluser un membre",
-        value: "expulsate_Member" as const,
+        value: "expel_Member" as const,
       },
       {
         action: "Modifier le serveur",
@@ -19,9 +19,14 @@ const listActions = [
         value: "edit_Server" as const,
       },
       {
+        action: "Supprimer le serveur",
+        description: "Permet la suppression du serveur",
+        value: "delete_Server" as const,
+      },
+      {
         action: "Gestion des rôles",
         description:
-          "Permet de créer, attribuer et modifier les rôles",
+          "Permet de créer, attribuer, supprimer et modifier les rôles",
         value: "role_Management" as const,
       },
       {
@@ -36,16 +41,16 @@ const listActions = [
     name: "Gestions des salons et catégories",
     actions: [
       {
-        action: "Créér/Supprimer",
+        action: "Gestion des salons",
         description:
-          "Permet la création et suppression des salons ou catégories",
-        value: "create_Remove_Channel" as const,
+          "Permet la création, modification et suppression des salons",
+        value: "role_Management" as const,
       },
       {
-        action: "Modifier",
+        action: "Gestion des catégories",
         description:
-          "Permet la modification du profil d'un salon ou catégorie",
-        value: "edit_Channel" as const,
+          "Permet la création, modification et suppression des catégories",
+        value: "category_Management" as const,
       },
       {
         action: "Voir",
@@ -75,6 +80,18 @@ const listActions = [
         description:
           "Permet de télécharger dans les salons non-privés",
         value: "download_Channel" as const,
+      },
+      {
+        action: "Réaction",
+        description:
+          "Permet d'ajouter des réactions dans le serveur",
+        value: "reaction_Channel" as const,
+      },
+      {
+        action: "Supprimer des messages",
+        description:
+          "Permet de supprimer des messages dans des salons",
+        value: "delete_Input_Channel" as const,
       },
     ],
   },
