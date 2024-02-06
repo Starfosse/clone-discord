@@ -1,5 +1,5 @@
 import { User } from "@prisma/client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { trpc } from "../_trpc/client"
 import { z } from "zod"
 
@@ -8,7 +8,10 @@ const [currentWho, setCurrentWho] = useState<
 >()
 
 const whoData = trpc.getUser.useQuery()
-if (whoData.data) setCurrentWho(whoData.data)
+
+useEffect(() => {
+  if (whoData.data) setCurrentWho(whoData.data)
+}, [whoData.data])
 
 const user = z.object({ id: z.string() })
 

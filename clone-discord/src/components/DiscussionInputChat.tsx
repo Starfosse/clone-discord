@@ -2,9 +2,8 @@
 
 import { trpc } from "@/app/_trpc/client"
 import { useIntersection } from "@mantine/hooks"
-import { useEffect, useRef } from "react"
-import PostDiscussionDisplay from "./PostInputChat"
 import { User } from "@prisma/client"
+import { useEffect, useRef, useState } from "react"
 import PostInputChat from "./PostInputChat"
 
 interface DiscussionInputChatProps {
@@ -12,10 +11,21 @@ interface DiscussionInputChatProps {
   currentFriend: User
 }
 
+interface currentUsers {
+  userOne: User
+  userTwo: User
+}
+
 const DiscussionInputChat = ({
   discussionId,
   currentFriend,
 }: DiscussionInputChatProps) => {
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const lastPostRef = useRef<HTMLElement>(null)
+  const [currentUsers, setCurrentUsers] = useState<
+    currentUsers | undefined
+  >()
+
   const {
     data: query,
     fetchNextPage,
@@ -26,33 +36,38 @@ const DiscussionInputChat = ({
       discussionId: discussionId,
     },
     {
-      getNextPageParam: (lastPage, pages) =>
-        lastPage.nextCursor,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   )
-  const lastPostRef = useRef<HTMLElement>(null)
+  const inputChatId = { id: discussionId }
+
+  const users =
+    trpc.getUsersDiscussion.useQuery(inputChatId)
+
+  const posts = query?.pages.flatMap((page) => page.items)
   const { ref, entry } = useIntersection({
     root: lastPostRef.current,
     threshold: 1,
   })
 
   useEffect(() => {
-    if (entry?.isIntersecting) fetchNextPage()
-  }, [entry])
-
-  const posts = query?.pages.flatMap((page) => page.items)
-
-  const bottomRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
     if (bottomRef.current)
       bottomRef.current.scrollIntoView({
         behavior: "smooth",
       })
   }, [])
+  useEffect(() => {
+    if (entry?.isIntersecting) fetchNextPage()
+  }, [entry])
+  useEffect(() => {
+    if (users.data) setCurrentUsers(users.data)
+  }, [users.data])
+
   return (
     <div className="text-white bg-primaryColor h-full flex relative overflow-auto">
       <div className="mt-auto pb-6 pl-4 flex flex-col gap-4 w-full">
         {query &&
+          currentUsers &&
           posts &&
           posts.map((post, i) => {
             if (i === posts.length - 1) {
@@ -64,6 +79,7 @@ const DiscussionInputChat = ({
                   <PostInputChat
                     msg={post}
                     currentFriend={currentFriend}
+                    currentUsers={currentUsers}
                   />
                   <div ref={bottomRef} />
                 </div>
@@ -76,15 +92,11 @@ const DiscussionInputChat = ({
                 <PostInputChat
                   msg={post}
                   currentFriend={currentFriend}
+                  currentUsers={currentUsers}
                 />
               </div>
             )
           })}
-        {/* {query && (
-      <button onClick={() => fetchNextPage()}>
-        Load More
-      </button>
-    )} */}
       </div>
     </div>
   )

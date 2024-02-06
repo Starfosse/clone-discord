@@ -1,22 +1,18 @@
 import { prisma } from "@/lib/db"
 import { publicProcedure } from "@/server/trpc"
-import { currentUser } from "@clerk/nextjs"
-import { UserFriend } from "@prisma/client"
+import { z } from "zod"
 
-const getListDiscussion = publicProcedure.query(
-  async () => {
-    const userId = await currentUser()
-    if (!userId) return
-    const user = await prisma.user.findFirst({
-      where: { userId: userId.id },
-    })
-    if (!user) return
+const user = z.object({ id: z.string() })
+
+const getListDiscussion = publicProcedure
+  .input(user)
+  .query(async ({ input }) => {
     const userFriendList = await prisma.userFriend.findMany(
       {
         where: {
           OR: [
-            { userTwoId: user.id },
-            { userOneId: user.id },
+            { userTwoId: input.id },
+            { userOneId: input.id },
           ],
           AND: [{ pending: false }],
         },
@@ -30,9 +26,9 @@ const getListDiscussion = publicProcedure.query(
     const userFriendListShowable =
       userFriendListNotNull.filter(
         (userFriend) =>
-          (userFriend.userOneId === user.id &&
+          (userFriend.userOneId === input.id &&
             userFriend.showConvUserOne) ||
-          (userFriend.userTwoId === user.id &&
+          (userFriend.userTwoId === input.id &&
             userFriend.showConvUserTwo)
       )
     const listFriends = []
@@ -42,7 +38,7 @@ const getListDiscussion = publicProcedure.query(
       i++
     ) {
       const friend =
-        user.id === userFriendListShowable[i].userOneId
+        input.id === userFriendListShowable[i].userOneId
           ? await prisma.user.findFirst({
               where: {
                 id: userFriendListShowable[i].userTwoId,
@@ -58,7 +54,6 @@ const getListDiscussion = publicProcedure.query(
     }
     if (!listFriends) return
     return { userFriendListShowable, listFriends }
-  }
-)
+  })
 
 export default getListDiscussion

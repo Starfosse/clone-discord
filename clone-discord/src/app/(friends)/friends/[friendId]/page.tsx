@@ -2,7 +2,6 @@
 
 import { trpc } from "@/app/_trpc/client"
 import DiscussionInputChat from "@/components/DiscussionInputChat"
-import FriendAudio from "@/components/FriendAudio"
 import FriendHeader from "@/components/FriendHeader"
 import InputChatDiscussion from "@/components/InputDiscussion"
 import { User } from "@prisma/client"
@@ -12,16 +11,20 @@ import { useEffect, useState } from "react"
 const FriendPage = () => {
   const userFriend = useParams<{ friendId: string }>()
   const userFriendId = { userFriendId: userFriend.friendId }
-  const friend =
-    trpc.getFriendDiscussion.useQuery(userFriendId)
   const [currentFriend, setCurrentFriend] = useState<
     User | undefined
   >()
+
+  const friend =
+    trpc.getFriendDiscussion.useQuery(userFriendId)
+
   useEffect(() => {
     if (friend.data) setCurrentFriend(friend.data)
   }, [friend.data])
+
   const { mutate: shownMessage } =
     trpc.editMessageShownBypage.useMutation()
+
   const handleClickShownMessage = () => {
     shownMessage(userFriendId)
   }
