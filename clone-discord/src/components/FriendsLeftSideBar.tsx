@@ -1,11 +1,11 @@
 "use client"
 
+import { trpc } from "@/app/_trpc/client"
+import { User } from "@prisma/client"
 import { Users } from "lucide-react"
 import Link from "next/link"
-import ListDiscussion from "./ListDiscussion"
-import { trpc } from "@/app/_trpc/client"
 import { useEffect, useState } from "react"
-import { User } from "@prisma/client"
+import ListDiscussion from "./ListDiscussion"
 
 const FriendsLeftSideBar = () => {
   const [currentWho, setCurrentWho] = useState<

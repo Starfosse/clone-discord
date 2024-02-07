@@ -11,20 +11,18 @@ import { useEffect, useState } from "react"
 const ChannelIdPage = () => {
   const utils = trpc.useUtils()
   const channelId = useParams<{ channelId: string }>()
-  const channelData =
-    trpc.getChannelById.useQuery(channelId)
   const [currentChannel, setCurrentChannel] = useState<
     Channel | undefined
   >()
-  const userData = trpc.getUser.useQuery()
   const [currentUser, setCurrentUser] = useState<
     User | undefined
   >()
+
+  const channelData =
+    trpc.getChannelById.useQuery(channelId)
+  const userData = trpc.getUser.useQuery()
   const whoData = trpc.getMemberByUser.useQuery(channelId)
-  const { mutate: joinChannel } =
-    trpc.joinMemberToChannel.useMutation({
-      onSuccess: () => utils.getChannelUsers.invalidate(),
-    })
+
   useEffect(() => {
     if (channelData.data)
       setCurrentChannel(channelData.data)
@@ -37,6 +35,11 @@ const ChannelIdPage = () => {
       joinChannel(MemberIdChannelId)
     }
   }, [channelData.data, userData.data, whoData.data])
+
+  const { mutate: joinChannel } =
+    trpc.joinMemberToChannel.useMutation({
+      onSuccess: () => utils.getChannelUsers.invalidate(),
+    })
 
   return (
     <>

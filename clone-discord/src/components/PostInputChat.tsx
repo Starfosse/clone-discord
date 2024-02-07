@@ -36,6 +36,7 @@ const PostInputChat = ({
   currentUsers,
 }: PostInputChatProps) => {
   const [edit, setEdit] = useState(false)
+  const utils = trpc.useUtils()
   const {
     register,
     handleSubmit,
@@ -48,9 +49,13 @@ const PostInputChat = ({
   })
 
   const { mutate: deleteMessage } =
-    trpc.deleteInputChat.useMutation({})
+    trpc.deleteInputChat.useMutation({
+      onSuccess: () => utils.getInputChat.invalidate(),
+    })
   const { mutate: editInput } =
-    trpc.editInputChat.useMutation({})
+    trpc.editInputChat.useMutation({
+      onSuccess: () => utils.getInputChat.invalidate(),
+    })
 
   const getUserImage = (msg: inputChat) => {
     if (!currentUsers) return

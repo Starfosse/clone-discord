@@ -5,13 +5,13 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
+import permissions from "@/lib/interface/permissions"
 import { Channel } from "@prisma/client"
 import { Hash, Headphones, Video } from "lucide-react"
-import { useState } from "react"
-import EditChannel from "./modals/channel/EditChannel"
 import Link from "next/link"
+import { useState } from "react"
 import ActiveUser from "./ActiveUser"
-import permissions from "@/lib/interface/permissions"
+import EditChannel from "./modals/channel/EditChannel"
 
 interface channelProps {
   channel: Channel
@@ -23,9 +23,12 @@ interface channelProps {
 
 const ChannelDisplay = (channelProps: channelProps) => {
   const utils = trpc.useUtils()
-
+  const channelId = {
+    id: channelProps.channel.id,
+  }
   const [showModalEditChannel, setShowModalEditChannel] =
     useState(false)
+
   const { mutate: deleteChannel } =
     trpc.deleteChannel.useMutation({
       onSuccess: () => {
@@ -35,22 +38,18 @@ const ChannelDisplay = (channelProps: channelProps) => {
       },
     })
 
-  const channelId = {
-    id: channelProps.channel.id,
-  }
-  const handleClickDeleteChannel = () => {
-    deleteChannel(channelId)
-  }
-
   const showModal = () => {
     setShowModalEditChannel(true)
   }
   const unShowModal = () => {
     setShowModalEditChannel(false)
   }
+  const handleClickDeleteChannel = () => {
+    deleteChannel(channelId)
+  }
   return (
     <div className="">
-      {channelProps.listPermissions.edit_Channel ? (
+      {channelProps.listPermissions.channel_Management ? (
         <div>
           <Link
             href={`/server/${channelProps.channel.serverId}/channel/${channelId.id}`}>

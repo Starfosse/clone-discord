@@ -7,14 +7,13 @@ import {
   TableCell,
   TableRow,
 } from "@/components/ui/table"
-import { TMemberRoleId } from "@/lib/validator/member-role-validator"
+import { Role } from "@prisma/client"
+import { Check } from "lucide-react"
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 import { Button } from "../../ui/button"
 import { Dialog, DialogContent } from "../../ui/dialog"
 import EditRolePermission from "./EditRolePermission"
-import { MemberRole, Role } from "@prisma/client"
-import { toast } from "sonner"
-import { Check } from "lucide-react"
 
 interface Server {
   id: string
@@ -30,11 +29,16 @@ interface Server {
 
 const EditRole = (currentServer: Server) => {
   const serverId = { serverId: currentServer.id }
-  const listRoleServerData =
-    trpc.getRoleServer.useQuery(serverId)
+  const [MemberRole, setMemberRole] = useState<Role>()
+  const [showModalEditRole, setShowModalEditRole] =
+    useState(false)
   const [listRoleServer, setListRoleServer] = useState<
     Role[] | undefined
   >()
+
+  const listRoleServerData =
+    trpc.getRoleServer.useQuery(serverId)
+
   useEffect(() => {
     if (listRoleServerData.data) {
       const listRole = listRoleServerData.data.map(
@@ -60,7 +64,6 @@ const EditRole = (currentServer: Server) => {
           )
       },
     })
-
   const { mutate: deleteRole } =
     trpc.deleteRole.useMutation({
       onSuccess: () => {
@@ -74,10 +77,6 @@ const EditRole = (currentServer: Server) => {
         )
       },
     })
-  const [MemberRole, setMemberRole] = useState<Role>()
-
-  const [showModalEditRole, setShowModalEditRole] =
-    useState(false)
 
   const onClickShowModalEditRole = () => {
     setShowModalEditRole(false)
@@ -101,7 +100,6 @@ const EditRole = (currentServer: Server) => {
     e.preventDefault()
     const roleId = e.dataTransfer.getData("roleId")
     const draggedRole = listRoleServer?.find(
-      // draggedItemObject
       (role) => role.id === roleId
     )
     if (draggedRole) {

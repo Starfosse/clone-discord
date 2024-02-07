@@ -1,5 +1,4 @@
 import { User } from "@prisma/client"
-import { PhoneCall, Video } from "lucide-react"
 import Image from "next/image"
 
 interface friendHeaderProps {

@@ -84,7 +84,6 @@ const PostInputChannel = ({
       message: msg.message,
     },
   })
-  const id = msg.id
   const onSubmit = ({
     message,
     id,
