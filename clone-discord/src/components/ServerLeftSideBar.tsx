@@ -12,7 +12,6 @@ import permissions from "@/lib/interface/permissions"
 
 const ServerLeftSideBar = () => {
   const serverId = useParams<{ serverId: string }>()
-  const utils = trpc.useUtils()
   const [currentServer, setCurrentServer] = useState<
     Server | undefined
   >()

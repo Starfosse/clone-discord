@@ -67,6 +67,7 @@ model inputChat{
   id String @id @default(uuid())
   isEdit Boolean? @default(false)
   isGif Boolean? @default(false)
+  isInvitationServer Boolean? @default(false)
   message String
   sentByUserOne Boolean @default(false)
   sentByUserTwo Boolean @default(false)

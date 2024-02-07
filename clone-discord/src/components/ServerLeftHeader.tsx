@@ -55,6 +55,7 @@ import AddMemberRole from "./modals/member/AddMemberRole"
 import CreateRole from "./modals/role/CreateRole"
 import EditRole from "./modals/role/EditRole"
 import EditServer from "./modals/server/EditServer"
+import AddMember from "./modals/member/AddMember"
 
 const ServerLeftHeader = (currentServer: Server) => {
   const [
@@ -76,6 +77,8 @@ const ServerLeftHeader = (currentServer: Server) => {
     setShowModalAddMemberRole,
   ] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [showModalAddMember, setShowModalAddMember] =
+    useState(false)
   const utils = trpc.useUtils()
   const router = useRouter()
   const serverId = { id: currentServer.id }
@@ -135,6 +138,12 @@ const ServerLeftHeader = (currentServer: Server) => {
   const onClickAddMemberRole = () => {
     setShowModalAddMemberRole(false)
   }
+  const onSelectAddMember = () => {
+    setShowModalAddMember(true)
+  }
+  const onClickAddMember = () => {
+    setShowModalAddMember(false)
+  }
   return (
     <>
       <DropdownMenu
@@ -161,7 +170,7 @@ const ServerLeftHeader = (currentServer: Server) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 text-muted-foreground bg-tertiaryColor">
           {currentServer.listPermissions.invite_Member && (
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={onSelectAddMember}>
               Inviter des gens (WIP)
               <DropdownMenuShortcut>
                 <UserPlus className="size-5" />
@@ -333,6 +342,13 @@ const ServerLeftHeader = (currentServer: Server) => {
           {...currentServer}
           onClickAddMemberRole={onClickAddMemberRole}
           showModalAddMemberRole={showModalAddMemberRole}
+        />
+      )}
+      {showModalAddMember && (
+        <AddMember
+          {...currentServer}
+          onClickAddMember={onClickAddMember}
+          showModalAddMember={showModalAddMember}
         />
       )}
     </>
