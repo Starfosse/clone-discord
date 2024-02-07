@@ -18,6 +18,7 @@ import {
   ContextMenuTrigger,
 } from "./ui/context-menu"
 import { Input } from "./ui/input"
+import InvServer from "./InvServer"
 
 interface currentUsers {
   userOne: User
@@ -64,7 +65,7 @@ const PostInputChat = ({
         <Image
           src={currentUsers?.userOne.imageUrl}
           alt="user picture"
-          className="rounded-full aspect-square"
+          className="rounded-full object-cover object-center aspect-square"
           width={30}
           height={30}
         />
@@ -74,7 +75,7 @@ const PostInputChat = ({
         <Image
           src={currentUsers.userTwo.imageUrl}
           alt="user picture"
-          className="rounded-full aspect-square"
+          className="rounded-full object-cover object-center aspect-square"
           width={30}
           height={30}
         />
@@ -119,7 +120,7 @@ const PostInputChat = ({
     deleteMessage(InputChatId)
   }
   return (
-    <div>
+    <div className="p-1">
       {isWriter(msg) && (
         <ContextMenu>
           <ContextMenuTrigger className="flex gap-4">
@@ -141,6 +142,8 @@ const PostInputChat = ({
                   width={200}
                   alt="msg gif"
                 />
+              ) : msg.isInvitationServer ? (
+                <InvServer serverId={msg.message} />
               ) : !edit ? (
                 <div className="flex">
                   <p className="whitespace-pre-wrap break-all">
@@ -199,6 +202,8 @@ const PostInputChat = ({
                   width={200}
                   alt="msg gif"
                 />
+              ) : msg.isInvitationServer ? (
+                <InvServer serverId={msg.message} />
               ) : !edit ? (
                 <div className="flex">
                   <p>{msg.message}</p>

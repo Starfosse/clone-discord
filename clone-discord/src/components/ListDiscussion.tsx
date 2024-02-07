@@ -40,10 +40,10 @@ const ListDiscussion = (who: User) => {
           (friend, index) => (
             <div>
               <Link
-                className="group flex relative w-48 justify-between items-center group-hover:border group-hover:border-tertiaryColor rounded-md hover:bg-slate-800 mx-auto py-2 "
+                className="gap-2 group flex relative w-48 justify-between items-center group-hover:border group-hover:border-tertiaryColor rounded-md hover:bg-slate-800 mx-auto py-2 "
                 href={`/friends/${currentListDiscussion.userFriendListShowable[index].id}`}>
                 <Image
-                  className="rounded-full ml-1 aspect-square "
+                  className="rounded-full object-cover object-center ml-1 aspect-square "
                   alt="friend-image"
                   src={friend.imageUrl}
                   width={24}
@@ -51,7 +51,7 @@ const ListDiscussion = (who: User) => {
                 />
                 <Image
                   alt="friend-image"
-                  className="rounded-full absolute top-6 left-[1.15rem] border-2 border-tertiaryColor"
+                  className="rounded-full object-cover object-center absolute top-6 left-[1.15rem] border-2 border-tertiaryColor"
                   src={`/${friend.state}.png`}
                   width={10}
                   height={10}

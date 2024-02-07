@@ -188,7 +188,7 @@ const AvatarMember = (
             <ContextMenuTrigger className="w-full">
               <div className="flex relative items-center w-full">
                 <Image
-                  className="absolute top-7 left-7 z-10 rounded-full border-[3px] border-tertiaryColor"
+                  className="absolute top-7 left-7 z-10 object-cover object-center rounded-full border-[3px] border-tertiaryColor"
                   src={`/${stateUser}.png`}
                   width={16}
                   height={16}
@@ -222,7 +222,7 @@ const AvatarMember = (
         <div className="w-full">
           <div className="flex relative items-center w-full">
             <Image
-              className="absolute top-7 left-7 z-10 rounded-full border-[3px] border-tertiaryColor"
+              className="absolute top-7 left-7 z-10 object-cover object-center rounded-full border-[3px] border-tertiaryColor"
               src={`/${stateUser}.png`}
               width={16}
               height={16}
@@ -253,7 +253,7 @@ const AvatarMember = (
               side="left">
               <div className="relative pl-2  mb-4">
                 <Image
-                  className="absolute top-12 left-12  z-10 rounded-full border-[3px] border-tertiaryColor"
+                  className="absolute top-12 left-12  z-10 rounded-full object-cover object-center border-[3px] border-tertiaryColor"
                   src={`/${stateUser}.png`}
                   width={18}
                   height={18}
@@ -264,7 +264,7 @@ const AvatarMember = (
                   height={64}
                   width={64}
                   alt="member picture"
-                  className="rounded-full aspect-square border-[3px] border-tertiaryColor"
+                  className="rounded-full object-cover object-center aspect-square border-[3px] border-tertiaryColor"
                 />
               </div>
               <div className="bg-zinc-900 rounded-md p-2">
@@ -282,7 +282,7 @@ const AvatarMember = (
                       width={14}
                       height={14}
                       alt="logo-discord"
-                      className="aspect-square rounded-full m-1 object-contain"
+                      className="aspect-square rounded-full object-cover object-center m-1"
                     />
                     <p className="relative right-1 py-2">
                       {format(
@@ -300,7 +300,7 @@ const AvatarMember = (
                       width={14}
                       height={14}
                       alt="logo-serv"
-                      className="aspect-square rounded-full m-1 object-contain"
+                      className="aspect-square rounded-full object-cover object-center m-1 "
                     />
                     <p className="relative right-1">
                       {format(

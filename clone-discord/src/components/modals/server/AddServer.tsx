@@ -29,6 +29,7 @@ import { Label } from "../../ui/label"
 interface AddServerProps {
   refetch: () => Promise<any>
 }
+
 const AddServer = (AddServerProps: AddServerProps) => {
   const [open, setOpen] = useState<boolean>(false)
   const [currentFormaData, setCurrentFormaData] =
@@ -67,13 +68,16 @@ const AddServer = (AddServerProps: AddServerProps) => {
   const getBlobUrl = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
+    console.log("ok")
     const formData = new FormData()
     if (e.target.files) {
       const file = e.target.files[0]
       formData.append("file", file)
       setCurrentFormaData(formData)
+      console.log("ok")
       const url = await uploadFile(formData)
-      console.log(url)
+      console.log("ok")
+      // console.log(url)
       setTmpImgUser(url)
     }
   }
@@ -82,9 +86,11 @@ const AddServer = (AddServerProps: AddServerProps) => {
     name,
     imageUrl,
   }: TServerValidator) => {
+    console.log("ok")
     setOpen(false)
     if (currentFormaData)
       imageUrl = await uploadFile(currentFormaData)
+    console.log("ok")
     mutate({ name, imageUrl })
     resetField("name")
     resetField("imageUrl")
@@ -92,7 +98,7 @@ const AddServer = (AddServerProps: AddServerProps) => {
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
-        <button className="text-green-600 hover:text-white bg-secondaryColor rounded-full w-10 h-10 hover:rounded-xl hover:bg-green-600">
+        <button className=" text-green-600 hover:text-white bg-secondaryColor rounded-full w-10 h-10 hover:rounded-xl hover:bg-green-600">
           <p className=" text-3xl relative bottom-1">+</p>{" "}
         </button>
       </DialogTrigger>
@@ -108,11 +114,11 @@ const AddServer = (AddServerProps: AddServerProps) => {
             <div className="grid grid-cols-4 items-center gap-4">
               {tmpImgUser && (
                 <Image
-                  className=" col-span-4 mt-2 relative mx-auto z-10 mb-8 rounded-full aspect-square border-[1px] border-tertiaryColor object-cover object-center"
+                  className="col-span-4 mt-2 relative mx-auto z-10 mb-8 rounded-full aspect-square border-[1px] border-tertiaryColor object-cover object-center"
                   src={tmpImgUser}
                   width={60}
                   height={60}
-                  alt="ok"
+                  alt="preview image"
                 />
               )}
               <Label
@@ -148,7 +154,11 @@ const AddServer = (AddServerProps: AddServerProps) => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Enregistrer</Button>
+            <Button
+              type="submit"
+              onClick={() => console.log("clicked!")}>
+              Enregistrer
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

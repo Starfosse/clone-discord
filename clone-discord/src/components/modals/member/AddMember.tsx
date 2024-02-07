@@ -1,7 +1,6 @@
 "use client"
 
 import { trpc } from "@/app/_trpc/client"
-import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -12,8 +11,10 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { User } from "@prisma/client"
+import { Check } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 interface aMProps {
   id: string
@@ -27,21 +28,47 @@ interface aMProps {
   onClickAddMember: () => void
 }
 
+interface friendsData {
+  friendsList: User[]
+  userFriendListId: string[]
+}
+
 const AddMember = (currentServer: aMProps) => {
   const [
     currentListUserFriends,
     setCurrentListUserFriends,
-  ] = useState<User[] | undefined>()
+  ] = useState<friendsData | undefined>()
 
   const listUserFriendsData =
     trpc.getUserListUserFriends.useQuery()
 
   useEffect(() => {
     if (listUserFriendsData.data)
-      setCurrentListUserFriends(
-        listUserFriendsData.data.friendsUserList
-      )
+      setCurrentListUserFriends(listUserFriendsData.data)
   }, [listUserFriendsData.data])
+
+  const { mutate: invServer } =
+    trpc.sendInvitationServer.useMutation({
+      onSuccess: () => {
+        toast.success(
+          <div className="flex items-center">
+            <Check />
+            &nbsp;L'invitation au serveur a bien été envoyé
+          </div>,
+          { duration: 3000 }
+        )
+      },
+    })
+
+  const handleClickInvServer = (index: number) => {
+    if (!currentListUserFriends) return
+    const invitationServer = {
+      serverId: currentServer.id,
+      userFriendId:
+        currentListUserFriends.userFriendListId[index],
+    }
+    invServer(invitationServer)
+  }
   return (
     <div className="">
       <Dialog
@@ -63,26 +90,32 @@ const AddMember = (currentServer: aMProps) => {
                 <h4 className="mb-4 text-sm  leading-none font-bold">
                   Amis
                 </h4>
-                {currentListUserFriends.map((friend) => (
-                  <>
-                    <div
-                      key={friend.id}
-                      className="text-sm flex items-center">
-                      <Image
-                        src={friend.imageUrl}
-                        alt="friend picture"
-                        className="rounded-full aspect-square mr-2"
-                        width={24}
-                        height={24}
-                      />
-                      {friend.pseudo}
-                      <button className="ml-auto border p-1 border-green-300 rounded-sm px-2">
-                        Inviter
-                      </button>
-                    </div>
-                    <Separator className="my-2" />
-                  </>
-                ))}
+                {currentListUserFriends.friendsList.map(
+                  (friend, index) => (
+                    <>
+                      <div
+                        key={friend.id}
+                        className="text-sm flex items-center">
+                        <Image
+                          src={friend.imageUrl}
+                          alt="friend picture"
+                          className="rounded-full aspect-square mr-2 object-cover object-center"
+                          width={24}
+                          height={24}
+                        />
+                        {friend.pseudo}
+                        <button
+                          onClick={() =>
+                            handleClickInvServer(index)
+                          }
+                          className="ml-auto border p-1 border-green-300 rounded-sm px-2">
+                          Inviter
+                        </button>
+                      </div>
+                      <Separator className="my-2" />
+                    </>
+                  )
+                )}
               </div>
             </ScrollArea>
           )}

@@ -9,6 +9,7 @@ import { MemberRole } from "@prisma/client"
 const createServer = publicProcedure
   .input(ServerValidator)
   .mutation(async ({ input }) => {
+    console.log("ok")
     const user = await currentUser()
     if (!user) {
       return new NextResponse("Unauthorized", {
@@ -45,6 +46,21 @@ const createServer = publicProcedure
             {
               role: "propriétaire",
               orderServ: 0,
+              invite_Member: true,
+              expel_Member: true,
+              edit_Server: true,
+              delete_Server: true,
+              role_Management: true,
+              view_Logs: true,
+              channel_Management: true,
+              view_Channel: true,
+              write_Channel: true,
+              speak_Channel: true,
+              video_Channel: true,
+              reaction_Channel: true,
+              download_Channel: true,
+              category_Management: true,
+              delete_Input_Channel: true,
             },
             {
               role: "membre",
@@ -107,6 +123,7 @@ const createServer = publicProcedure
                   create: [
                     {
                       name: "Général",
+                      type: "AUDIO",
                       serverId: server.id,
                     },
                   ],

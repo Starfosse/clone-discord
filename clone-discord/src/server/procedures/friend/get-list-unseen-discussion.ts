@@ -62,7 +62,7 @@ const getListUnseenDiscussion = publicProcedure.query(
       if (!friendData) return
       listFriendData.push(friendData)
     }
-    if (!listFriendData) return null
+    if (!listFriendData) return
     return {
       listUnSeenConv,
       listFriendData,

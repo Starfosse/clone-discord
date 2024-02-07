@@ -63,6 +63,7 @@ const ChannelsGroup = (cGProps: channnelsGroupProps) => {
     const channelId = { id: cGProps.channelsGroup.id }
     deleteChannel(channelId)
   }
+  console.log(cGProps.listPermissions.channel_Management)
   return (
     <div className="mt-4 pl-2">
       {cGProps.listPermissions.channel_Management ? (

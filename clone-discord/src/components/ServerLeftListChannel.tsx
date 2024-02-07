@@ -45,7 +45,7 @@ const ServerLeftListChannel = (currentServer: Server) => {
       <div className="flex flex-col items-start text-white w-full overflow-auto">
         <div className="w-full">
           {channelsGroups &&
-            currentServer.listPermissions &&
+            currentServer.listPermissions.view_Channel &&
             channelsGroups.map((channelsGroup) => (
               <div key={channelsGroup.id}>
                 <ChannelsGroup
@@ -64,7 +64,7 @@ const ServerLeftListChannel = (currentServer: Server) => {
         </div>
         <div className="pt-4 w-full">
           {channels &&
-            currentServer.listPermissions &&
+            currentServer.listPermissions.view_Channel &&
             channels.map(
               (channel) =>
                 !channel.channelGroupId && (

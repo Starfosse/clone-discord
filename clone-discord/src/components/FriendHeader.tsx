@@ -18,10 +18,10 @@ const FriendHeader = (fHP: friendHeaderProps) => {
             height={20}
           />
           <Image
-            className="absolute top-4 right-[5.4rem] z-10 rounded-full border-[3px] border-tertiaryColor"
+            className="absolute top-[0.85rem] left-3 z-10 object-cover object-center rounded-full border-[3px] border-tertiaryColor"
             src={`/${fHP.currentFriend.state.toLocaleLowerCase()}.png`}
-            width={10}
-            height={10}
+            width={12}
+            height={12}
             alt="ok"
           />
           <p className="text-lg">
