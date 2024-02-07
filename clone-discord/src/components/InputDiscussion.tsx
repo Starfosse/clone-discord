@@ -6,7 +6,14 @@ import {
   discussionProps,
 } from "@/lib/validator/discussion-validator"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
+import GiphySearch from "./GiphySearch"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
 import {
   Form,
   FormControl,
@@ -14,13 +21,6 @@ import {
   FormItem,
 } from "./ui/form"
 import { Input } from "./ui/input"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
-import GiphySearch from "./GiphySearch"
-import { useState } from "react"
 
 interface InputChatDiscussion {
   discussionId: string

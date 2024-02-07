@@ -5,9 +5,9 @@ import { Server } from "@prisma/client"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import ServerLeftHeader from "./ServerLeftHeader"
+import ServerLeftListChannel from "./ServerLeftListChannel"
 import ServerListMember from "./ServerRightListMember"
 import { Separator } from "./ui/separator"
-import ServerLeftListChannel from "./ServerLeftListChannel"
 
 const ServerLeftSideBar = () => {
   const serverId = useParams<{ serverId: string }>()

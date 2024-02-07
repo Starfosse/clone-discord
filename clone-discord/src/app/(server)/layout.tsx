@@ -15,19 +15,20 @@ export default function ServerLayout({
 }: {
   children: React.ReactNode
 }) {
-  const serverId = useParams<{ serverId: string }>()
-
-  const serverData = trpc.getServer.useQuery(serverId)
   const [currentServer, setCurrentServer] = useState<
     Server | undefined
   >()
-  const listPermissionsData =
-    trpc.getListPermissions.useQuery(serverId)
-  const utils = trpc.useUtils()
   const [
     currentListPermissions,
     setCurrentListPermissions,
   ] = useState<permissions | undefined>()
+  const utils = trpc.useUtils()
+  const serverId = useParams<{ serverId: string }>()
+
+  const serverData = trpc.getServer.useQuery(serverId)
+  const listPermissionsData =
+    trpc.getListPermissions.useQuery(serverId)
+
   useEffect(() => {
     if (serverData.data) {
       setCurrentServer(serverData.data)

@@ -10,28 +10,46 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { uploadFile } from "@/lib/upload.action"
+import { cn } from "@/lib/utils"
 import {
   ServerValidator,
   TServerValidator,
 } from "@/lib/validator/server-validator"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Check } from "lucide-react"
+import Image from "next/image"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import { Label } from "../../ui/label"
-import { Check } from "lucide-react"
-import { toast } from "sonner"
-import { cn } from "@/lib/utils"
-import { uploadFile } from "@/lib/upload.action"
-import Image from "next/image"
 
 interface AddServerProps {
   refetch: () => Promise<any>
 }
 const AddServer = (AddServerProps: AddServerProps) => {
   const [open, setOpen] = useState<boolean>(false)
+  const [currentFormaData, setCurrentFormaData] =
+    useState<FormData | null>()
+  const [tmpImgUser, setTmpImgUser] = useState<
+    string | undefined
+  >()
   const utils = trpc.useUtils()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    resetField,
+  } = useForm<TServerValidator>({
+    resolver: zodResolver(ServerValidator),
+    defaultValues: {
+      imageUrl: "",
+      name: "",
+    },
+  })
+
   const { mutate } = trpc.createServer.useMutation({
     onSuccess: () => {
       AddServerProps.refetch()
@@ -45,11 +63,7 @@ const AddServer = (AddServerProps: AddServerProps) => {
       )
     },
   })
-  const [tmpImgUser, setTmpImgUser] = useState<
-    string | undefined
-  >()
-  const [currentFormaData, setCurrentFormaData] =
-    useState<FormData | null>()
+
   const getBlobUrl = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -63,19 +77,6 @@ const AddServer = (AddServerProps: AddServerProps) => {
       setTmpImgUser(url)
     }
   }
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    resetField,
-  } = useForm<TServerValidator>({
-    resolver: zodResolver(ServerValidator),
-    defaultValues: {
-      imageUrl: "",
-      name: "",
-    },
-  })
 
   const onSubmit = async ({
     name,

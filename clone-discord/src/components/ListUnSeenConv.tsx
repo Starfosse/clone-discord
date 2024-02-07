@@ -14,12 +14,14 @@ interface ListUnSeenConvProps {
 const ListUnSeenConv = ({
   currentListUnSeenConv,
 }: ListUnSeenConvProps) => {
+  const { mutate: shownMessage } =
+    trpc.editMessageShown.useMutation()
+
   const getNumberUnSeenMessage = (index: number) => {
     return currentListUnSeenConv.listUnSeenConv[index]
       .length
   }
-  const { mutate: shownMessage } =
-    trpc.editMessageShown.useMutation()
+
   const handleShownMessage = (id: string) => {
     const userFriendId = { id: id }
     shownMessage(userFriendId)

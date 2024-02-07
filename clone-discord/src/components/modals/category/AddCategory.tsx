@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { trpc } from "@/app/_trpc/client"
 import {
   Dialog,
   DialogContent,
@@ -9,19 +9,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Label } from "../../ui/label"
-import { Input } from "../../ui/input"
-import { Button } from "../../ui/button"
-import { trpc } from "@/app/_trpc/client"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { cn } from "@/lib/utils"
 import {
   CategoryValidator,
   TCategoryValidator,
 } from "@/lib/validator/category-validator"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Check } from "lucide-react"
+import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { cn } from "@/lib/utils"
+import { Button } from "../../ui/button"
+import { Input } from "../../ui/input"
+import { Label } from "../../ui/label"
 
 interface Server {
   id: string
@@ -37,6 +36,17 @@ interface Server {
 
 const AddCategory = (currentServer: Server) => {
   const utils = trpc.useUtils()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TCategoryValidator>({
+    resolver: zodResolver(CategoryValidator),
+    defaultValues: {
+      id: currentServer.id,
+      name: "",
+    },
+  })
 
   const { mutate } = trpc.createcategory.useMutation({
     onSuccess: () => {
@@ -48,18 +58,6 @@ const AddCategory = (currentServer: Server) => {
           </div>,
           { duration: 3000 }
         )
-    },
-  })
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TCategoryValidator>({
-    resolver: zodResolver(CategoryValidator),
-    defaultValues: {
-      id: currentServer.id,
-      name: "",
     },
   })
 

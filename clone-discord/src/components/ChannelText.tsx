@@ -2,9 +2,8 @@
 
 import { Channel } from "@prisma/client"
 import { Hash } from "lucide-react"
-import ChatDisplay from "./ChatInputChannel"
-import InputChannel from "./InputChannel"
 import ChatInputChannel from "./ChatInputChannel"
+import InputChannel from "./InputChannel"
 
 const ChannelText = (currentChannel: Channel) => {
   return (

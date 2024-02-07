@@ -1,14 +1,19 @@
 "use client"
 
 import { trpc } from "@/app/_trpc/client"
+import { useIntersection } from "@mantine/hooks"
 import { Channel, User } from "@prisma/client"
 import { useEffect, useRef, useState } from "react"
-import PostDisplay from "./PostInputChannel"
-import { useInfiniteQuery } from "react-query"
-import { useIntersection } from "@mantine/hooks"
 import PostInputChannel from "./PostInputChannel"
 
 const ChatInputChannel = (cDProps: Channel) => {
+  const [currentWho, setCurrentWho] = useState<
+    User | undefined
+  >()
+  const [currentListMembers, setCurrentListMembers] =
+    useState<User[] | undefined>()
+  const ServerId = { id: cDProps.serverId }
+
   const {
     data: query,
     fetchNextPage,
@@ -23,17 +28,10 @@ const ChatInputChannel = (cDProps: Channel) => {
         lastPage.nextCursor,
     }
   )
-
   const whoData = trpc.getUser.useQuery()
-  const [currentWho, setCurrentWho] = useState<
-    User | undefined
-  >()
-
-  const ServerId = { id: cDProps.serverId }
   const listUsersMembers =
     trpc.getUsersByMemberByServer.useQuery(ServerId)
-  const [currentListMembers, setCurrentListMembers] =
-    useState<User[] | undefined>()
+
   useEffect(() => {
     if (listUsersMembers.data)
       setCurrentListMembers(listUsersMembers.data)
@@ -85,11 +83,6 @@ const ChatInputChannel = (cDProps: Channel) => {
               </div>
             )
           })}
-        {/* {query && (
-          <button onClick={() => fetchNextPage()}>
-            Load More
-          </button>
-        )} */}
       </div>
     </div>
   )

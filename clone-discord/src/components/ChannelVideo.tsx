@@ -1,19 +1,17 @@
 "use client"
 
-import "@livekit/components-styles"
 import {
-  LiveKitRoom,
-  VideoConference,
-  GridLayout,
-  ParticipantTile,
-  useTracks,
-  RoomAudioRenderer,
   ControlBar,
+  GridLayout,
+  LiveKitRoom,
+  ParticipantTile,
+  RoomAudioRenderer,
+  useTracks,
 } from "@livekit/components-react"
-import { useEffect, useState } from "react"
-import { Track } from "livekit-client"
+import "@livekit/components-styles"
 import { Channel, User } from "@prisma/client"
-import { Video } from "lucide-react"
+import { Track } from "livekit-client"
+import { useEffect, useState } from "react"
 
 interface ChannelVideoProps {
   currentChannel: Channel

@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { uploadFile } from "@/lib/upload.action"
 import { cn } from "@/lib/utils"
 import {
   ServerValidatorId,
@@ -16,14 +17,13 @@ import {
 } from "@/lib/validator/server-validator-id"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Check } from "lucide-react"
+import Image from "next/image"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import { Label } from "../../ui/label"
-import { uploadFile } from "@/lib/upload.action"
-import { useState } from "react"
-import Image from "next/image"
 
 interface Server {
   id: string
@@ -39,6 +39,11 @@ interface Server {
 }
 
 const EditServer = (currentServer: Server) => {
+  const [tmpImgUser, setTmpImgUser] = useState<
+    string | undefined
+  >(currentServer.imageUrl ?? undefined)
+  const [currentFormaData, setCurrentFormaData] =
+    useState<FormData | null>()
   const {
     handleSubmit,
     register,
@@ -65,11 +70,6 @@ const EditServer = (currentServer: Server) => {
     },
   })
 
-  const [tmpImgUser, setTmpImgUser] = useState<
-    string | undefined
-  >(currentServer.imageUrl ?? undefined)
-  const [currentFormaData, setCurrentFormaData] =
-    useState<FormData | null>()
   const getBlobUrl = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -78,11 +78,11 @@ const EditServer = (currentServer: Server) => {
       const file = e.target.files[0]
       formData.append("file", file)
       setCurrentFormaData(formData)
-      // if(tmpImgUser !== currentProfile?.imageUrl) // supprime l'image de preview précédente
       const url = await uploadFile(formData)
       setTmpImgUser(url)
     }
   }
+
   const onSubmit = ({
     name,
     imageUrl,

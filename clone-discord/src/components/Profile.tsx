@@ -48,21 +48,15 @@ import {
 import { Separator } from "./ui/separator"
 
 const Profile = () => {
-  const profileData = trpc.getUser.useQuery()
-
+  const [tmpImgUser, setTmpImgUser] = useState<
+    string | undefined
+  >()
+  const [currentFormaData, setCurrentFormaData] =
+    useState<FormData | null>()
   const [currentProfile, setCurrentProfile] = useState<
     User | undefined
   >()
-
-  useEffect(() => {
-    if (profileData.data) {
-      setCurrentProfile(profileData.data)
-      setTmpImgUser(profileData.data.imageUrl)
-    }
-  }, [profileData.data])
-
   const [open, setOpen] = useState(false)
-
   const form = useForm<TProfileValidator>({
     resolver: zodResolver(ProfileValidator),
     defaultValues: {
@@ -71,14 +65,30 @@ const Profile = () => {
     },
   })
 
+  const profileData = trpc.getUser.useQuery()
+
+  useEffect(() => {
+    if (profileData.data) {
+      setCurrentProfile(profileData.data)
+      setTmpImgUser(profileData.data.imageUrl)
+    }
+  }, [profileData.data])
+
   const { mutate } = trpc.updateUser.useMutation({
-    onSuccess: () => profileData.refetch(),
+    onSuccess: () => {
+      profileData.refetch()
+      ;() => {
+        toast.success(
+          <div className="flex items-center">
+            <Check />
+            &nbsp;Vos modifications ont été enregristrées
+          </div>,
+          { duration: 3000 }
+        )
+      }
+    },
   })
-  const [tmpImgUser, setTmpImgUser] = useState<
-    string | undefined
-  >()
-  const [currentFormaData, setCurrentFormaData] =
-    useState<FormData | null>()
+
   const getBlobUrl = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -87,11 +97,12 @@ const Profile = () => {
       const file = e.target.files[0]
       formData.append("file", file)
       setCurrentFormaData(formData)
-      // if(tmpImgUser !== currentProfile?.imageUrl) // supprime l'image de preview précédente
       const url = await uploadFile(formData)
       setTmpImgUser(url)
     }
   }
+  const stateUser =
+    currentProfile?.state.toLocaleLowerCase()
 
   const onSubmit = async ({
     pseudo,
@@ -105,8 +116,6 @@ const Profile = () => {
     form.reset()
   }
 
-  const stateUser =
-    currentProfile?.state.toLocaleLowerCase()
   return (
     <>
       {currentProfile && (
@@ -284,20 +293,7 @@ const Profile = () => {
                   />
                 </div>
                 <DialogFooter>
-                  <Button
-                    type="submit"
-                    onClick={() => {
-                      toast.success(
-                        <div className="flex items-center">
-                          <Check />
-                          &nbsp;Vos modifications ont été
-                          enregristrées
-                        </div>,
-                        { duration: 3000 }
-                      )
-                    }}>
-                    Sauvegarder
-                  </Button>
+                  <Button type="submit">Sauvegarder</Button>
                 </DialogFooter>
               </form>
             </Form>
