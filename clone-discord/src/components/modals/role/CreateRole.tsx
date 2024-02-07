@@ -22,10 +22,10 @@ import {
   TAddRoleValidator,
 } from "@/lib/validator/add-role-validator"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Input } from "../../ui/input"
 import { Check } from "lucide-react"
+import { useForm } from "react-hook-form"
 import { toast } from "sonner"
+import { Input } from "../../ui/input"
 
 interface Server {
   id: string

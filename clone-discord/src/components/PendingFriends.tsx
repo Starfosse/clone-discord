@@ -1,11 +1,10 @@
 "use client"
 
 import { trpc } from "@/app/_trpc/client"
-import { Button } from "./ui/button"
-import { Ban } from "lucide-react"
-import { UserRoundCheck } from "lucide-react"
-import Image from "next/image"
 import { User } from "@prisma/client"
+import { Ban, UserRoundCheck } from "lucide-react"
+import Image from "next/image"
+import { Button } from "./ui/button"
 
 interface PendingFriendsProps {
   currentPendingFriends: User[]
@@ -15,6 +14,7 @@ const PendingFriends = ({
   currentPendingFriends,
 }: PendingFriendsProps) => {
   const utils = trpc.useUtils()
+
   const { mutate: validFriendDemand } =
     trpc.validFriendDemand.useMutation({
       onSuccess: () => {

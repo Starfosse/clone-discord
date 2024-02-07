@@ -7,10 +7,8 @@ import {
   LiveKitRoom,
   ParticipantTile,
   RoomAudioRenderer,
-  useParticipantInfo,
   useTracks,
 } from "@livekit/components-react"
-import { DisconnectButton } from "@livekit/components-react"
 import "@livekit/components-styles"
 import { User } from "@prisma/client"
 import { Track } from "livekit-client"

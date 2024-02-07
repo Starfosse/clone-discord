@@ -1,10 +1,10 @@
 "use client"
 import { trpc } from "@/app/_trpc/client"
+import permissions from "@/lib/interface/permissions"
 import { Channel, ChannelGroup } from "@prisma/client"
 import { useEffect, useState } from "react"
-import ChannelsGroup from "./ChannelsGroup"
 import ChannelDisplay from "./ChannelDisplay"
-import permissions from "@/lib/interface/permissions"
+import ChannelsGroup from "./ChannelsGroup"
 
 interface Server {
   id: string
@@ -20,10 +20,6 @@ interface Server {
 
 const ServerLeftListChannel = (currentServer: Server) => {
   const serverId = { serverId: currentServer.id }
-  const channelsData = trpc.getChannels.useQuery(serverId) //
-  const ChannelsGroupsData =
-    trpc.getChannelsGroups.useQuery(serverId) //
-
   const [channelsGroups, setChannelsGroups] = useState<
     ChannelGroup[] | undefined
   >()
@@ -31,17 +27,19 @@ const ServerLeftListChannel = (currentServer: Server) => {
     Channel[] | undefined
   >()
 
+  const channelsData = trpc.getChannels.useQuery(serverId)
+  const ChannelsGroupsData =
+    trpc.getChannelsGroups.useQuery(serverId)
+
   useEffect(() => {
     if (channelsData.data) {
       setChannels(channelsData.data)
     }
-  }, [channelsData.data])
-
-  useEffect(() => {
     if (ChannelsGroupsData.data) {
       setChannelsGroups(ChannelsGroupsData.data)
     }
-  }, [ChannelsGroupsData.data])
+  }, [channelsData.data, ChannelsGroupsData.data])
+
   return (
     <>
       <div className="flex flex-col items-start text-white w-full overflow-auto">

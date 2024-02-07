@@ -1,9 +1,23 @@
+"use client"
+
+import { trpc } from "@/app/_trpc/client"
+import { User } from "@prisma/client"
 import { Users } from "lucide-react"
-import { Button } from "./ui/button"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 import ListDiscussion from "./ListDiscussion"
 
 const FriendsLeftSideBar = () => {
+  const [currentWho, setCurrentWho] = useState<
+    User | undefined
+  >()
+
+  const whoData = trpc.getUser.useQuery()
+
+  useEffect(() => {
+    if (whoData.data) setCurrentWho(whoData.data)
+  }, [whoData.data])
+
   return (
     <div className="text-white flex flex-col">
       <div className="my-2 ">
@@ -13,17 +27,13 @@ const FriendsLeftSideBar = () => {
           <Users />
           <p className="pl-4">Amis</p>
         </Link>
-        {/* <Button className="justify-start w-full">
-          <Users />
-          <p className="pl-4">Amis</p>
-        </Button> */}
       </div>
       <div className="px-2">
         <div className="py-2 text-muted-foreground">
           Messages Privés
         </div>
         <div>
-          <ListDiscussion />
+          {currentWho && <ListDiscussion {...currentWho} />}
         </div>
       </div>
     </div>

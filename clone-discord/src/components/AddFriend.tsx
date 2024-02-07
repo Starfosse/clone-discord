@@ -1,16 +1,17 @@
+import { trpc } from "@/app/_trpc/client"
+import { cn } from "@/lib/utils"
 import {
   FriendValidator,
   TFriendValidator,
 } from "@/lib/validator/friend-validator"
-import { Input } from "./ui/input"
-import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { trpc } from "@/app/_trpc/client"
-import { toast } from "sonner"
+import { User } from "@prisma/client"
 import { Check } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { Input } from "./ui/input"
 
-const AddFriend = () => {
+const AddFriend = (who: User) => {
   const { mutate: addFriend } = trpc.addFriend.useMutation({
     onSuccess: () =>
       toast.success(
@@ -31,7 +32,8 @@ const AddFriend = () => {
   })
 
   const onSubmit = ({ pseudo }: TFriendValidator) => {
-    addFriend({ pseudo })
+    const input = { pseudo: pseudo, id: who.id }
+    addFriend(input)
   }
 
   return (

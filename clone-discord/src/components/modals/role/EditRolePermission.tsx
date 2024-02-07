@@ -17,19 +17,15 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Switch } from "@/components/ui/switch"
-import {
-  AddRoleValidator,
-  TAddRoleValidator,
-} from "@/lib/validator/add-role-validator"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Input } from "../../ui/input"
-import { MemberRole, Role } from "@prisma/client"
 import MemberRoleId, {
   TMemberRoleId,
 } from "@/lib/validator/member-role-validator"
-import { toast } from "sonner"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Role } from "@prisma/client"
 import { Check } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { Input } from "../../ui/input"
 
 interface EditRolePermissionProps {
   serverId: string
@@ -50,17 +46,20 @@ const EditRolePermission = (
       id: data.id,
       role: data.role,
       invite_Member: data.invite_Member,
-      expulsate_Member: data.expulsate_Member,
+      expel_Member: data.expel_Member,
       edit_Server: data.edit_Server,
+      delete_Server: data.delete_Server,
       role_Management: data.role_Management,
       view_Logs: data.view_Logs,
-      create_Remove_Channel: data.create_Remove_Channel,
-      edit_Channel: data.edit_Channel,
+      channel_Management: data.channel_Management,
       view_Channel: data.view_Channel,
       write_Channel: data.write_Channel,
       speak_Channel: data.speak_Channel,
       video_Channel: data.video_Channel,
+      reaction_Channel: data.reaction_Channel,
       download_Channel: data.download_Channel,
+      category_Management: data.category_Management,
+      delete_Input_Channel: data.delete_Input_Channel,
     },
   })
 
@@ -137,7 +136,6 @@ const EditRolePermission = (
                             <FormControl>
                               <Switch
                                 checked={field.value}
-                                // checked={action.value}
                                 onCheckedChange={
                                   field.onChange
                                 }

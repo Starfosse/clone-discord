@@ -7,27 +7,43 @@ import {
 } from "@/lib/validator/input-content-validator"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Channel } from "@prisma/client"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
+import GiphySearch from "./GiphySearch"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
 } from "./ui/form"
 import { Input } from "./ui/input"
-import { useState } from "react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
-import GiphySearch from "./GiphySearch"
 
 const InputChannel = (currentChannel: Channel) => {
   const utils = trpc.useUtils()
   const [selectedGif, setSelectedGif] = useState<string>("")
+  const [isOpenGif, setIsOpenGif] = useState(false)
+  const form = useForm<TInputContent>({
+    resolver: zodResolver(inputContent),
+    defaultValues: {
+      id: currentChannel.id,
+      message: "",
+    },
+  })
+
+  const { mutate: addGif } =
+    trpc.addGifInputChannel.useMutation({
+      onSuccess: () => utils.getInputChannel.invalidate(),
+    })
+  const { mutate: addMessage } =
+    trpc.addInputChannel.useMutation({
+      onSuccess: () => utils.getInputChannel.invalidate(),
+    })
+
   const handleGifSelect = (url: string) => {
     setSelectedGif(url)
     const channelId = {
@@ -38,28 +54,13 @@ const InputChannel = (currentChannel: Channel) => {
     setIsOpenGif(false)
   }
 
-  const { mutate: addGif } =
-    trpc.addGifInputChannel.useMutation({
-      onSuccess: () => utils.getInputChannel.invalidate(),
-    })
-  const { mutate: addMessage } =
-    trpc.addInputChannel.useMutation({
-      onSuccess: () => utils.getInputChannel.invalidate(),
-    })
-  const form = useForm<TInputContent>({
-    resolver: zodResolver(inputContent),
-    defaultValues: {
-      id: currentChannel.id,
-      message: "",
-    },
-  })
   const onSubmit = ({ message }: TInputContent) => {
     if (message === "") return
     const id = currentChannel.id
     addMessage({ id, message })
     form.reset()
   }
-  const [isOpenGif, setIsOpenGif] = useState(false)
+
   return (
     <div className="bg-primaryColor h-14 overflow-hidden">
       <div className=" w-[98%] mx-auto bg-secondaryColor rounded-md">

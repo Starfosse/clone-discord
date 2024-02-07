@@ -1,28 +1,32 @@
 "use client"
+
 import { trpc } from "@/app/_trpc/client"
 import { User } from "@prisma/client"
 import { MessageCircle, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { Button } from "./ui/button"
 
 interface friendsData {
   friendsList: User[]
   userFriendListId: string[]
 }
 
-const FriendsAllList = () => {
-  const data = trpc.getAllFriends.useQuery()
+const FriendsAllList = (who: User) => {
   const [friends, setFriends] = useState<
     friendsData | undefined
   >()
+
+  const data = trpc.getAllFriends.useQuery(who)
+
   useEffect(() => {
     if (data.data) setFriends(data.data)
   }, [data.data])
 
   const { mutate: deleteFriend } =
-    trpc.deleteFriend.useMutation()
+    trpc.deleteFriend.useMutation({
+      onSuccess: () => data.refetch(),
+    })
 
   const handleClickDelete = (id: string) => {
     const userFriendId = { id: id }

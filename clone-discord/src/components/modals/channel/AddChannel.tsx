@@ -65,24 +65,25 @@ interface memberRoleIdLabel {
 }
 
 const AddChannel = (currentServer: Server) => {
-  const utils = trpc.useUtils()
   const serverId = { serverId: currentServer.id }
-  const { mutate } = trpc.createChannel.useMutation({
-    onSuccess: () => {
-      utils.getChannels.invalidate(serverId)
-      toast.success(
-        <div className="flex items-center">
-          <Check />
-          &nbsp;Le channel a bien été ajouté
-        </div>,
-        { duration: 3000 }
-      )
-    },
-  })
-  const listRoleServer =
-    trpc.getRoleServer.useQuery(serverId)
   const [currentListRoleServer, setCurrentListRoleServer] =
     useState<memberRoleIdLabel[] | undefined>()
+  const [isPrivate, setIsPrivate] = useState(false)
+  const utils = trpc.useUtils()
+  const form = useForm<TChannelValidator>({
+    resolver: zodResolver(ChannelValidator),
+    defaultValues: {
+      id: currentServer.id,
+      name: "",
+      type: ChannelType.TEXT,
+      isPrivate: false,
+      rolesRequired: [],
+    },
+  })
+
+  const listRoleServer =
+    trpc.getRoleServer.useQuery(serverId)
+
   useEffect(() => {
     if (listRoleServer.data) {
       const items = listRoleServer.data.map(
@@ -95,16 +96,22 @@ const AddChannel = (currentServer: Server) => {
     }
   }, [listRoleServer.data])
 
-  const form = useForm<TChannelValidator>({
-    resolver: zodResolver(ChannelValidator),
-    defaultValues: {
-      id: currentServer.id,
-      name: "",
-      type: ChannelType.TEXT,
-      isPrivate: false,
-      rolesRequired: [],
+  const { mutate } = trpc.createChannel.useMutation({
+    onSuccess: () => {
+      utils.getChannels.invalidate(serverId)
+      toast.success(
+        <div className="flex items-center">
+          <Check />
+          &nbsp;Le channel a bien été ajouté
+        </div>,
+        { duration: 3000 }
+      )
     },
   })
+
+  const setPrivate = () => {
+    setIsPrivate(!isPrivate)
+  }
 
   const onSubmit = ({
     name,
@@ -116,12 +123,6 @@ const AddChannel = (currentServer: Server) => {
     mutate({ name, id, type, rolesRequired, isPrivate })
     currentServer.onClickCreateChannel()
   }
-
-  const [isPrivate, setIsPrivate] = useState(false)
-  const setPrivate = () => {
-    setIsPrivate(!isPrivate)
-  }
-
   return (
     <Dialog
       open={currentServer.showModalCreateChannel}

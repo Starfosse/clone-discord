@@ -7,17 +7,20 @@ const serverId = z.object({ serverId: z.string() })
 
 interface permissions {
   invite_Member: boolean
-  expulsate_Member: boolean
+  expel_Member: boolean
   edit_Server: boolean
+  delete_Server: boolean
   role_Management: boolean
   view_Logs: boolean
-  create_Remove_Channel: boolean
-  edit_Channel: boolean
+  channel_Management: boolean
   view_Channel: boolean
   write_Channel: boolean
   speak_Channel: boolean
   video_Channel: boolean
+  reaction_Channel: boolean
   download_Channel: boolean
+  category_Management: boolean
+  delete_Input_Channel: boolean
 }
 
 const getListPermissions = publicProcedure
@@ -48,17 +51,20 @@ const getListPermissions = publicProcedure
     if (!memberRoles) return
     let listPermissions: permissions = {
       invite_Member: false,
-      expulsate_Member: false,
+      expel_Member: false,
       edit_Server: false,
+      delete_Server: false,
       role_Management: false,
       view_Logs: false,
-      create_Remove_Channel: false,
-      edit_Channel: false,
+      channel_Management: false,
       view_Channel: false,
       write_Channel: false,
       speak_Channel: false,
       video_Channel: false,
+      reaction_Channel: false,
       download_Channel: false,
+      category_Management: false,
+      delete_Input_Channel: false,
     }
     for (let i = 0; i < memberRoles.length; i++) {
       const permissions = await prisma.role.findFirst({
@@ -67,18 +73,18 @@ const getListPermissions = publicProcedure
       if (!permissions) return
       if (permissions.invite_Member)
         listPermissions.invite_Member = true
-      if (permissions.expulsate_Member)
-        listPermissions.expulsate_Member = true
+      if (permissions.expel_Member)
+        listPermissions.expel_Member = true
       if (permissions.edit_Server)
         listPermissions.edit_Server = true
       if (permissions.role_Management)
         listPermissions.role_Management = true
       if (permissions.view_Logs)
         listPermissions.view_Logs = true
-      if (permissions.create_Remove_Channel)
-        listPermissions.create_Remove_Channel = true
-      if (permissions.edit_Channel)
-        listPermissions.edit_Channel = true
+      if (permissions.channel_Management)
+        listPermissions.channel_Management = true
+      if (permissions.category_Management)
+        listPermissions.category_Management = true
       if (permissions.view_Channel)
         listPermissions.view_Channel = true
       if (permissions.write_Channel)
@@ -89,6 +95,14 @@ const getListPermissions = publicProcedure
         listPermissions.video_Channel = true
       if (permissions.download_Channel)
         listPermissions.download_Channel = true
+      if (permissions.download_Channel)
+        listPermissions.download_Channel = true
+      if (permissions.delete_Input_Channel)
+        listPermissions.delete_Input_Channel = true
+      if (permissions.reaction_Channel)
+        listPermissions.reaction_Channel = true
+      if (permissions.delete_Server)
+        listPermissions.delete_Server = true
     }
     return listPermissions
   })

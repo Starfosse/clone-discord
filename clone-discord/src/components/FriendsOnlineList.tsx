@@ -1,45 +1,24 @@
 "use client"
 
 import { trpc } from "@/app/_trpc/client"
-import Image from "next/image"
-import { Button } from "./ui/button"
+import { User } from "@prisma/client"
 import { MessageCircle, X } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { User, stateList } from "@prisma/client"
-
-// interface FriendData {
-//   id: string
-//   userId: string
-//   pseudo: string
-//   imageUrl: string
-//   state: stateList
-//   createdAt: Date
-//   updatedAt: Date
-// }
-
-// interface ResultData {
-//   onlineFriendsList: FriendData[]
-//   userFriendListId: string[]
-// }
-
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu"
 
 interface friendsData {
   onlineFriendsList: User[]
   userFriendListId: string[]
 }
 
-const FriendsOnlineList = () => {
-  const data = trpc.getFriendsOnline.useQuery()
+const FriendsOnlineList = (who: User) => {
   const [friendsOnline, setFriendsOnline] = useState<
     friendsData | undefined
   >()
+
+  const data = trpc.getFriendsOnline.useQuery(who)
+
   useEffect(() => {
     if (data.data) setFriendsOnline(data.data)
   }, [data.data])
@@ -105,33 +84,3 @@ const FriendsOnlineList = () => {
 }
 
 export default FriendsOnlineList
-
-{
-  /* <div
-            key={friend?.id}
-            className="w-80 h-14  bg-secondaryColor rounded-lg flex items-center">
-            <Image
-              className="rounded-full ml-2"
-              src={friend.imageUrl ?? ""}
-              width={28}
-              height={28}
-              alt="ok"
-            />
-            <div className="relative">
-              <Image
-                className="absolute right-0 z-10 rounded-full border-[8px] border-tertiaryColor"
-                src={`/${friend?.state.toLocaleLowerCase()}.png`}
-                width={16}
-                height={16}
-                alt="ok"
-              />
-            </div>
-            <p className="ml-4">{friend?.pseudo}</p>
-            <div className="ml-auto flex gap-2 mr-2">
-              <Link href={`/friends/${friend.}`}>
-                <MessageCircle />
-              </Link>
-              <Button className="rounded-full">⁝</Button>
-            </div>
-          </div> */
-}

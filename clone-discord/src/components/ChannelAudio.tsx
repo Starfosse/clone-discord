@@ -1,21 +1,17 @@
 "use client"
 
-import "@livekit/components-styles"
 import {
-  LiveKitRoom,
-  VideoConference,
-  GridLayout,
-  ParticipantTile,
-  useTracks,
-  RoomAudioRenderer,
   ControlBar,
+  GridLayout,
+  LiveKitRoom,
+  ParticipantTile,
+  RoomAudioRenderer,
+  useTracks,
 } from "@livekit/components-react"
-import { useEffect, useState } from "react"
+import "@livekit/components-styles"
+import { Channel, User } from "@prisma/client"
 import { Track } from "livekit-client"
-import { Channel, Member, User } from "@prisma/client"
-import { Hash, Headphones } from "lucide-react"
-import { trpc } from "@/app/_trpc/client"
-import { useDisconnectButton } from "@livekit/components-react"
+import { useEffect, useState } from "react"
 
 interface ChannelAudioProps {
   currentChannel: Channel

@@ -1,19 +1,19 @@
 "use client"
+import { trpc } from "@/app/_trpc/client"
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
-import { trpc } from "@/app/_trpc/client"
+import permissions from "@/lib/interface/permissions"
+import { cn } from "@/lib/utils"
 import { Channel, ChannelGroup } from "@prisma/client"
+import { ArrowBigDown } from "lucide-react"
 import { useEffect, useState } from "react"
 import ChannelDisplay from "./ChannelDisplay"
-import { ArrowBigDown } from "lucide-react"
 import AddChannelByGroupId from "./modals/category/AddChannelByGroupId"
 import EditCategory from "./modals/category/EditCategory"
-import { cn } from "@/lib/utils"
-import permissions from "@/lib/interface/permissions"
 
 interface channnelsGroupProps {
   channelsGroup: ChannelGroup
@@ -25,20 +25,27 @@ interface channnelsGroupProps {
 
 const ChannelsGroup = (cGProps: channnelsGroupProps) => {
   const ChannelGroupId = { id: cGProps.channelsGroup.id }
-  const channels =
-    trpc.getChannelsByGroupId.useQuery(ChannelGroupId)
+  const utils = trpc.useUtils()
   const [currentChannels, setCurrentChannels] = useState<
     Channel[] | undefined
   >()
   const [isOpen, setIsOpen] = useState(true)
+  const [showModalAddChannel, setShowModalAddChannel] =
+    useState(false)
+  const [showModalEditCategory, setShowModalEditCategory] =
+    useState(false)
+
+  const channels =
+    trpc.getChannelsByGroupId.useQuery(ChannelGroupId)
+
   useEffect(() => {
     if (channels.data) setCurrentChannels(channels.data)
   }, [channels.data])
-  const [showModalAddChannel, setShowModalAddChannel] =
-    useState(false)
 
-  const [showModalEditCategory, setShowModalEditCategory] =
-    useState(false)
+  const { mutate: deleteChannel } =
+    trpc.deleteCategory.useMutation({
+      onSuccess: () => utils.getChannelsGroups.invalidate(),
+    })
 
   const showModal = () => {
     setShowModalEditCategory(true)
@@ -46,25 +53,19 @@ const ChannelsGroup = (cGProps: channnelsGroupProps) => {
   const unShowModal = () => {
     setShowModalEditCategory(false)
   }
-
   const handleClickAddChannel = () => {
     setShowModalAddChannel(true)
   }
   const closeAddChannel = () => {
     setShowModalAddChannel(false)
   }
-  const utils = trpc.useUtils()
-  const { mutate: deleteChannel } =
-    trpc.deleteCategory.useMutation({
-      onSuccess: () => utils.getChannelsGroups.invalidate(),
-    })
   const handleClickDeleteCategory = () => {
     const channelId = { id: cGProps.channelsGroup.id }
     deleteChannel(channelId)
   }
   return (
     <div className="mt-4 pl-2">
-      {cGProps.listPermissions.create_Remove_Channel ? (
+      {cGProps.listPermissions.channel_Management ? (
         <div>
           <ContextMenu>
             <ContextMenuTrigger className="flex w-full items-center">
@@ -142,7 +143,6 @@ const ChannelsGroup = (cGProps: channnelsGroupProps) => {
             cGProps.refetchChannelsGroups
           }
           refetchCategory={channels.refetch}
-          // refetch
         />
       )}
 

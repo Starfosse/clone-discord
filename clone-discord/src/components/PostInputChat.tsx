@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { User, inputChat } from "@prisma/client"
 import { format } from "date-fns"
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import {
   ContextMenu,
@@ -27,25 +27,39 @@ interface currentUsers {
 interface PostInputChatProps {
   msg: inputChat
   currentFriend: User
+  currentUsers: currentUsers
 }
 
 const PostInputChat = ({
   msg,
   currentFriend,
+  currentUsers,
 }: PostInputChatProps) => {
-  const inputChatId = { id: msg.id }
-  const users =
-    trpc.getUsersDiscussion.useQuery(inputChatId)
-  const [currentUsers, setCurrentUsers] = useState<
-    currentUsers | undefined
-  >()
-  useEffect(() => {
-    if (users.data) setCurrentUsers(users.data)
-  }, [users.data])
+  const [edit, setEdit] = useState(false)
+  const utils = trpc.useUtils()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TEditInputChatId>({
+    resolver: zodResolver(editInputChatId),
+    defaultValues: {
+      id: msg.id,
+    },
+  })
+
+  const { mutate: deleteMessage } =
+    trpc.deleteInputChat.useMutation({
+      onSuccess: () => utils.getInputChat.invalidate(),
+    })
+  const { mutate: editInput } =
+    trpc.editInputChat.useMutation({
+      onSuccess: () => utils.getInputChat.invalidate(),
+    })
 
   const getUserImage = (msg: inputChat) => {
     if (!currentUsers) return
-    if (!msg.sentByUserOne) {
+    if (msg.sentByUserOne) {
       return (
         <Image
           src={currentUsers?.userOne.imageUrl}
@@ -73,21 +87,7 @@ const PostInputChat = ({
     if (msg.sentByUserOne) {
       return currentUsers.userOne.pseudo
     }
-    return
-    currentUsers?.userTwo.pseudo
-  }
-
-  const [edit, setEdit] = useState(false)
-  const handleClickEdit = () => {
-    setEdit(true)
-  }
-
-  const { mutate: deleteMessage } =
-    trpc.deleteInputChat.useMutation({})
-
-  const handleClickDelete = (msg: inputChat) => {
-    const InputChatId = { id: msg.id }
-    deleteMessage(InputChatId)
+    return currentUsers?.userTwo.pseudo
   }
 
   const isWriter = (msg: inputChat) => {
@@ -101,27 +101,22 @@ const PostInputChat = ({
 
     return true
   }
-  const { mutate: editInput } =
-    trpc.editInputChat.useMutation({})
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TEditInputChatId>({
-    resolver: zodResolver(editInputChatId),
-    defaultValues: {
-      id: msg.id,
-    },
-  })
-
-  const id = msg.id
   const onSubmit = ({
     messsageEdited,
     id,
   }: TEditInputChatId) => {
     editInput({ messsageEdited, id })
     setEdit(false)
+  }
+
+  const handleClickEdit = () => {
+    setEdit(true)
+  }
+
+  const handleClickDelete = (msg: inputChat) => {
+    const InputChatId = { id: msg.id }
+    deleteMessage(InputChatId)
   }
   return (
     <div>
