@@ -72,7 +72,7 @@ const ChannelsGroup = (cGProps: channnelsGroupProps) => {
               <ArrowBigDown
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
-                  "h-6 w-6 transition-all text-muted-foreground flex-shrink-0",
+                  "h-6 w-6 transition-all text-muted-foreground flex-shrink-0 hover:cursor-pointer",
                   {
                     "-rotate-90": !isOpen,
                   }

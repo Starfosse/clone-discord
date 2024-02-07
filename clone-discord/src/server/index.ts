@@ -61,6 +61,7 @@ import editImage from "./procedures/user/editImage"
 import getUser from "./procedures/user/getUser"
 import getUserByMember from "./procedures/user/getUserByMember"
 import getUserId from "./procedures/user/getUserId"
+import getUserListUserFriends from "./procedures/user/getUserListUserFriend"
 import getUsersByMemberByServer from "./procedures/user/getUsersByMemberByServer"
 import hello from "./procedures/user/hello"
 import updateUser from "./procedures/user/updateUser"
@@ -133,6 +134,7 @@ export const appRouter = createTRPCRouter({
   expelMember,
   getListPermissions,
   getUserId,
+  getUserListUserFriends,
 })
 
 export type AppRouter = typeof appRouter
