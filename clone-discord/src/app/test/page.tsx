@@ -1,56 +1,33 @@
-<FormMessage />
-<FormMessage className="col-span-4 text-right" />
+import { User } from "@prisma/client"
+import { useEffect, useState } from "react"
+import { trpc } from "../_trpc/client"
+import { z } from "zod"
 
-{errors.name && (
-                <p className="col-span-4 text-red-500" role="alert">
-                  {errors.name.message}{" "}
-                </p>
-              )}
+const [currentWho, setCurrentWho] = useState<
+  User | undefined
+>()
 
-              <p
-                  className={cn({
-                    "text-red-500": errors.name,
-                  })}>
+const whoData = trpc.getUser.useQuery()
 
-              toast.success(
-                <div className="flex items-center">
-                  <Check />
-                  &nbsp;Votre catégorie a bien été enregistré
-                </div>,
-                { duration: 3000 }
-              )
+useEffect(() => {
+  if (whoData.data) setCurrentWho(whoData.data)
+}, [whoData.data])
 
-              className={cn(
-                "h-4 w-4 transition-all text-muted-foreground",
-                {
-                  "-rotate-90": !isOpen,
-                }
-              )}
+const user = z.object({ id: z.string() })
 
-<Label
-                htmlFor="name"
-                className={cn("text-right", {
-                  "text-red-500": errors.name,
-                })}>
-                Nom de la catégorie
-              </Label>
-              <Input
-                {...register("name")}
-                placeholder={
-                  editCategoryProps.ChannelGroup.name
-                }
-                className="col-span-3"
-              />
-              {errors.name && (
-                <p
-                  className="col-span-4 text-red-500 text-right"
-                  role="alert">
-                  {errors.name.message}{" "}
-                </p>
-              )}
+// {...currentWho}
+//who: User
 
+// 1/useState puis trpc.utils puis  déclaration form
 
-whitespace-pre-wrap break-all
+// 2/query
 
-overflow-ellipsis overflow-hidden whitespace-nowrap
-truncate
+// 3/useEffect
+
+// 4/mutation
+
+// 5/fonction
+
+// 6/ onSubmit puis handle...
+
+// 7/

@@ -33,9 +33,9 @@ interface Server {
   listPermissions: permissions
 }
 
+import permissions from "@/lib/interface/permissions"
+import { cn } from "@/lib/utils"
 import {
-  ArrowBigDown,
-  ArrowLeft,
   ChevronDown,
   FileDiff,
   LogOut,
@@ -51,54 +51,39 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import AddCategory from "./modals/category/AddCategory"
 import AddChannel from "./modals/channel/AddChannel"
+import AddMemberRole from "./modals/member/AddMemberRole"
 import CreateRole from "./modals/role/CreateRole"
 import EditRole from "./modals/role/EditRole"
 import EditServer from "./modals/server/EditServer"
-import AddMemberRole from "./modals/member/AddMemberRole"
-import { Button } from "./ui/button"
-import { cn } from "@/lib/utils"
-import permissions from "@/lib/interface/permissions"
 
 const ServerLeftHeader = (currentServer: Server) => {
-  const serverId = { id: currentServer.id }
-  const utils = trpc.useUtils()
   const [
     showModalCreateCategory,
     setshowModalCreateCategory,
   ] = useState(false)
-
   const [
     showModalCreateChannel,
     setshowModalCreateChannel,
   ] = useState(false)
-
   const [showModalEditServer, setshowModalEditServer] =
     useState(false)
-
   const [showModalCreateRole, setshowModalCreateRole] =
     useState(false)
-
   const [showModalEditRole, setshowModalEditRole] =
     useState(false)
-
   const [
     showModalAddMemberRole,
     setShowModalAddMemberRole,
   ] = useState(false)
-
+  const [showModal, setShowModal] = useState(false)
+  const utils = trpc.useUtils()
   const router = useRouter()
+  const serverId = { id: currentServer.id }
 
   const { mutate: deleteServer } =
     trpc.deleteServer.useMutation({
       onSuccess: () => utils.getUserListServ.invalidate(),
     })
-
-  const onSelectDeleteServer = () => {
-    deleteServer(serverId)
-    router.refresh()
-    router.push("/")
-  }
-
   const { mutate: quitServer } =
     trpc.quitServer.useMutation({
       onSuccess: () => utils.getUserListServ.invalidate(),
@@ -109,51 +94,47 @@ const ServerLeftHeader = (currentServer: Server) => {
     router.refresh()
     router.push("/")
   }
-
+  const onSelectDeleteServer = () => {
+    deleteServer(serverId)
+    router.refresh()
+    router.push("/")
+  }
   const onSelectShowEditServer = () => {
     setshowModalEditServer(true)
   }
-
   const onClickEditServer = () => {
     setshowModalEditServer(false)
   }
-
   const onSelectCreateCategory = () => {
     setshowModalCreateCategory(true)
   }
   const onClickCreateCategory = () => {
     setshowModalCreateCategory(false)
   }
-
   const onSelectCreateChannel = () => {
     setshowModalCreateChannel(true)
   }
   const onClickCreateChannel = () => {
     setshowModalCreateChannel(false)
   }
-
   const onSelectCreateRole = () => {
     setshowModalCreateRole(true)
   }
   const onClickCreateRole = () => {
     setshowModalCreateRole(false)
   }
-
   const onSelectEditRole = () => {
     setshowModalEditRole(true)
   }
   const onClickEditRole = () => {
     setshowModalEditRole(false)
   }
-
   const onSelectAddMemberRole = () => {
     setShowModalAddMemberRole(true)
   }
   const onClickAddMemberRole = () => {
     setShowModalAddMemberRole(false)
   }
-
-  const [showModal, setShowModal] = useState(false)
   return (
     <>
       <DropdownMenu
@@ -233,7 +214,7 @@ const ServerLeftHeader = (currentServer: Server) => {
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           {currentServer.listPermissions
-            .create_Remove_Channel && (
+            .channel_Management && (
             <DropdownMenuItem
               onSelect={onSelectCreateChannel}>
               Créér un channel
@@ -359,5 +340,3 @@ const ServerLeftHeader = (currentServer: Server) => {
 }
 
 export default ServerLeftHeader
-
-//ajouter alert dialog pour quitter/supprimer le server

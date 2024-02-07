@@ -1,6 +1,7 @@
 "use client"
 
 import { trpc } from "@/app/_trpc/client"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogContent,
@@ -9,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Switch } from "@/components/ui/switch"
 import {
   ChannelValidator,
   TChannelValidator,
@@ -21,6 +23,7 @@ import {
   Headphones,
   Video,
 } from "lucide-react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { Button } from "../../ui/button"
@@ -42,9 +45,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select"
-import { useEffect, useState } from "react"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Switch } from "@/components/ui/switch"
 
 interface cHGroup {
   channelsGroup: ChannelGroup
@@ -60,6 +60,39 @@ interface memberRoleIdLabel {
 }
 
 const AddChannelByGroupId = (cHGroup: cHGroup) => {
+  const [currentListRoleServer, setCurrentListRoleServer] =
+    useState<memberRoleIdLabel[] | undefined>()
+  const [isPrivate, setIsPrivate] = useState(false)
+  const serverId = {
+    serverId: cHGroup.channelsGroup.serverId,
+  }
+
+  const listRoleServer =
+    trpc.getRoleServer.useQuery(serverId)
+  const form = useForm<TChannelValidator>({
+    resolver: zodResolver(ChannelValidator),
+    defaultValues: {
+      serverId: cHGroup.channelsGroup.serverId,
+      id: cHGroup.channelsGroup.id,
+      name: "",
+      type: ChannelType.TEXT,
+      isPrivate: false,
+      rolesRequired: [],
+    },
+  })
+
+  useEffect(() => {
+    if (listRoleServer.data) {
+      const items = listRoleServer.data.map(
+        (memberRole) => ({
+          id: memberRole.id,
+          label: memberRole.role,
+        })
+      )
+      setCurrentListRoleServer(items)
+    }
+  }, [listRoleServer.data])
+
   const { mutate } =
     trpc.createChannelByGroupId.useMutation({
       onSuccess: () => {
@@ -74,37 +107,6 @@ const AddChannelByGroupId = (cHGroup: cHGroup) => {
         )
       },
     })
-
-  const serverId = {
-    serverId: cHGroup.channelsGroup.serverId,
-  }
-  const listRoleServer =
-    trpc.getRoleServer.useQuery(serverId)
-  const [currentListRoleServer, setCurrentListRoleServer] =
-    useState<memberRoleIdLabel[] | undefined>()
-  useEffect(() => {
-    if (listRoleServer.data) {
-      const items = listRoleServer.data.map(
-        (memberRole) => ({
-          id: memberRole.id,
-          label: memberRole.role,
-        })
-      )
-      setCurrentListRoleServer(items)
-    }
-  }, [listRoleServer.data])
-
-  const form = useForm<TChannelValidator>({
-    resolver: zodResolver(ChannelValidator),
-    defaultValues: {
-      serverId: cHGroup.channelsGroup.serverId,
-      id: cHGroup.channelsGroup.id,
-      name: "",
-      type: ChannelType.TEXT,
-      isPrivate: false,
-      rolesRequired: [],
-    },
-  })
 
   const onSubmit = ({
     name,
@@ -125,7 +127,6 @@ const AddChannelByGroupId = (cHGroup: cHGroup) => {
     cHGroup.closeAddChannel()
   }
 
-  const [isPrivate, setIsPrivate] = useState(false)
   const setPrivate = () => {
     setIsPrivate(!isPrivate)
   }

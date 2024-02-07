@@ -1,7 +1,7 @@
 "use client"
 
 import { trpc } from "@/app/_trpc/client"
-import { User, UserFriend, inputChat } from "@prisma/client"
+import { User, UserFriend } from "@prisma/client"
 import { X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -12,17 +12,23 @@ interface ListDiscussion {
   listFriends: User[]
 }
 
-const ListDiscussion = () => {
-  const listDiscussionData =
-    trpc.getListDiscussion.useQuery()
+const ListDiscussion = (who: User) => {
   const [currentListDiscussion, setCurrentListDiscussion] =
     useState<ListDiscussion | undefined>()
+
+  const listDiscussionData =
+    trpc.getListDiscussion.useQuery(who)
+
   useEffect(() => {
     if (listDiscussionData.data)
       setCurrentListDiscussion(listDiscussionData.data)
   }, [listDiscussionData.data])
+
   const { mutate: unshowDiscussion } =
-    trpc.unshowDiscussion.useMutation()
+    trpc.unshowDiscussion.useMutation({
+      onSuccess: () => listDiscussionData.refetch(),
+    })
+
   const handleDelete = (id: string) => {
     const discussionId = { id: id }
     unshowDiscussion(discussionId)

@@ -1,20 +1,19 @@
 "use client"
 
-import Image from "next/image"
-import { Separator } from "./ui/separator"
-import Profile from "./Profile"
-import AddServer from "./modals/server/AddServer"
 import { trpc } from "@/app/_trpc/client"
-import Link from "next/link"
 import {
   Server,
   User,
   UserFriend,
   inputChat,
 } from "@prisma/client"
+import Image from "next/image"
+import Link from "next/link"
 import { useEffect, useState } from "react"
-import { createNewUser } from "@/server/procedures/user/createNewUser"
 import ListUnSeenConv from "./ListUnSeenConv"
+import Profile from "./Profile"
+import AddServer from "./modals/server/AddServer"
+import { Separator } from "./ui/separator"
 
 interface unSeenConv {
   listUnSeenConv: inputChat[][]
@@ -23,16 +22,16 @@ interface unSeenConv {
 }
 
 const SideLeftBar = () => {
-  const userListServData = trpc.getUserListServ.useQuery()
-  const listUnSeenConvData =
-    trpc.getListUnseenDiscussion.useQuery()
   const [currentListUnSeenConv, setCurrentListUnSeenConv] =
     useState<unSeenConv | undefined>()
   const [userListServ, setUserListServ] = useState<
     Server[] | undefined
   >()
-  const { mutate: createNewUser } =
-    trpc.createNewUser.useMutation({})
+
+  const userListServData = trpc.getUserListServ.useQuery()
+  const listUnSeenConvData =
+    trpc.getListUnseenDiscussion.useQuery()
+
   useEffect(() => {
     if (userListServData.data)
       setUserListServ(userListServData.data)
@@ -75,7 +74,6 @@ const SideLeftBar = () => {
               <div className="hidden group-hover:inline relative">
                 <div className="absolute top-3 right-1 rounded w-10 h-4 bg-white"></div>
               </div>
-              {/*`${server.imageUrl}`*/}
               {server.imageUrl ? (
                 <Image
                   src="/logo-discord.png"

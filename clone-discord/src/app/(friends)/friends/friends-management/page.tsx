@@ -3,7 +3,6 @@
 import { trpc } from "@/app/_trpc/client"
 import AddFriend from "@/components/AddFriend"
 import FriendsAllList from "@/components/FriendsAllList"
-import FriendsList from "@/components/FriendsAllList"
 import FriendsOnlineList from "@/components/FriendsOnlineList"
 import PendingFriends from "@/components/PendingFriends"
 import { Button } from "@/components/ui/button"
@@ -13,20 +12,29 @@ import { Users } from "lucide-react"
 import { useEffect, useState } from "react"
 
 const FriendsManagement = () => {
-  const pendingFriendsData =
-    trpc.pendingInvitationFriend.useQuery()
-  const [currentPendingFriends, setCurrentPendingFriends] =
-    useState<User[] | undefined>()
-  useEffect(() => {
-    if (pendingFriendsData.data)
-      setCurrentPendingFriends(pendingFriendsData.data)
-  }, [pendingFriendsData.data])
   const [addFriend, setAddFriend] = useState(false)
   const [seePendingFriends, setSeePendingFriends] =
     useState(false)
   const [seeOnlineFriends, setSeeOnlineFriends] =
     useState(false)
   const [seeAllFriends, setSeeAllFriends] = useState(false)
+  const [currentWho, setCurrentWho] = useState<
+    User | undefined
+  >()
+
+  const [currentPendingFriends, setCurrentPendingFriends] =
+    useState<User[] | undefined>()
+
+  const whoData = trpc.getUser.useQuery()
+  const pendingFriendsData =
+    trpc.pendingInvitationFriend.useQuery()
+
+  useEffect(() => {
+    if (pendingFriendsData.data)
+      setCurrentPendingFriends(pendingFriendsData.data)
+    if (whoData.data) setCurrentWho(whoData.data)
+  }, [pendingFriendsData.data, whoData.data])
+
   const handleClickSeeOnlineFriends = () => {
     setSeeOnlineFriends(true)
     setSeeAllFriends(false)
@@ -88,12 +96,17 @@ const FriendsManagement = () => {
           className="bg-transparent hover:bg-gray-950 rounded-md p-2 "
           onClick={handleClickAddFriend}>
           Ajouter
-          {/* {currentPendingFriends?.length} */}
         </Button>
       </div>
-      {seeAllFriends && <FriendsAllList />}
-      {seeOnlineFriends && <FriendsOnlineList />}
-      {addFriend && <AddFriend />}
+      {seeAllFriends && currentWho && (
+        <FriendsAllList {...currentWho} />
+      )}
+      {seeOnlineFriends && currentWho && (
+        <FriendsOnlineList {...currentWho} />
+      )}
+      {addFriend && currentWho && (
+        <AddFriend {...currentWho} />
+      )}
       {seePendingFriends && currentPendingFriends && (
         <PendingFriends
           currentPendingFriends={currentPendingFriends}

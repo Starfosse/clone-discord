@@ -6,7 +6,14 @@ import {
   discussionProps,
 } from "@/lib/validator/discussion-validator"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
+import GiphySearch from "./GiphySearch"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
 import {
   Form,
   FormControl,
@@ -14,13 +21,6 @@ import {
   FormItem,
 } from "./ui/form"
 import { Input } from "./ui/input"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
-import GiphySearch from "./GiphySearch"
-import { useState } from "react"
 
 interface InputChatDiscussion {
   discussionId: string
@@ -31,15 +31,32 @@ const InputChatDiscussion = ({
   discussionId,
   friend,
 }: InputChatDiscussion) => {
+  const [isOpenGif, setIsOpenGif] = useState(false)
+  const [selectedGif, setSelectedGif] = useState<string>("")
   const utils = trpc.useUtils()
+  const form = useForm<TDiscussionProps>({
+    resolver: zodResolver(discussionProps),
+    defaultValues: {
+      message: "",
+    },
+  })
+
   const { mutate: addMessage } =
     trpc.addInputDiscussion.useMutation({
       onSuccess: () => utils.getInputChat.invalidate(),
     })
-
   const { mutate: addGif } =
-    trpc.addGifDiscussion.useMutation({})
-  const [selectedGif, setSelectedGif] = useState<string>("")
+    trpc.addGifDiscussion.useMutation({
+      onSuccess: () => utils.getInputChat.invalidate(),
+    })
+
+  const onSubmit = ({ message }: TDiscussionProps) => {
+    form.reset()
+    if (message === "") return
+    addMessage({ discussionId, message })
+    form.reset()
+  }
+
   const handleGifSelect = (url: string) => {
     setSelectedGif(url)
     const discussionProps = {
@@ -49,20 +66,7 @@ const InputChatDiscussion = ({
     addGif(discussionProps)
     setIsOpenGif(false)
   }
-  const form = useForm<TDiscussionProps>({
-    resolver: zodResolver(discussionProps),
-    defaultValues: {
-      message: "",
-    },
-  })
-  const onSubmit = ({ message }: TDiscussionProps) => {
-    form.reset()
-    if (message === "") return
-    addMessage({ discussionId, message })
-    form.reset()
-  }
 
-  const [isOpenGif, setIsOpenGif] = useState(false)
   return (
     <div className="bg-primaryColor h-14 overflow-hidden">
       <div className=" w-[98%] mx-auto bg-secondaryColor rounded-md">

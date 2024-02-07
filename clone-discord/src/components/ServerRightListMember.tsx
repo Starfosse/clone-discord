@@ -1,29 +1,15 @@
 "use client"
 import {
   ContextMenu,
-  ContextMenuCheckboxItem,
   ContextMenuContent,
   ContextMenuItem,
-  ContextMenuLabel,
-  ContextMenuRadioGroup,
-  ContextMenuRadioItem,
-  ContextMenuSeparator,
-  ContextMenuShortcut,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
 
-import { format } from "date-fns"
 import { trpc } from "@/app/_trpc/client"
-import {
-  Member,
-  MemberRole,
-  Role,
-  Server,
-  User,
-} from "@prisma/client"
+import permissions from "@/lib/interface/permissions"
+import { Member, Role, Server, User } from "@prisma/client"
+import { format } from "date-fns"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import {
@@ -32,21 +18,11 @@ import {
   AvatarImage,
 } from "./ui/avatar"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog"
-import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
 import { Separator } from "./ui/separator"
-import permissions from "@/lib/interface/permissions"
 
 interface ServerRightListMember {
   id: string
@@ -63,12 +39,22 @@ interface DataDisplay {
   role: Role
   member: Member[]
 }
+
+interface AvatarMemberProps {
+  member: Member
+  currentServer: ServerRightListMember
+  listPermissions: permissions
+}
+
 const getDataDisplay = (id: string): DataDisplay[] => {
   const ServerId = { id: id }
-  const ServerListMemberData =
-    trpc.getMemberByRole.useQuery(ServerId)
+  const DataDisplay: DataDisplay[] = []
   const [currentListMember, setCurrentListMember] =
     useState<Server | undefined>()
+
+  const ServerListMemberData =
+    trpc.getMemberByRole.useQuery(ServerId)
+
   useEffect(() => {
     if (ServerListMemberData.data)
       setCurrentListMember(ServerListMemberData.data)
@@ -83,7 +69,7 @@ const getDataDisplay = (id: string): DataDisplay[] => {
   const members = ServerListMemberData.data
     ? ServerListMemberData.data!.members
     : undefined
-  const DataDisplay: DataDisplay[] = []
+
   if (currentListMember && members && roles) {
     for (let i = 0; i < roles.length; i++) {
       const role: Role = roles[i]
@@ -121,7 +107,6 @@ const ServerRightListMember = (
   const dataDisplay: DataDisplay[] = getDataDisplay(
     currentServer.id
   )
-  // getDataDisplay(currentServer.id)
 
   return (
     <div className="pl-4 pt-4 relative right-2">
@@ -153,25 +138,23 @@ const ServerRightListMember = (
   )
 }
 
-interface AvatarMemberProps {
-  member: Member
-  currentServer: ServerRightListMember
-  listPermissions: permissions
-}
 const AvatarMember = (
   AvatarMemberProps: AvatarMemberProps
 ) => {
   const MemberId = { id: AvatarMemberProps.member.userId }
-  const memberData = trpc.getUserByMember.useQuery(MemberId)
+  const memberId = { id: AvatarMemberProps.member.id }
+  const [open, setOpen] = useState(false)
   const [currentMember, setCurrentMember] = useState<
     User | undefined
   >()
   const [currentListRoles, setCurrentListRoles] = useState<
     Role[] | undefined
   >()
-  const memberId = { id: AvatarMemberProps.member.id }
+
+  const memberData = trpc.getUserByMember.useQuery(MemberId)
   const listRoleData =
     trpc.getListRoleByMember.useQuery(memberId)
+
   useEffect(() => {
     if (memberData.data) setCurrentMember(memberData.data)
     if (listRoleData.data)
@@ -179,7 +162,7 @@ const AvatarMember = (
   }, [memberData.data, listRoleData.data])
 
   const stateUser = currentMember?.state.toLocaleLowerCase()
-  const [open, setOpen] = useState(false)
+
   const setOpenTrue = () => {
     setOpen(true)
   }
@@ -199,7 +182,7 @@ const AvatarMember = (
       onClick={() => setOpen(!open)}
       className="flex relative items-center p-1 hover:cursor-pointer hover:bg-neutral-700 hover:rounded-sm h-full w-full">
       {currentMember &&
-      AvatarMemberProps.listPermissions.expulsate_Member ? (
+      AvatarMemberProps.listPermissions.expel_Member ? (
         <div className="w-full">
           <ContextMenu>
             <ContextMenuTrigger className="w-full">
