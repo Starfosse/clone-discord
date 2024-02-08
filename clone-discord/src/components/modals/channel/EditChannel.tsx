@@ -83,8 +83,6 @@ const EditChannel = (
   const [currentListRoleServer, setCurrentListRoleServer] =
     useState<memberRoleIdLabel[] | undefined>()
   useEffect(() => {
-    console.log(listRoleServer.data)
-    console.log(currentRequiredRoleData.data)
     if (
       listRoleServer.data &&
       currentRequiredRoleData.data
@@ -100,13 +98,9 @@ const EditChannel = (
           ),
         })
       )
-      console.log(items)
-      setCurrentListRoleServer(items)
-      console.log(items)
-      console.log(currentListRoleServer) // currentlistROleServer non attribué
+      setCurrentListRoleServer(items) // currentlistROleServer non attribué
     }
   }, [listRoleServer.data, currentRequiredRoleData.data])
-  console.log(currentListRoleServer)
   const { mutate: editChannel } =
     trpc.editChannel.useMutation({
       onSuccess: () => {

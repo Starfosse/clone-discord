@@ -58,10 +58,10 @@ const DiscussionInputChat = ({
   }, [])
   useEffect(() => {
     if (entry?.isIntersecting) fetchNextPage()
-  }, [entry])
+  }, [entry, fetchNextPage])
   useEffect(() => {
     if (users.data) setCurrentUsers(users.data)
-  }, [users.data])
+  }, [users.data, fetchNextPage])
 
   return (
     <div className="text-white bg-primaryColor h-full flex relative overflow-auto">

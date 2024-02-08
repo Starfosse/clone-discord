@@ -17,7 +17,7 @@ const ServerIdPage = () => {
     typeof routeTo.data !== undefined
   ) {
     router.push(
-      `/server/${channelId.serverId}/channel/${routeTo.data.id}`
+      `/server/${channelId.serverId}/channel/${routeTo.data}`
     )
   }
   // useEffect(() => {
@@ -36,15 +36,15 @@ const ServerIdPage = () => {
       {routeTo.data === "Not allowed despite roles" ? (
         <div className="bg-primaryColor flex h-full w-full items-center justify-center text-white">
           <div>
-            Tu n'as pas la permission de voir des salons
-            actuellement.
+            Tu n&apos;as pas la permission de voir des
+            salons actuellement.
           </div>
         </div>
       ) : (
         <div className="bg-primaryColor flex h-full w-full items-center justify-center text-white">
           <div>
-            Tu n'as pas de rôle assigné et ne peux donc pas
-            voir de salons ou catégories actuellement.
+            Tu n&apos;as pas de rôle assigné et ne peux donc
+            pas voir de salons ou catégories actuellement.
           </div>
         </div>
       )}

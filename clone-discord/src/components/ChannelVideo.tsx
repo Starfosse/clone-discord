@@ -33,7 +33,10 @@ const ChannelVideo = (cVPRops: ChannelVideoProps) => {
         console.error(e)
       }
     })()
-  }, [])
+  }, [
+    cVPRops.currentChannel.name,
+    cVPRops.currentUser.pseudo,
+  ])
 
   if (token === "") {
     return <div>Getting token...</div>

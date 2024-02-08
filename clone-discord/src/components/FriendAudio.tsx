@@ -37,7 +37,7 @@ const FriendAudio = (fAProps: FriendAudioProps) => {
         console.error(e)
       }
     })()
-  }, [])
+  }, [fAProps.discussionId, user?.pseudo])
 
   if (token === "") {
     return <div>Getting token...</div>

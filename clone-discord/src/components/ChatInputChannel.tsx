@@ -46,7 +46,7 @@ const ChatInputChannel = (cDProps: Channel) => {
 
   useEffect(() => {
     if (entry?.isIntersecting) fetchNextPage()
-  }, [entry])
+  }, [entry, fetchNextPage])
 
   const posts = query?.pages.flatMap((page) => page.items)
   return (

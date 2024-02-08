@@ -23,6 +23,11 @@ const ChannelIdPage = () => {
   const userData = trpc.getUser.useQuery()
   const whoData = trpc.getMemberByUser.useQuery(channelId)
 
+  const { mutate: joinChannel } =
+    trpc.joinMemberToChannel.useMutation({
+      onSuccess: () => utils.getChannelUsers.invalidate(),
+    })
+
   useEffect(() => {
     if (channelData.data)
       setCurrentChannel(channelData.data)
@@ -34,12 +39,12 @@ const ChannelIdPage = () => {
       }
       joinChannel(MemberIdChannelId)
     }
-  }, [channelData.data, userData.data, whoData.data])
-
-  const { mutate: joinChannel } =
-    trpc.joinMemberToChannel.useMutation({
-      onSuccess: () => utils.getChannelUsers.invalidate(),
-    })
+  }, [
+    channelData.data,
+    userData.data,
+    whoData.data,
+    joinChannel,
+  ])
 
   return (
     <>
