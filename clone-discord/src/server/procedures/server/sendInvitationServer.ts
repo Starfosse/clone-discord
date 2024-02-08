@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
 import { z } from "zod"
@@ -8,7 +9,7 @@ const InvitationServer = z.object({
   userFriendId: z.string(),
 })
 
-const sendInvitationServer = publicProcedure
+const sendInvitationServer = authentifiedProcedure
   .input(InvitationServer)
   .mutation(async ({ input }) => {
     const userId = await currentUser()

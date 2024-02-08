@@ -2,10 +2,11 @@ import MemberRoleId from "@/lib/validator/member-role-validator"
 import { publicProcedure } from "../../trpc"
 import { prisma } from "@/lib/db"
 import { z } from "zod"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 
 const MemberRoleArray = z.array(MemberRoleId)
 
-const EditOrderMemberRole = publicProcedure
+const EditOrderMemberRole = authentifiedProcedure
   .input(MemberRoleArray)
   .mutation(async ({ input }) => {
     const memberRoles = input

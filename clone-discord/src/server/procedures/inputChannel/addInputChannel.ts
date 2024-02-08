@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/db"
 import { inputContent } from "@/lib/validator/input-content-validator"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
 import { z } from "zod"
 
-const addInputChannel = publicProcedure
+const addInputChannel = authentifiedProcedure
   .input(inputContent)
   .mutation(async ({ input }) => {
     const user = await currentUser()

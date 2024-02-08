@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { z } from "zod"
 
-const getInputChannel = publicProcedure
+const getInputChannel = authentifiedProcedure
   .input(
     z.object({
       channelId: z.string(),

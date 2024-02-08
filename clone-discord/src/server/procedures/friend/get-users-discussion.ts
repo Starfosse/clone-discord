@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { z } from "zod"
 
 const inputChatId = z.object({ id: z.string() })
 
-const getUsersDiscussion = publicProcedure
+const getUsersDiscussion = authentifiedProcedure
   .input(inputChatId)
   .query(async ({ input }) => {
     const userFriend = await prisma.userFriend.findFirst({

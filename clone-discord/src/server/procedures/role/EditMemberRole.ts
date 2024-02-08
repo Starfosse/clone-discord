@@ -2,8 +2,9 @@ import { z } from "zod"
 import { publicProcedure } from "../../trpc"
 import { prisma } from "@/lib/db"
 import MemberRoleId from "@/lib/validator/member-role-validator"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 
-const EditMemberRole = publicProcedure
+const EditMemberRole = authentifiedProcedure
   .input(MemberRoleId)
   .mutation(async ({ input }) => {
     const { serverId, id } = input

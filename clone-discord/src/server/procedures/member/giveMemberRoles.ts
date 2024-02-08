@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { z } from "zod"
 
@@ -11,7 +12,7 @@ export type TGiveMemberRoleValidator = z.infer<
   typeof giveMemberRoleValidator
 >
 
-const giveMemberRoles = publicProcedure
+const giveMemberRoles = authentifiedProcedure
   .input(giveMemberRoleValidator)
   .mutation(async ({ input }) => {
     const res = await prisma.memberRole.deleteMany({

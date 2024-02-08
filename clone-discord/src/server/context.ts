@@ -5,6 +5,7 @@ import {
   SignedInAuthObject,
   SignedOutAuthObject,
 } from "@clerk/nextjs/server"
+import { NextRequest } from "next/server"
 
 interface AuthContext {
   auth: SignedInAuthObject | SignedOutAuthObject
@@ -18,12 +19,8 @@ export const createContextInner = async ({
   }
 }
 
-export const createContext = async (
-  opts: trpcNext.CreateNextContextOptions
-) => {
-  return await createContextInner({
-    auth: getAuth(opts.req),
-  })
+export const createContext = async (req: NextRequest) => {
+  return await createContextInner({ auth: getAuth(req) })
 }
 
 export type Context = trpc.inferAsyncReturnType<
