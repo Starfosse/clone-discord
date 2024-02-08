@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db"
 import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
+import { ChannelRole } from "@prisma/client"
 import { channel } from "diagnostics_channel"
 import { z } from "zod"
 
@@ -64,7 +65,7 @@ const findFirstPublicChannel = authentifiedProcedure
 
     if (channelVisible[0]) return channelVisible[0]
 
-    let channelsRole = []
+    let channelsRole: ChannelRole[][] = []
     for (let i = 0; i < server.channels.length; i++) {
       const channelRole = await prisma.channelRole.findMany(
         {

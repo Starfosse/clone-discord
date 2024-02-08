@@ -53,7 +53,8 @@ const AddMember = (currentServer: aMProps) => {
         toast.success(
           <div className="flex items-center">
             <Check />
-            &nbsp;L'invitation au serveur a bien été envoyé
+            &nbsp;L&apos;invitation au serveur a bien été
+            envoyé
           </div>,
           { duration: 3000 }
         )

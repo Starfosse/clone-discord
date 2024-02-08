@@ -38,7 +38,7 @@ const ListDiscussion = (who: User) => {
       {currentListDiscussion &&
         currentListDiscussion.listFriends.map(
           (friend, index) => (
-            <div>
+            <div key={friend.id}>
               <Link
                 className="gap-2 group flex relative w-48 justify-between items-center group-hover:border group-hover:border-tertiaryColor rounded-md hover:bg-slate-800 mx-auto py-2 "
                 href={`/friends/${currentListDiscussion.userFriendListShowable[index].id}`}>

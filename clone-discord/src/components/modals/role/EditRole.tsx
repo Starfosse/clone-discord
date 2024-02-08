@@ -58,7 +58,8 @@ const EditRole = (currentServer: Server) => {
           toast.success(
             <div className="flex items-center">
               <Check />
-              &nbsp;L'ordre des rôles a bien été enregistré
+              &nbsp;L&apos;ordre des rôles a bien été
+              enregistré
             </div>,
             { duration: 3000 }
           )
@@ -229,7 +230,7 @@ const EditRole = (currentServer: Server) => {
           onClick={() => {
             handleClickValidate()
           }}>
-          Valider l'ordre
+          Valider l&apos;ordre
         </Button>
       </DialogContent>
       {showModalEditRole && (

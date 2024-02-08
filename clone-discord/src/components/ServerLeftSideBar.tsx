@@ -30,7 +30,7 @@ const ServerLeftSideBar = () => {
     }
     if (listPermissionsData.data)
       setCurrentListPermissions(listPermissionsData.data)
-  }, [serverData.data])
+  }, [serverData.data, listPermissionsData.data])
   return (
     <div className="flex h-full">
       <div className="w-52 bg-secondaryColor sticky z-50 h-full flex flex-col">

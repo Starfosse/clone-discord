@@ -32,7 +32,10 @@ const ChannelAudio = (cAPRops: ChannelAudioProps) => {
         console.error(e)
       }
     })()
-  }, [])
+  }, [
+    cAPRops.currentChannel.name,
+    cAPRops.currentUser.pseudo,
+  ])
 
   if (token === "") {
     return <div>Getting token...</div>

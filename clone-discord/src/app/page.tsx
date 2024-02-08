@@ -11,6 +11,6 @@ export default function Home() {
   const user = trpc.getUser.useQuery()
   useEffect(() => {
     if (!user.data) createNewUser()
-  }, [user.data])
+  }, [user.data, createNewUser])
   return <>{router.push("/friends/friends-management")}</>
 }

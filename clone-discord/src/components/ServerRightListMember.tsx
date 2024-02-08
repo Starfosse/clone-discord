@@ -46,7 +46,7 @@ interface AvatarMemberProps {
   listPermissions: permissions
 }
 
-const getDataDisplay = (id: string): DataDisplay[] => {
+const GetDataDisplay = (id: string): DataDisplay[] => {
   const ServerId = { id: id }
   const DataDisplay: DataDisplay[] = []
   const [currentListMember, setCurrentListMember] =
@@ -104,7 +104,7 @@ const getDataDisplay = (id: string): DataDisplay[] => {
 const ServerRightListMember = (
   currentServer: ServerRightListMember
 ) => {
-  const dataDisplay: DataDisplay[] = getDataDisplay(
+  const dataDisplay: DataDisplay[] = GetDataDisplay(
     currentServer.id
   )
 
@@ -121,7 +121,7 @@ const ServerRightListMember = (
             </div>
             <div>
               {data.member.map((m) => (
-                <div className="">
+                <div key={m.id} className="">
                   <AvatarMember
                     member={m}
                     currentServer={currentServer}

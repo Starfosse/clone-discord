@@ -1,6 +1,7 @@
 import axios from "axios"
 import React, { ChangeEvent, useState } from "react"
 import { Input } from "./ui/input"
+import Image from "next/image"
 
 interface Gif {
   id: string
@@ -52,7 +53,7 @@ const GiphySearch: React.FC<GiphySearchProps> = ({
         />
         <div className="h-full mt-4 flex flex-col gap-3 border-0 bg-transparent overflow-scroll overflow-x-hidden ">
           {gifs.map((gif) => (
-            <img
+            <Image
               className="border-0 bg-transparent hover:cursor-pointer"
               key={gif.id}
               src={gif.images.fixed_height.url}

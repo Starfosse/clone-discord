@@ -121,8 +121,8 @@ const EditServer = (currentServer: Server) => {
               </Label>
               <Input
                 type="file"
-                onChange={getBlobUrl}
                 {...register("imageUrl")}
+                onChange={getBlobUrl}
                 className="col-span-3"
               />
             </div>
