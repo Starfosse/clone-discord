@@ -34,6 +34,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^3.3.0",
+    "js-base64": "^3.7.6",
     "livekit-client": "^1.15.10",
     "livekit-server-sdk": "^1.2.7",
     "lucide-react": "^0.302.0",

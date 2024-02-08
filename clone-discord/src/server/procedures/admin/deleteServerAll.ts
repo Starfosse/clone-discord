@@ -1,7 +1,11 @@
 import { prisma } from "@/lib/db"
-import { publicProcedure } from "@/server/trpc"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
+import {
+  protectedProcedure,
+  publicProcedure,
+} from "@/server/trpc"
 
-const deleteServerAll = publicProcedure.mutation(
+const deleteServerAll = authentifiedProcedure.mutation(
   async () => {
     return await prisma.server.deleteMany()
   }

@@ -36,7 +36,9 @@ const AddServer = (AddServerProps: AddServerProps) => {
     useState<FormData | null>()
   const [tmpImgUser, setTmpImgUser] = useState<
     string | undefined
-  >()
+  >(
+    "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png"
+  )
   const utils = trpc.useUtils()
   const {
     register,
@@ -46,7 +48,8 @@ const AddServer = (AddServerProps: AddServerProps) => {
   } = useForm<TServerValidator>({
     resolver: zodResolver(ServerValidator),
     defaultValues: {
-      imageUrl: "",
+      imageUrl:
+        "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png",
       name: "",
     },
   })
@@ -68,16 +71,12 @@ const AddServer = (AddServerProps: AddServerProps) => {
   const getBlobUrl = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log("ok")
     const formData = new FormData()
     if (e.target.files) {
       const file = e.target.files[0]
       formData.append("file", file)
       setCurrentFormaData(formData)
-      console.log("ok")
       const url = await uploadFile(formData)
-      console.log("ok")
-      // console.log(url)
       setTmpImgUser(url)
     }
   }
@@ -86,14 +85,26 @@ const AddServer = (AddServerProps: AddServerProps) => {
     name,
     imageUrl,
   }: TServerValidator) => {
-    console.log("ok")
+    // console.log
     setOpen(false)
+    console.log(imageUrl)
     if (currentFormaData)
       imageUrl = await uploadFile(currentFormaData)
-    console.log("ok")
+    if (!imageUrl[0])
+      imageUrl =
+        "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png"
+    if (
+      tmpImgUser ===
+      "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png"
+    )
+      imageUrl =
+        "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png"
     mutate({ name, imageUrl })
     resetField("name")
     resetField("imageUrl")
+    setTmpImgUser(
+      "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png"
+    )
   }
   return (
     <Dialog onOpenChange={setOpen} open={open}>
@@ -132,6 +143,13 @@ const AddServer = (AddServerProps: AddServerProps) => {
                 className="col-span-3 "
                 onChange={getBlobUrl}
               />
+              {errors.imageUrl && (
+                <p
+                  className="col-span-4 text-red-500 text-right"
+                  role="alert">
+                  {"oupsi"}{" "}
+                </p>
+              )}
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label

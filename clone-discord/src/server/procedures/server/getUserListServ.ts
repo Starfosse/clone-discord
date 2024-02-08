@@ -3,14 +3,15 @@ import { currentUser } from "@clerk/nextjs"
 import { prisma } from "@/lib/db"
 
 const getUserListServ = publicProcedure.query(async () => {
-  const user = await currentUser()
-  const userId = await prisma.user.findFirst({
-    where: { userId: user?.id },
-    select: { id: true },
+  const userId = await currentUser()
+  if (!userId) return
+  const user = await prisma.user.findFirst({
+    where: { userId: userId.id },
   })
+  if (!user) return
   const userListServer = await prisma.member.findMany({
     where: {
-      userId: userId!.id,
+      userId: user.id,
     },
     select: {
       serverId: true,

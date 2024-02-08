@@ -5,11 +5,11 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import { v4 as uuidv4 } from "uuid"
 import { MemberRole } from "@prisma/client"
+import { inputContent } from "@/lib/validator/input-content-validator"
 
 const createServer = publicProcedure
   .input(ServerValidator)
   .mutation(async ({ input }) => {
-    console.log("ok")
     const user = await currentUser()
     if (!user) {
       return new NextResponse("Unauthorized", {
@@ -17,13 +17,7 @@ const createServer = publicProcedure
       })
     }
     const { name } = input
-    const { imageUrl } =
-      input.imageUrl !== ""
-        ? input
-        : {
-            imageUrl:
-              "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png",
-          }
+    const { imageUrl } = input
     const userOwner = await prisma.user.findFirst({
       where: {
         userId: user?.id,
@@ -83,6 +77,7 @@ const createServer = publicProcedure
       },
     })
     if (!rolesServer) return
+    //checker comment créér et relier les membres différemment
     const updatedServerChannels =
       await prisma.server.update({
         where: { id: server.id },
