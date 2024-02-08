@@ -1,3 +1,4 @@
+import deleteServerAll from "./procedures/admin/deleteServerAll"
 import createcategory from "./procedures/category/createCategory"
 import deleteCategory from "./procedures/category/deleteCategory"
 import editCategory from "./procedures/category/editCategory"
@@ -36,6 +37,7 @@ import addInputChannel from "./procedures/inputChannel/addInputChannel"
 import deleteInputChannel from "./procedures/inputChannel/deleteInputChannel"
 import editInputChannel from "./procedures/inputChannel/editInputChannel"
 import getInputChannel from "./procedures/inputChannel/getInputsChannel"
+import createMember from "./procedures/member/createMember"
 import expelMember from "./procedures/member/expelMember"
 import getMemberByRole from "./procedures/member/getMemberByRole"
 import getMemberByUser from "./procedures/member/getMemberByUser"
@@ -56,11 +58,13 @@ import findFirstPublicChannel from "./procedures/server/findFirstPublicChannel"
 import getServer from "./procedures/server/getServ"
 import getUserListServ from "./procedures/server/getUserListServ"
 import quitServer from "./procedures/server/quitServer"
+import sendInvitationServer from "./procedures/server/sendInvitationServer"
 import createNewUser from "./procedures/user/createNewUser"
 import editImage from "./procedures/user/editImage"
 import getUser from "./procedures/user/getUser"
 import getUserByMember from "./procedures/user/getUserByMember"
 import getUserId from "./procedures/user/getUserId"
+import getUserListUserFriends from "./procedures/user/getUserListUserFriend"
 import getUsersByMemberByServer from "./procedures/user/getUsersByMemberByServer"
 import hello from "./procedures/user/hello"
 import updateUser from "./procedures/user/updateUser"
@@ -133,6 +137,10 @@ export const appRouter = createTRPCRouter({
   expelMember,
   getListPermissions,
   getUserId,
+  getUserListUserFriends,
+  sendInvitationServer,
+  createMember,
+  deleteServerAll,
 })
 
 export type AppRouter = typeof appRouter

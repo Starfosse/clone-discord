@@ -8,18 +8,21 @@ const ServerId = z.object({ id: z.string() })
 const quitServer = publicProcedure
   .input(ServerId)
   .mutation(async ({ input }) => {
-    const user = await currentUser()
-    return await prisma.server.delete({
+    console.log(input.id)
+    const userId = await currentUser()
+    if (!userId) return
+    const user = await prisma.user.findFirst({
+      where: { userId: userId.id },
+    })
+    if (!user) return
+    const member = await prisma.member.findFirst({
       where: {
-        id: input.id,
+        AND: [{ serverId: input.id }, { userId: user.id }],
       },
-      select: {
-        members: {
-          where: {
-            userId: user?.id,
-          },
-        },
-      },
+    })
+    if (!member) return
+    return await prisma.member.delete({
+      where: { id: member.id },
     })
   })
 

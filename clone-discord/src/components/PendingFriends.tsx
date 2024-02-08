@@ -34,7 +34,7 @@ const PendingFriends = ({
             key={friend?.id}
             className="w-80 h-14  bg-secondaryColor rounded-lg flex items-center">
             <Image
-              className="rounded-full ml-2"
+              className="object-cover object-center rounded-full ml-2"
               src={friend?.imageUrl ?? ""}
               width={28}
               height={28}

@@ -44,9 +44,9 @@ const ListUnSeenConv = ({
               width={40}
               src={user.imageUrl}
               alt="image user"
-              className="rounded-full aspect-square"
+              className="rounded-full object-cover object-center aspect-square"
             />
-            <p className="text-white absolute left-5 bottom-0 bg-red-800 rounded-full aspect-square px-2">
+            <p className="flex items-center text-white absolute left-5 bottom-0  bg-red-800 rounded-full aspect-square px-1">
               {getNumberUnSeenMessage(index)}{" "}
             </p>
           </Link>

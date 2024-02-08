@@ -29,13 +29,16 @@ import { Label } from "../../ui/label"
 interface AddServerProps {
   refetch: () => Promise<any>
 }
+
 const AddServer = (AddServerProps: AddServerProps) => {
   const [open, setOpen] = useState<boolean>(false)
   const [currentFormaData, setCurrentFormaData] =
     useState<FormData | null>()
   const [tmpImgUser, setTmpImgUser] = useState<
     string | undefined
-  >()
+  >(
+    "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png"
+  )
   const utils = trpc.useUtils()
   const {
     register,
@@ -45,7 +48,8 @@ const AddServer = (AddServerProps: AddServerProps) => {
   } = useForm<TServerValidator>({
     resolver: zodResolver(ServerValidator),
     defaultValues: {
-      imageUrl: "",
+      imageUrl:
+        "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png",
       name: "",
     },
   })
@@ -73,7 +77,6 @@ const AddServer = (AddServerProps: AddServerProps) => {
       formData.append("file", file)
       setCurrentFormaData(formData)
       const url = await uploadFile(formData)
-      console.log(url)
       setTmpImgUser(url)
     }
   }
@@ -82,17 +85,31 @@ const AddServer = (AddServerProps: AddServerProps) => {
     name,
     imageUrl,
   }: TServerValidator) => {
+    // console.log
     setOpen(false)
+    console.log(imageUrl)
     if (currentFormaData)
       imageUrl = await uploadFile(currentFormaData)
+    if (!imageUrl[0])
+      imageUrl =
+        "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png"
+    if (
+      tmpImgUser ===
+      "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png"
+    )
+      imageUrl =
+        "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png"
     mutate({ name, imageUrl })
     resetField("name")
     resetField("imageUrl")
+    setTmpImgUser(
+      "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png"
+    )
   }
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
-        <button className="text-green-600 hover:text-white bg-secondaryColor rounded-full w-10 h-10 hover:rounded-xl hover:bg-green-600">
+        <button className=" text-green-600 hover:text-white bg-secondaryColor rounded-full w-10 h-10 hover:rounded-xl hover:bg-green-600">
           <p className=" text-3xl relative bottom-1">+</p>{" "}
         </button>
       </DialogTrigger>
@@ -108,11 +125,11 @@ const AddServer = (AddServerProps: AddServerProps) => {
             <div className="grid grid-cols-4 items-center gap-4">
               {tmpImgUser && (
                 <Image
-                  className=" col-span-4 mt-2 relative mx-auto z-10 mb-8 rounded-full aspect-square border-[1px] border-tertiaryColor object-cover object-center"
+                  className="col-span-4 mt-2 relative mx-auto z-10 mb-8 rounded-full aspect-square border-[1px] border-tertiaryColor object-cover object-center"
                   src={tmpImgUser}
                   width={60}
                   height={60}
-                  alt="ok"
+                  alt="preview image"
                 />
               )}
               <Label
@@ -126,6 +143,13 @@ const AddServer = (AddServerProps: AddServerProps) => {
                 className="col-span-3 "
                 onChange={getBlobUrl}
               />
+              {errors.imageUrl && (
+                <p
+                  className="col-span-4 text-red-500 text-right"
+                  role="alert">
+                  {"oupsi"}{" "}
+                </p>
+              )}
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label
@@ -148,7 +172,11 @@ const AddServer = (AddServerProps: AddServerProps) => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Enregistrer</Button>
+            <Button
+              type="submit"
+              onClick={() => console.log("clicked!")}>
+              Enregistrer
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

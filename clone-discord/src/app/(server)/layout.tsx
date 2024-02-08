@@ -36,6 +36,7 @@ export default function ServerLayout({
     if (listPermissionsData.data)
       setCurrentListPermissions(listPermissionsData.data)
   }, [serverData.data, listPermissionsData.data])
+  console.log(currentListPermissions)
   return (
     <div className="h-full">
       <main className="h-full relative flex">
