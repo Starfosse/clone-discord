@@ -46,7 +46,7 @@ const PostInputChannel = ({
         <Image
           src={user.imageUrl}
           alt="user picture"
-          className="rounded-full aspect-square"
+          className="rounded-full object-cover object-center aspect-square"
           width={30}
           height={30}
         />

@@ -54,7 +54,7 @@ const SideLeftBar = () => {
               alt="logo discord"
               width={40}
               height={40}
-              className="rounded-full group-hover:rounded-xl object-cover object-center"
+              className="rounded-full  group-hover:rounded-xl object-cover object-center"
             />
           </Link>
         </div>
@@ -76,14 +76,14 @@ const SideLeftBar = () => {
               </div>
               {server.imageUrl ? (
                 <Image
-                  src="/logo-discord.png"
-                  alt="logo discord"
+                  src={server.imageUrl}
+                  alt="logo server"
                   width={40}
                   height={40}
-                  className="rounded-full group-hover:rounded-xl object-cover object-center"
+                  className="rounded-full group-hover:rounded-xl object-cover object-center aspect-square"
                 />
               ) : (
-                <div className="bg-secondaryColor rounded-full w-10 h-10 hover:rounded-xl ">
+                <div className="bg-secondaryColor rounded-full  w-10 h-10 hover:rounded-xl ">
                   <p className="relative top-2 text-center text-white text-sm">
                     {server.name
                       .split(" ")

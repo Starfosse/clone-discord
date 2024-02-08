@@ -120,7 +120,7 @@ const Profile = () => {
     <>
       {currentProfile && (
         <Image
-          className="relative top-11 left-6 z-10 rounded-full border-[3px] border-tertiaryColor"
+          className="relative top-11 left-6 z-10 object-cover object-center rounded-full border-[3px] border-tertiaryColor"
           src={`/${stateUser}.png`}
           width={16}
           height={16}
@@ -157,7 +157,7 @@ const Profile = () => {
                 <div className="grid py-4">
                   {tmpImgUser && (
                     <Image
-                      className="relative mx-auto z-10 mb-8 rounded-full border-[1px] border-tertiaryColor object-cover object-center"
+                      className="relative mx-auto z-10 mb-8rounded-full border-[1px] border-tertiaryColor object-cover object-center"
                       src={tmpImgUser}
                       width={60}
                       height={60}

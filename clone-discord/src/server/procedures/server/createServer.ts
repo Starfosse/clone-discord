@@ -5,6 +5,7 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import { v4 as uuidv4 } from "uuid"
 import { MemberRole } from "@prisma/client"
+import { inputContent } from "@/lib/validator/input-content-validator"
 
 const createServer = publicProcedure
   .input(ServerValidator)
@@ -16,13 +17,7 @@ const createServer = publicProcedure
       })
     }
     const { name } = input
-    const { imageUrl } =
-      input.imageUrl !== ""
-        ? input
-        : {
-            imageUrl:
-              "https://jbfj2hcv3mw8pv33.public.blob.vercel-storage.com/logo-discord-E0ZUFZla5jmR37FfQ7oGTEH7bycUKL.png",
-          }
+    const { imageUrl } = input
     const userOwner = await prisma.user.findFirst({
       where: {
         userId: user?.id,
@@ -45,6 +40,21 @@ const createServer = publicProcedure
             {
               role: "propriétaire",
               orderServ: 0,
+              invite_Member: true,
+              expel_Member: true,
+              edit_Server: true,
+              delete_Server: true,
+              role_Management: true,
+              view_Logs: true,
+              channel_Management: true,
+              view_Channel: true,
+              write_Channel: true,
+              speak_Channel: true,
+              video_Channel: true,
+              reaction_Channel: true,
+              download_Channel: true,
+              category_Management: true,
+              delete_Input_Channel: true,
             },
             {
               role: "membre",
@@ -67,6 +77,7 @@ const createServer = publicProcedure
       },
     })
     if (!rolesServer) return
+    //checker comment créér et relier les membres différemment
     const updatedServerChannels =
       await prisma.server.update({
         where: { id: server.id },
@@ -107,6 +118,7 @@ const createServer = publicProcedure
                   create: [
                     {
                       name: "Général",
+                      type: "AUDIO",
                       serverId: server.id,
                     },
                   ],

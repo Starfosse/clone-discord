@@ -27,7 +27,7 @@ const ActiveUser = (currentChannel: Channel) => {
               <Image
                 alt="avatar"
                 src={user.imageUrl}
-                className="rounded-full aspect-square m-2"
+                className="rounded-full aspect-square m-2 object-cover object-center"
                 height={20}
                 width={20}
               />{" "}

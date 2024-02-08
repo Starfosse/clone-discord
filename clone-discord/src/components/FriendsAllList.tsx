@@ -40,7 +40,7 @@ const FriendsAllList = (who: User) => {
             key={friend?.id}
             className="w-80 h-14  bg-secondaryColor rounded-lg flex items-center relative">
             <Image
-              className="rounded-full ml-2 aspect-square"
+              className="rounded-full ml-2 aspect-square object-cover object-center"
               src={friend.imageUrl}
               width={28}
               height={28}
@@ -48,7 +48,7 @@ const FriendsAllList = (who: User) => {
             />
             <div className="relative">
               <Image
-                className="relative top-[0.67rem] right-[0.67rem] rounded-full border-2 border-tertiaryColor"
+                className="relative top-[0.67rem] right-[0.67rem] rounded-full object-cover object-center border-2 border-tertiaryColor"
                 src={`/${friend.state.toLocaleLowerCase()}.png`}
                 width={14}
                 height={14}
@@ -61,10 +61,10 @@ const FriendsAllList = (who: User) => {
             <div className="ml-auto flex gap-2 mr-2 items-center">
               <Link
                 href={`/friends/${friends.userFriendListId[index]}`}
-                className="rounded-full bg-tertiaryColor border-[0.5rem] border-tertiaryColor ">
+                className="rounded-full  bg-tertiaryColor border-[0.5rem] border-tertiaryColor ">
                 <MessageCircle />
               </Link>
-              <div className="flex items-center rounded-full bg-tertiaryColor border-[0.5rem] border-tertiaryColor">
+              <div className="flex items-center  rounded-full bg-tertiaryColor border-[0.5rem] border-tertiaryColor">
                 <button
                   onClick={() =>
                     handleClickDelete(
