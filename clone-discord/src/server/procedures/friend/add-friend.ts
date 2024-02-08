@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
 import { z } from "zod"
@@ -8,7 +9,7 @@ const pseudo = z.object({
   id: z.string(),
 })
 
-const addFriend = publicProcedure
+const addFriend = authentifiedProcedure
   .input(pseudo)
   .mutation(async ({ input }) => {
     const userToAdd = await prisma.user.findFirst({

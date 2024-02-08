@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
 import { stateList } from "@prisma/client"
@@ -6,7 +7,7 @@ import { z } from "zod"
 
 const user = z.object({ id: z.string() })
 
-const getFriendsOnline = publicProcedure
+const getFriendsOnline = authentifiedProcedure
   .input(user)
   .query(async ({ input }) => {
     const userFriendList = await prisma.userFriend.findMany(

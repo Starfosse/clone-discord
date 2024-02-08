@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
 
-const getUserListUserFriends = publicProcedure.query(
+const getUserListUserFriends = authentifiedProcedure.query(
   async () => {
     const userId = await currentUser()
     if (!userId) return

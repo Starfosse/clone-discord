@@ -1,11 +1,12 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
 import { z } from "zod"
 
 const channelId = z.object({ channelId: z.string() })
 
-const getMemberByUser = publicProcedure
+const getMemberByUser = authentifiedProcedure
   .input(channelId)
   .query(async ({ input }) => {
     const user = await currentUser()

@@ -2,8 +2,9 @@ import { currentUser } from "@clerk/nextjs"
 import { publicProcedure } from "../../trpc"
 import { prisma } from "@/lib/db"
 import { ChannelValidator } from "@/lib/validator/channel-validator"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 
-const createChannelByGroupId = publicProcedure
+const createChannelByGroupId = authentifiedProcedure
   .input(ChannelValidator)
   .mutation(async ({ input }) => {
     const user = await currentUser()

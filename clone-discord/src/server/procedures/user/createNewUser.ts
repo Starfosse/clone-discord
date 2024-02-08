@@ -1,8 +1,9 @@
 import { currentUser } from "@clerk/nextjs"
 import { prisma } from "../../../lib/db"
 import { publicProcedure } from "@/server/trpc"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 
-export const createNewUser = publicProcedure.mutation(
+export const createNewUser = authentifiedProcedure.mutation(
   async () => {
     const user = await currentUser()
 
