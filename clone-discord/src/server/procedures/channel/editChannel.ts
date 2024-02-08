@@ -2,10 +2,11 @@ import { currentUser } from "@clerk/nextjs"
 import { publicProcedure } from "../../trpc"
 import { prisma } from "@/lib/db"
 import { ChannelValidator } from "@/lib/validator/channel-validator"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 
 //ajouter dans les input tous les ids des roles, supprimer ces roles et ajouter les nouveaux
 
-const editChannel = publicProcedure
+const editChannel = authentifiedProcedure
   .input(ChannelValidator)
   .mutation(async ({ input }) => {
     const user = await currentUser()

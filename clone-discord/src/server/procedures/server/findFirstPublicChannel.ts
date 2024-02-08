@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
 import { channel } from "diagnostics_channel"
@@ -6,7 +7,7 @@ import { z } from "zod"
 
 const serverId = z.object({ serverId: z.string() })
 
-const findFirstPublicChannel = publicProcedure
+const findFirstPublicChannel = authentifiedProcedure
   .input(serverId)
   .query(async ({ input }) => {
     const userId = await currentUser()

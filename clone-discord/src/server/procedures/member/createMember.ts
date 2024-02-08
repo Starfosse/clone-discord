@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
 import { create } from "domain"
@@ -6,7 +7,7 @@ import { z } from "zod"
 
 const MemberData = z.object({ serverId: z.string() })
 
-const createMember = publicProcedure
+const createMember = authentifiedProcedure
   .input(MemberData)
   .mutation(async ({ input }) => {
     const userId = await currentUser()

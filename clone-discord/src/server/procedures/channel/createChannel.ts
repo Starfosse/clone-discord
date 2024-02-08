@@ -2,8 +2,9 @@ import { prisma } from "@/lib/db"
 import { ChannelValidator } from "@/lib/validator/channel-validator"
 import { currentUser } from "@clerk/nextjs"
 import { publicProcedure } from "../../trpc"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 
-const createChannel = publicProcedure
+const createChannel = authentifiedProcedure
   .input(ChannelValidator)
   .mutation(async ({ input }) => {
     const user = await currentUser()

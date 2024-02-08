@@ -6,8 +6,9 @@ import { prisma } from "@/lib/db"
 import { v4 as uuidv4 } from "uuid"
 import { MemberRole } from "@prisma/client"
 import { inputContent } from "@/lib/validator/input-content-validator"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 
-const createServer = publicProcedure
+const createServer = authentifiedProcedure
   .input(ServerValidator)
   .mutation(async ({ input }) => {
     const user = await currentUser()
