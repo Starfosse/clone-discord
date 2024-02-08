@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { z } from "zod"
 
@@ -7,7 +8,7 @@ const discussionId = z.object({
   cursor: z.string().nullish(),
 })
 
-const getInputChat = publicProcedure
+const getInputChat = authentifiedProcedure
   .input(discussionId)
   .query(async ({ input }) => {
     const limit = 15

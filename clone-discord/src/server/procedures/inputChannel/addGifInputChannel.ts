@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
 import { z } from "zod"
@@ -7,7 +8,7 @@ const channelId = z.object({
   id: z.string(),
   gif: z.string(),
 })
-const addGifInputChannel = publicProcedure
+const addGifInputChannel = authentifiedProcedure
   .input(channelId)
   .mutation(async ({ input }) => {
     const user = await currentUser()

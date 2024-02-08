@@ -1,8 +1,9 @@
 import { AddRoleValidator } from "@/lib/validator/add-role-validator"
 import { publicProcedure } from "../../trpc"
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 
-const createRole = publicProcedure
+const createRole = authentifiedProcedure
   .input(AddRoleValidator)
   .mutation(async ({ input }) => {
     const sizeMemberRole = await prisma.server.findFirst({

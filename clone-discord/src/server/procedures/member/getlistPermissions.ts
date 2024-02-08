@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
 import { z } from "zod"
@@ -23,7 +24,7 @@ interface permissions {
   delete_Input_Channel: boolean
 }
 
-const getListPermissions = publicProcedure
+const getListPermissions = authentifiedProcedure
   .input(serverId)
   .query(async ({ input }) => {
     const userId = await currentUser()

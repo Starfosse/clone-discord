@@ -1,8 +1,9 @@
 import { publicProcedure } from "../../trpc"
 import { prisma } from "@/lib/db"
 import { ServerValidatorId } from "@/lib/validator/server-validator-id"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 
-const editServer = publicProcedure
+const editServer = authentifiedProcedure
   .input(ServerValidatorId)
   .mutation(async ({ input }) => {
     const { imageUrl, name, id } = input

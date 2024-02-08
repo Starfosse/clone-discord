@@ -2,8 +2,9 @@ import { ProfileValidator } from "@/lib/validator/profile-validator"
 import { publicProcedure } from "../../trpc"
 import { currentUser } from "@clerk/nextjs"
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 
-const updateUser = publicProcedure
+const updateUser = authentifiedProcedure
   .input(ProfileValidator)
   .mutation(async ({ input }) => {
     const user = await currentUser()

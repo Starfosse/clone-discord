@@ -2,10 +2,11 @@ import { publicProcedure } from "../../trpc"
 import { currentUser } from "@clerk/nextjs"
 import { prisma } from "@/lib/db"
 import { z } from "zod"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 
 const ServerId = z.object({ id: z.string() })
 
-const quitServer = publicProcedure
+const quitServer = authentifiedProcedure
   .input(ServerId)
   .mutation(async ({ input }) => {
     console.log(input.id)

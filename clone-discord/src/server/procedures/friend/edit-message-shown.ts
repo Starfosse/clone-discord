@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/db"
+import { authentifiedProcedure } from "@/server/middlewares/authentified"
 import { publicProcedure } from "@/server/trpc"
 import { z } from "zod"
 
 const userFriendId = z.object({ id: z.string() })
 
-const editMessageShown = publicProcedure
+const editMessageShown = authentifiedProcedure
   .input(userFriendId)
   .mutation(async ({ input }) => {
     return await prisma.inputChat.updateMany({
