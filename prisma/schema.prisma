@@ -1,0 +1,260 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output = "../../node_modules/.prisma/client"
+}
+
+enum stateList{
+  ONLINE
+  ABSENT
+  BUSY
+  OFFLINE
+}
+
+model User {
+  id String @id @default(uuid())
+  userId String @unique
+  pseudo String
+  imageUrl String @default("")
+  state stateList @default(OFFLINE)
+
+  servers Server[]
+  members Member[]
+  InputChannel InputChannel[]
+
+  UserFriendInitatied UserFriend[] @relation("UserOne")
+  UserFriendReceived UserFriend[] @relation("UserTwo")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model UserFriend{
+  id String @id @default(uuid())
+
+  userOneId String
+  userOne User @relation("UserOne", fields: [userOneId], references: [id], onDelete: Cascade)
+
+  userTwoId String
+  userTwo User @relation("UserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
+
+  isCalling Boolean? @default(false)
+  isRecording Boolean? @default(false)
+  pending Boolean @default(true)
+  lastMessage DateTime?
+  showConvUserOne Boolean? @default(true)
+  showConvUserTwo Boolean? @default(true)
+
+  discussion inputChat[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([userOneId])
+  @@index([userTwoId])
+  @@unique([userOneId, userTwoId])
+}
+
+model inputChat{
+  id String @id @default(uuid())
+  isEdit Boolean? @default(false)
+  isGif Boolean? @default(false)
+  isInvitationServer Boolean? @default(false)
+  message String
+  sentByUserOne Boolean @default(false)
+  sentByUserTwo Boolean @default(false)
+  unSeenByUserOne Boolean @default(false)
+  unSeenByUseTwo Boolean @default(false)
+
+  userFriendId String
+  userFriend UserFriend @relation(fields: [userFriendId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([userFriendId])
+}
+model Server{
+  id String @id @default(uuid())
+  name String
+  imageUrl String
+  inviteCode String @unique
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  channels Channel[]
+  members Member[]
+  channelGroups ChannelGroup[]
+  roles Role[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+enum ChannelType{
+  TEXT
+  AUDIO
+  VIDEO
+}
+
+model Channel{
+  id String @id @default(uuid())
+  name String
+  type ChannelType @default(TEXT)
+  isPrivate Boolean @default(false)
+
+  serverId String
+  server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
+
+  channelGroupId String?
+  channelGroupe ChannelGroup? @relation(fields: [channelGroupId], references: [id], onDelete: Cascade)
+
+  channelRole ChannelRole[]
+  InputChannel InputChannel[]
+  Members Member[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([serverId])
+  @@index([channelGroupId])
+}
+
+model ChannelRole{
+  ChannelId String
+  channel Channel @relation(fields: [ChannelId], references: [id], onDelete: Cascade)
+  RoleId  String
+  role Role @relation(fields: [RoleId], references: [id], onDelete: Cascade)
+  @@id([ChannelId, RoleId])
+  @@index([ChannelId])
+  @@index([RoleId])
+}
+
+model ChannelGroup{
+  id String @id @default(uuid())
+  name String
+  isPrivate Boolean @default(false)
+
+  serverId String
+  server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
+
+  channels Channel[]
+  channelsGroupRole ChannelGroupRole[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([serverId])
+}
+
+model ChannelGroupRole{
+  ChannelGroupId String
+  channelGroup ChannelGroup @relation(fields: [ChannelGroupId], references: [id], onDelete: Cascade)
+  RoleId  String
+  role Role @relation(fields: [RoleId], references: [id], onDelete: Cascade)
+  @@id([ChannelGroupId, RoleId])
+  @@index([ChannelGroupId])
+  @@index([RoleId])
+}
+
+model Role{
+  id String @id @default(uuid())
+  role String
+  orderServ Int?
+
+  serverId String?
+  server Server? @relation(fields: [serverId], references:[id], onDelete: Cascade)
+
+  memberRole  MemberRole[]
+  channelsGroupRole ChannelGroupRole[]
+  channelRole ChannelRole[]
+
+  invite_Member Boolean @default(false)
+  expel_Member Boolean @default(false)
+  edit_Server Boolean @default(false)
+  delete_Server Boolean @default(false)
+  role_Management Boolean @default(false)
+  view_Logs Boolean @default(false)
+  channel_Management Boolean @default(false)
+  view_Channel Boolean @default(false)
+  write_Channel Boolean @default(false)
+  speak_Channel Boolean @default(false)
+  video_Channel Boolean @default(false)
+  reaction_Channel Boolean @default(false)
+  download_Channel Boolean @default(false)
+  category_Management Boolean @default(false)
+  delete_Input_Channel Boolean @default(false)
+  @@index([serverId])
+}
+
+model MemberRole{
+  MemberId String
+  member Member @relation(fields: [MemberId], references: [id], onDelete: Cascade)
+  RoleId  String
+  role Role @relation(fields: [RoleId], references: [id], onDelete: Cascade)
+  @@id([MemberId, RoleId])
+  @@index([MemberId])
+  @@index([RoleId])
+}
+
+model Member{
+  id String @id @default(uuid())
+  
+  serverId String
+  server Server @relation(fields: [serverId], references:[id], onDelete: Cascade)
+
+  userId String
+  user User @relation(fields:[userId], references: [id], onDelete: Cascade)
+
+  channelId  String?
+  channel Channel? @relation(fields: [channelId], references: [id]) // onDelete: Cascade
+  role MemberRole[]
+  todelete Boolean?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([channelId])
+  @@index([serverId])
+  @@index([userId])
+}
+
+model LogServer{
+  id String @id @default(uuid())
+  log String[]
+  logDate DateTime[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model InputChannel{
+  id String @id @default(uuid())
+  message String
+  isEdit Boolean? @default(false)
+  isGif Boolean? @default(false)
+
+  channelId String
+  channel Channel @relation(fields:[channelId], references:[id], onDelete: Cascade)
+
+  userId String
+  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([channelId])
+}
