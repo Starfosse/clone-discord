@@ -10,7 +10,9 @@ import { useEffect, useState } from "react"
 
 const FriendPage = () => {
   const userFriend = useParams<{ friendId: string }>()
-  const userFriendId = { userFriendId: userFriend.friendId }
+  const userFriendId = {
+    userFriendId: userFriend!.friendId,
+  }
   const [currentFriend, setCurrentFriend] = useState<
     User | undefined
   >()
@@ -37,13 +39,13 @@ const FriendPage = () => {
           <FriendHeader currentFriend={currentFriend} />
 
           <DiscussionInputChat
-            discussionId={userFriend.friendId}
+            discussionId={userFriend!.friendId}
             currentFriend={currentFriend}
           />
 
           <div className="mt-auto sticky">
             <InputChatDiscussion
-              discussionId={userFriend.friendId}
+              discussionId={userFriend!.friendId}
               friend={currentFriend?.pseudo}
             />
           </div>
