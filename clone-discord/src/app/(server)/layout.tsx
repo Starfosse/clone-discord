@@ -25,9 +25,9 @@ export default function ServerLayout({
   const utils = trpc.useUtils()
   const serverId = useParams<{ serverId: string }>()
 
-  const serverData = trpc.getServer.useQuery(serverId)
+  const serverData = trpc.getServer.useQuery(serverId!)
   const listPermissionsData =
-    trpc.getListPermissions.useQuery(serverId)
+    trpc.getListPermissions.useQuery(serverId!)
 
   useEffect(() => {
     if (serverData.data) {
