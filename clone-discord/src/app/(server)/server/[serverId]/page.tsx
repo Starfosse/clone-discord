@@ -6,8 +6,9 @@ import { useEffect } from "react"
 
 const ServerIdPage = () => {
   const channelId = useParams<{ serverId: string }>()
-  const routeTo =
-    trpc.findFirstPublicChannel.useQuery(channelId)
+  const routeTo = trpc.findFirstPublicChannel.useQuery(
+    channelId!
+  )
 
   const router = useRouter()
   if (
@@ -17,7 +18,9 @@ const ServerIdPage = () => {
     typeof routeTo.data !== undefined
   ) {
     router.push(
-      `/server/${channelId.serverId}/channel/${routeTo.data}`
+      `/server/${channelId!.serverId}/channel/${
+        routeTo.data
+      }`
     )
   }
   // useEffect(() => {

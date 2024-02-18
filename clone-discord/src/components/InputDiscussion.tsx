@@ -21,6 +21,8 @@ import {
   FormItem,
 } from "./ui/form"
 import { Input } from "./ui/input"
+import axios from "axios"
+import qs from "query-string"
 
 interface InputChatDiscussion {
   discussionId: string
@@ -50,10 +52,18 @@ const InputChatDiscussion = ({
       onSuccess: () => utils.getInputChat.invalidate(),
     })
 
-  const onSubmit = ({ message }: TDiscussionProps) => {
+  const onSubmit = async ({
+    message,
+  }: TDiscussionProps) => {
     form.reset()
     if (message === "") return
-    addMessage({ discussionId, message })
+    const query = { discussionId: discussionId }
+    const url = qs.stringifyUrl({
+      url: "/api/socket/direct-message",
+      query,
+    })
+    await axios.post(url, { message })
+    // addMessage({ discussionId, message })
     form.reset()
   }
 

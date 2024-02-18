@@ -18,10 +18,11 @@ const ChannelIdPage = () => {
     User | undefined
   >()
 
-  const channelData =
-    trpc.getChannelById.useQuery(channelId)
+  const channelData = trpc.getChannelById.useQuery(
+    channelId!
+  )
   const userData = trpc.getUser.useQuery()
-  const whoData = trpc.getMemberByUser.useQuery(channelId)
+  const whoData = trpc.getMemberByUser.useQuery(channelId!)
 
   const { mutate: joinChannel } =
     trpc.joinMemberToChannel.useMutation({

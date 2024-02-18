@@ -21,8 +21,8 @@ const ServerLeftSideBar = () => {
   ] = useState<permissions | undefined>()
 
   const listPermissionsData =
-    trpc.getListPermissions.useQuery(serverId)
-  const serverData = trpc.getServer.useQuery(serverId)
+    trpc.getListPermissions.useQuery(serverId!)
+  const serverData = trpc.getServer.useQuery(serverId!)
 
   useEffect(() => {
     if (serverData.data) {
