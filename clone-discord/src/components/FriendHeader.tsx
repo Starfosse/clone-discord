@@ -1,5 +1,6 @@
 import { User } from "@prisma/client"
 import Image from "next/image"
+import { SocketIndicator } from "./socket-indicator"
 
 interface friendHeaderProps {
   currentFriend: User
@@ -27,6 +28,7 @@ const FriendHeader = (fHP: friendHeaderProps) => {
           <p className="text-lg">
             {fHP.currentFriend.pseudo}{" "}
           </p>
+          <SocketIndicator />
           {/* <div className="flex ml-auto justify-end">
             <button onClick={fHP.calling}>
               <PhoneCall className="ml-auto" />
