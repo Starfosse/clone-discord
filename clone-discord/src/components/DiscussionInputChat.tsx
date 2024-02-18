@@ -81,7 +81,7 @@ const DiscussionInputChat = ({
   useEffect(() => {
     if (users.data) setCurrentUsers(users.data)
   }, [users.data, fetchNextPage])
-
+  if (!posts) return
   return (
     <div className="text-white bg-primaryColor h-full flex relative overflow-auto">
       <div className="mt-auto pb-6 pl-4 flex flex-col gap-4 w-full">
@@ -89,7 +89,7 @@ const DiscussionInputChat = ({
           currentUsers &&
           posts &&
           posts.map((post, i) => {
-            if (i === posts.length - 1) {
+            if (i === posts!.length - 1) {
               return (
                 <div
                   key={post.id}
@@ -120,7 +120,7 @@ const DiscussionInputChat = ({
           currentUsers &&
           posts &&
           messages.map((post, i) => {
-            if (i === posts.length - 1) {
+            if (i === posts!.length - 1) {
               return (
                 <div
                   key={post.id}
