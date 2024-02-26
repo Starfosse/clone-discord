@@ -6,7 +6,11 @@ import { createNewUser } from "./server/procedures/user/createNewUser"
 // See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
 
 export default authMiddleware({
-  publicRoutes: ["/", "/^/api/webhook//"],
+  publicRoutes: [
+    "/",
+    "/^/api/webhook//",
+    "/authentification/sign-up",
+  ],
   // ignoredRoutes: [
   //   "/((?!api|trpc))(_next.*|.+.[w]+$)",
   //   "/api/trpc/hello",

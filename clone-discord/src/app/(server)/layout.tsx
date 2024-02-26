@@ -15,7 +15,7 @@ export default function ServerLayout({
 }: {
   children: React.ReactNode
 }) {
-  console.log(localStorage.getItem("test"))
+  // console.log(localStorage.getItem("test"))
   const [currentServer, setCurrentServer] = useState<
     Server | undefined
   >()
