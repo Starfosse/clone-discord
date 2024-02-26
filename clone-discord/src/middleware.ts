@@ -7,14 +7,18 @@ import { createNewUser } from "./server/procedures/user/createNewUser"
 
 export default authMiddleware({
   publicRoutes: [
+    "/api/trpc/getUserListServ,getListUnseenDiscussion,getUser",
+    "/api/socket/io",
     "/",
     "/^/api/webhook//",
     "/authentification/sign-up",
   ],
-  // ignoredRoutes: [
-  //   "/((?!api|trpc))(_next.*|.+.[w]+$)",
-  //   "/api/trpc/hello",
-  // ],
+  ignoredRoutes: [
+    "/api/socket/io",
+    "/api/trpc/getUser,getUserListServ,getListUnseenDiscussion",
+    "/((?!api|trpc))(_next.*|.+.[w]+$)",
+    "/api/trpc/hello",
+  ],
 })
 
 export const config = {
@@ -22,5 +26,6 @@ export const config = {
     "/((?!.+\\.[\\w]+$|_next).*)",
     "/",
     "/(api|trpc)(.*)",
+    "/((?!proxy|favicon.ico).*)",
   ],
 }
