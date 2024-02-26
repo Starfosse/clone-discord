@@ -12,6 +12,7 @@ import { Users } from "lucide-react"
 import { useEffect, useState } from "react"
 
 const FriendsManagement = () => {
+  localStorage.setItem("test", "uuidv4")
   const [addFriend, setAddFriend] = useState(false)
   const [seePendingFriends, setSeePendingFriends] =
     useState(false)
