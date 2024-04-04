@@ -36,6 +36,7 @@ const PostInputChat = ({
   currentFriend,
   currentUsers,
 }: PostInputChatProps) => {
+  console.log("alo")
   const [edit, setEdit] = useState(false)
   const utils = trpc.useUtils()
   const {

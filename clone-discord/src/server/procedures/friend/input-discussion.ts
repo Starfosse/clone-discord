@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/db"
 import { authentifiedProcedure } from "@/server/middlewares/authentified"
-import { publicProcedure } from "@/server/trpc"
 import { currentUser } from "@clerk/nextjs"
 import { z } from "zod"
 

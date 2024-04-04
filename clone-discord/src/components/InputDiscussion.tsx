@@ -21,6 +21,11 @@ import {
   FormItem,
 } from "./ui/form"
 import { Input } from "./ui/input"
+import qs from "query-string"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import { router } from "@/server/trpc"
+import { useSocket } from "./socket-provider"
 
 interface InputChatDiscussion {
   discussionId: string
@@ -49,12 +54,28 @@ const InputChatDiscussion = ({
     trpc.addGifDiscussion.useMutation({
       onSuccess: () => utils.getInputChat.invalidate(),
     })
-
-  const onSubmit = ({ message }: TDiscussionProps) => {
+  const { socket } = useSocket()
+  // const router = useRouter()
+  const onSubmit = async ({
+    message,
+  }: TDiscussionProps) => {
     form.reset()
+    console.log("test")
     if (message === "") return
-    addMessage({ discussionId, message })
+    const query = { discussionId: discussionId }
+    const url = qs.stringifyUrl({
+      url: "/api/socket/message-user",
+      query,
+    })
+    console.log(url)
+    await axios.post(url, { message })
+    socket.on("chat message", (message: any) => {
+      console.log(message)
+    })
+    console.log("test")
+    // addMessage({ discussionId, message })
     form.reset()
+    // router.refresh()
   }
 
   const handleGifSelect = (url: string) => {

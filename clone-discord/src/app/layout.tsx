@@ -6,6 +6,7 @@ import SideLeftBar from "@/components/SideLeftBar"
 import { ClerkProvider } from "@clerk/nextjs"
 import Provider from "./_trpc/Provider"
 import { Toaster } from "@/components/ui/sonner"
+import { SocketProvider } from "@/components/socket-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -30,14 +31,16 @@ export default function RootLayout({
             inter.className
           )}>
           <main className="relative flex min-h-screen max-h-screen">
-            <Provider>
-              <SideLeftBar />
-              <div className="flex-grow flex-1 bg-black">
-                {/* retirer le bg*/}
-                {children}
-              </div>
-              <Toaster position="top-center" />
-            </Provider>
+            <SocketProvider>
+              <Provider>
+                <SideLeftBar />
+                <div className="flex-grow flex-1 bg-black">
+                  {/* retirer le bg*/}
+                  {children}
+                </div>
+                <Toaster position="top-center" />
+              </Provider>
+            </SocketProvider>
           </main>
         </body>
       </html>
